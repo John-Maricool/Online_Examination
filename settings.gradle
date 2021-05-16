@@ -1,0 +1,3 @@
+include ':StudentApp'
+include ':AdminApp'
+rootProject.name = "Online Examination Project"

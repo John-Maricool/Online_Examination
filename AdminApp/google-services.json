@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "362981904387",
+    "project_id": "online-examination-project",
+    "storage_bucket": "online-examination-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362981904387:android:3e95bebcc5fdaf87e9be36",
+        "android_client_info": {
+          "package_name": "com.maricoolsapps.onlineexaminationproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "362981904387-p9i4ab5skt76qii5p2h292252pdrf2no.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI3CT5HeADN-peP2VQVgRc8KL65WhULtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "362981904387-p9i4ab5skt76qii5p2h292252pdrf2no.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

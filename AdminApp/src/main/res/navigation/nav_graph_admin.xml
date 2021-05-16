@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    android:label="Login"
+    app:startDestination="@id/adminPortalFragment">
+
+    <fragment
+        android:id="@+id/adminPortalFragment"
+        android:name="com.maricoolsapps.adminpart.AdminPortalFragment"
+        android:label="Welcome"
+        tools:layout="@layout/fragment_admin_protal" >
+        <action
+            android:id="@+id/action_adminPortalFragment_to_quizArrangement"
+            app:destination="@id/quizArrangement" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.maricoolsapps.adminpart.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_changeNameDialog"
+            app:destination="@id/changeNameDialog" />
+        <action
+            android:id="@+id/action_profileFragment_to_changePasswordDialog"
+            app:destination="@id/changePasswordDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/changeNameDialog"
+        android:name="com.maricoolsapps.adminpart.ChangeNameDialog"
+        android:label="fragment_change_name_dialog"
+        tools:layout="@layout/fragment_change_name_dialog" />
+    <dialog
+        android:id="@+id/changePasswordDialog"
+        android:name="com.maricoolsapps.adminpart.ChangePasswordDialog"
+        android:label="fragment_change_password_dialog"
+        tools:layout="@layout/fragment_change_password_dialog" />
+    <fragment
+        android:id="@+id/quizArrangement"
+        android:name="com.maricoolsapps.adminpart.QuizArrangement"
+        android:label="fragment_quiz_arrangement"
+        tools:layout="@layout/fragment_quiz_arrangement" />
+</navigation>
