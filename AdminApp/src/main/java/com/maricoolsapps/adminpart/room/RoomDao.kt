@@ -2,6 +2,7 @@ package com.maricoolsapps.adminpart.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RoomDao {
@@ -16,5 +17,5 @@ interface RoomDao {
     fun deleteQuiz(quiz: RoomEntity)
 
     @Query("select * from question_table order by id")
-    fun getAllQuiz(): LiveData<List<RoomEntity>>
-}
+    fun getAllQuiz(): List<RoomEntity>
+    }

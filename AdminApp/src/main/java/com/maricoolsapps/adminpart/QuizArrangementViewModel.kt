@@ -17,4 +17,10 @@ class QuizArrangementViewModel
             repository.addQuiz(quiz)
         }
     }
+    fun updateQuiz(quiz: RoomEntity){
+        viewModelScope.launch {
+            //insert the quiz to rom
+            repository.updateQuiz(quiz)
+        }
+    }
 }

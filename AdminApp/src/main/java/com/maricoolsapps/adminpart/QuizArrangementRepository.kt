@@ -14,6 +14,11 @@ class QuizArrangementRepository constructor(var dao: RoomDao) {
     suspend fun addQuiz(quiz: RoomEntity){
             //insert the quiz to rom
             dao.insertQuiz(quiz)
+    }
 
+
+    suspend fun updateQuiz(quiz: RoomEntity){
+        //insert the quiz to rom
+        dao.updateQuiz(quiz)
     }
 }

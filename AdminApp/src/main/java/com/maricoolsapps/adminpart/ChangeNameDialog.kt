@@ -11,11 +11,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_change_name_dialog.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChangeNameDialog : BottomSheetDialogFragment() {
 
-    lateinit var auth:FirebaseAuth
+   @Inject lateinit var auth:FirebaseAuth
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -24,7 +25,6 @@ class ChangeNameDialog : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        auth = FirebaseAuth.getInstance()
         val displayName = auth.currentUser?.displayName
         name.setText(displayName)
 

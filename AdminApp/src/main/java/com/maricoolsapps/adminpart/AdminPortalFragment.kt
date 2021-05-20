@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @Suppress("DEPRECATION")
@@ -15,14 +16,23 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
     private var _binding: FragmentAdminProtalBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var auth: FirebaseAuth
+    @Inject lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        auth = FirebaseAuth.getInstance()
         _binding = FragmentAdminProtalBinding.bind(view)
         binding.createTest.setOnClickListener{
-            val action = AdminPortalFragmentDirections.actionAdminPortalFragmentToQuizArrangement()
+            val action = AdminPortalFragmentDirections.actionAdminPortalFragmentToQuizArrangement(null)
+            findNavController().navigate(action)
+        }
+
+        binding.registeredUsers.setOnClickListener {
+            val action = AdminPortalFragmentDirections.actionAdminPortalFragmentToRegisteredUsersFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.savedQuiz.setOnClickListener {
+            val action = AdminPortalFragmentDirections.actionAdminPortalFragmentToSavedQuizFragment()
             findNavController().navigate(action)
         }
     }

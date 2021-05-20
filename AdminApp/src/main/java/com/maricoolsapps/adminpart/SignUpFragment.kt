@@ -15,19 +15,19 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
 import com.maricoolsapps.adminpart.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.multibindings.IntKey
 import kotlinx.android.synthetic.main.fragment_sign_up.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
-    lateinit var auth: FirebaseAuth
+   @Inject lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        auth = FirebaseAuth.getInstance()
         _binding = FragmentSignUpBinding.bind(view)
 
         binding.login.setOnClickListener { userLogin() }

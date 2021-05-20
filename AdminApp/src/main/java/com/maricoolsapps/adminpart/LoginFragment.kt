@@ -12,20 +12,20 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
    private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    lateinit var auth: FirebaseAuth
+    @Inject lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentLoginBinding.bind(view)
 
-        auth = FirebaseAuth.getInstance()
         binding.register.setOnClickListener{
             val action = LoginFragmentDirections.actionLoginFragmentToSignUpFragment2()
             findNavController().navigate(action)

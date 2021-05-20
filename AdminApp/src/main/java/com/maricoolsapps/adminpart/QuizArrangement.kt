@@ -9,6 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
 import com.maricoolsapps.adminpart.databinding.FragmentQuizArrangementBinding
 import com.maricoolsapps.adminpart.room.RoomEntity
@@ -23,16 +25,37 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
 
    private val viewModel: QuizArrangementViewModel by viewModels()
 
+    private val args: QuizArrangementArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentQuizArrangementBinding.bind(view)
 
+        if (args.items == null){
+            binding.update.visibility = View.GONE
+        }else{
+            binding.add.visibility = View.GONE
+            binding.update.visibility = View.VISIBLE
+            updateView(args.items)
+        }
+
+        binding.update.setOnClickListener {
+            send()
+        }
 
         binding.add.setOnClickListener {
             send()
             clearAllInputs()
         }
+    }
 
+    private fun updateView(items: RoomEntity?) {
+      binding.enterQuestion.setText(items?.question)
+        binding.firstOption.setText(items?.firstOption)
+        binding.secondOption.setText(items?.secondOption)
+        binding.thirdOption.setText(items?.thirdOption)
+        binding.forthOption.setText(items?.forthOption)
+        binding.spinner.setSelection(items!!.correctIndex)
     }
 
     private fun clearAllInputs() {
@@ -65,8 +88,17 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
                 forthOption = option4,
                 correctIndex = correctOptionIndex)
         //add to database
+        if (args.items == null){
         viewModel.addQuiz(quiz)
         Toast.makeText(activity, "Added", Toast.LENGTH_SHORT).show()
+         }
+        else{
+            quiz.id = args.items!!.id
+            viewModel.updateQuiz(quiz)
+            Toast.makeText(activity, "Updated", Toast.LENGTH_SHORT).show()
+            val action = QuizArrangementDirections.actionQuizArrangementToSavedQuizFragment()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroy() {

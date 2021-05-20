@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_dialog) {
@@ -20,13 +21,12 @@ class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_di
     private var _binding: FragmentChangePasswordDialogBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
     lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentChangePasswordDialogBinding.bind(view)
-
-        auth = FirebaseAuth.getInstance()
         binding.reset.setOnClickListener { resetPassword() }
     }
 
