@@ -19,4 +19,8 @@ constructor(val dao: RoomDao) {
             emit(MyDataState.notLoaded(e))
         }
     }
+
+    suspend fun deleteSavedQuiz(quiz: List<RoomEntity>){
+        dao.deleteQuiz(quiz)
+    }
 }

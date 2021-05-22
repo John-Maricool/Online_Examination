@@ -17,16 +17,22 @@ class SavedQuizViewModel
         private val repository: SavedQuizRepository
 ): ViewModel() {
 
-        private val _dataState: MutableLiveData<MyDataState<List<RoomEntity>>> = MutableLiveData()
+    private val _dataState: MutableLiveData<MyDataState<List<RoomEntity>>> = MutableLiveData()
 
     val dataState: LiveData<MyDataState<List<RoomEntity>>> get() = _dataState
 
-    fun start(){
+    fun start() {
         viewModelScope.launch {
             repository.getListOfSavedQuiz().onEach {
                 _dataState.value = it
             }
                     .launchIn(viewModelScope)
+        }
+    }
+
+    fun delete(quiz: List<RoomEntity>) {
+        viewModelScope.launch {
+            repository.deleteSavedQuiz(quiz)
         }
     }
 }

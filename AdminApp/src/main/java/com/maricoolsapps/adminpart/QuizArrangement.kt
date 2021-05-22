@@ -1,21 +1,16 @@
 package com.maricoolsapps.adminpart
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
 import com.maricoolsapps.adminpart.databinding.FragmentQuizArrangementBinding
 import com.maricoolsapps.adminpart.room.RoomEntity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
@@ -24,12 +19,17 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
     private val binding get() = _binding!!
 
    private val viewModel: QuizArrangementViewModel by viewModels()
-
+    lateinit var adapter: ArrayAdapter<Int>
     private val args: QuizArrangementArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentQuizArrangementBinding.bind(view)
+
+        val countryList = arrayOf(1, 2, 3, 4)
+
+        adapter = ArrayAdapter<Int>(requireContext(), android.R.layout.simple_spinner_dropdown_item, countryList)
+        binding.spinner.setAdapter(adapter)
 
         if (args.items == null){
             binding.update.visibility = View.GONE
@@ -55,7 +55,7 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
         binding.secondOption.setText(items?.secondOption)
         binding.thirdOption.setText(items?.thirdOption)
         binding.forthOption.setText(items?.forthOption)
-        binding.spinner.setSelection(items!!.correctIndex)
+        binding.spinner.setSelection(adapter.getPosition(args.items?.correctIndex))
     }
 
     private fun clearAllInputs() {
