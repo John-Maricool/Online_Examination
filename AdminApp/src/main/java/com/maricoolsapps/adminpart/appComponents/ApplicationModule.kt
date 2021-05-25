@@ -1,7 +1,9 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.appComponents
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.maricoolsapps.adminpart.QuizArrangementRepository
 import com.maricoolsapps.adminpart.room.*
 import dagger.Module
 import dagger.Provides
@@ -37,7 +39,7 @@ object ApplicationModule {
 
     @Singleton
     @Provides
-    fun provideQuizArrangementRepo(dao: RoomDao): QuizArrangementRepository{
+    fun provideQuizArrangementRepo(dao: RoomDao): QuizArrangementRepository {
         return QuizArrangementRepository(dao)
     }
 
@@ -45,5 +47,10 @@ object ApplicationModule {
     @Provides
     fun provideFirebaseAuth(): FirebaseAuth{
         return FirebaseAuth.getInstance()
+    }
+    @Singleton
+    @Provides
+    fun provideFirebaseFirestore(): FirebaseFirestore{
+        return FirebaseFirestore.getInstance()
     }
 }

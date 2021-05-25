@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maricoolsapps.adminpart.databinding.RegisteredUsersListItemBinding
+import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
 
 class RegisteredUsersAdapter(var items: List<RegisteredUsersModel>):
         RecyclerView.Adapter<RegisteredUsersAdapter.RegisteredUsersViewHolder>() {

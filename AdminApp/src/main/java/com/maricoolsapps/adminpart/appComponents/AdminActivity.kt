@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.appComponents
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +9,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.*
 import com.google.firebase.auth.FirebaseAuth
+import com.maricoolsapps.adminpart.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_admin.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class AdminActivity : AppCompatActivity() {

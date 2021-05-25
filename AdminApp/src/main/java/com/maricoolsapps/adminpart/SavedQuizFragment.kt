@@ -8,8 +8,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
 import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
+import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
+import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
 import com.maricoolsapps.adminpart.room.RoomEntity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,10 +32,9 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentSavedQuizBinding.bind(view)
-        binding.reecyclerView.setHasFixedSize(false)
-        binding.reecyclerView.layoutManager = LinearLayoutManager(activity)
+        binding.recyclerView.setHasFixedSize(false)
+        binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         model.start()
-
         startMonitoring()
     }
 
@@ -42,8 +42,8 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         super.onStart()
         adapter.setOnClickListener(this)
         adapter.setOnLongClickListener(this)
-
     }
+
     private fun startMonitoring(){
         model.dataState.observe(viewLifecycleOwner, Observer {dataState ->
             when(dataState){
@@ -56,7 +56,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                     adapter.items = dataState.data.toMutableList()
                     Log.d("view", dataState.data.toString())
 
-                    binding.reecyclerView.adapter = adapter
+                    binding.recyclerView.adapter = adapter
                 }
                 is MyDataState.isLoading -> {
                     binding.progressBar.visibility = View.VISIBLE

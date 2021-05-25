@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.usersignup
 
 import android.app.Activity
 import android.content.Intent
@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

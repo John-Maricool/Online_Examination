@@ -1,22 +1,18 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.usersignup
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
+import com.google.firebase.firestore.FirebaseFirestore
+import com.maricoolsapps.adminpart.appComponents.AdminActivity
+import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.multibindings.IntKey
-import kotlinx.android.synthetic.main.fragment_sign_up.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -25,6 +21,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
    @Inject lateinit var auth: FirebaseAuth
+    @Inject lateinit var cloud: FirebaseFirestore
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

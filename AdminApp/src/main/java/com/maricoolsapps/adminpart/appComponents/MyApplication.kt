@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.appComponents
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

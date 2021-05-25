@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maricoolsapps.adminpart.databinding.QuizListItemBinding
+import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
+import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
 import com.maricoolsapps.adminpart.room.RoomEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

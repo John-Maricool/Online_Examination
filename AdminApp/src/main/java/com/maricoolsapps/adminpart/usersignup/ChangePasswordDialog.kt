@@ -1,17 +1,13 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.usersignup
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
-import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

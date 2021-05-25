@@ -3,7 +3,7 @@
     package="com.maricoolsapps.adminpart">
 
     <application
-        android:name=".MyApplication"
+        android:name=".appComponents.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineExaminationProject">
 
-        <activity android:name="com.maricoolsapps.adminpart.MainActivity"
+        <activity android:name="com.maricoolsapps.adminpart.appComponents.MainActivity"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.maricoolsapps.adminpart.AdminActivity"
+        <activity android:name="com.maricoolsapps.adminpart.appComponents.AdminActivity"
             android:theme="@style/Theme.OnlineExaminationProject"/>
     </application>
 
