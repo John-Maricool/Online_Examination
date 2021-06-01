@@ -1,9 +1,9 @@
-package com.maricoolsapps.adminpart.appComponents
+package com.maricoolsapps.adminpart.hilt
 
 import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.maricoolsapps.adminpart.QuizArrangementRepository
+import com.maricoolsapps.adminpart.utils.QuizArrangementRepository
 import com.maricoolsapps.adminpart.room.*
 import dagger.Module
 import dagger.Provides

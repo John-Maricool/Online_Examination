@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.usersignup
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,37 +6,30 @@ import android.util.Patterns
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
+import com.maricoolsapps.adminpart.ui.viewModels.LogInViewModel
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
    private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    @Inject lateinit var auth: FirebaseAuth
+    private val model: LogInViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentLoginBinding.bind(view)
-
         binding.register.setOnClickListener{
             val action = LoginFragmentDirections.actionLoginFragmentToSignUpFragment2()
             findNavController().navigate(action)
         }
-
         binding.login.setOnClickListener { userLogin() }
-     /*   binding.confirmEmail.setOnClickListener {
-            auth.currentUser.sendEmailVerification().addOnCompleteListener {
-                Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-            }
-        }*/
     }
 
     override fun onDestroy() {
@@ -45,15 +38,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun userLogin(){
-        val userEmail: String = binding.email.text.toString().trim { it <= ' ' }
-        val userPassword: String = binding.password.text.toString().trim { it <= ' ' }
+        val userEmail: String = binding.email.text.toString().trim()
+        val userPassword: String = binding.password.text.toString().trim()
 
         if (userEmail.isEmpty()) {
             binding.email.error = "Email is required"
             binding.email.requestFocus()
             return
         }
-
 
         if (userPassword.isEmpty()) {
             binding.password.error = "Password is required"
@@ -71,7 +63,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             return
         }
         binding.progressBar.setVisibility(View.VISIBLE)
-        auth.signInWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener{ task ->
+        model.logInUser(userEmail, userPassword).addOnCompleteListener{ task ->
             binding.progressBar.setVisibility(View.GONE)
             if (task.isSuccessful) {
                startActivity(Intent(activity, AdminActivity::class.java))
@@ -84,7 +76,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onStart() {
         super.onStart()
-        if (auth.currentUser != null){
+        if (model.currentUser != null){
             startActivity(Intent(activity, AdminActivity::class.java))
             activity?.finish()
         }

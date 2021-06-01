@@ -1,10 +1,11 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +23,7 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAdminProtalBinding.bind(view)
+
         binding.createTest.setOnClickListener{
             val action = AdminPortalFragmentDirections.actionAdminPortalFragmentToQuizArrangement(null)
             findNavController().navigate(action)

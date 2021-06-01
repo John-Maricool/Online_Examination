@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.os.Bundle
 import android.view.View
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.maricoolsapps.adminpart.ui.viewModels.QuizArrangementViewModel
+import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentQuizArrangementBinding
 import com.maricoolsapps.adminpart.room.RoomEntity
 import dagger.hilt.android.AndroidEntryPoint

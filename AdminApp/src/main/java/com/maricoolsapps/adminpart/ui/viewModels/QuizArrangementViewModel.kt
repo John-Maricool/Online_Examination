@@ -1,8 +1,9 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.adminpart.utils.QuizArrangementRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -8,7 +8,7 @@
     android:background="@drawable/gradient"
     android:gravity="center"
     android:padding="16dp"
-    tools:context=".usersignup.LoginFragment">
+    tools:context=".ui.fragments.LoginFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

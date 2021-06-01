@@ -1,8 +1,10 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.models
 
 data class RegisteredUsersModel(
-        val uid: Int,
+        val uid: String,
         val name: String,
         val email: String,
         val phoneNumber: String
-)
+){
+    constructor(): this("", "", "", "")
+}

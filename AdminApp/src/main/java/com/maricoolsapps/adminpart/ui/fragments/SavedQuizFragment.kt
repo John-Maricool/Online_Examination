@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +8,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.maricoolsapps.adminpart.R
+import com.maricoolsapps.adminpart.ui.viewModels.SavedQuizViewModel
+import com.maricoolsapps.adminpart.adapters.SavedQuizAdapter
 import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
 import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
 import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
 import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.adminpart.utils.MyDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -50,14 +54,16 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                 is MyDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE
                 }
+
                 is MyDataState.onLoaded<List<RoomEntity>> ->{
                     binding.progressBar.visibility = View.GONE
-                   // adapter.getList(dataState.data)
+                    // adapter.getList(dataState.data)
                     adapter.items = dataState.data.toMutableList()
                     Log.d("view", dataState.data.toString())
 
                     binding.recyclerView.adapter = adapter
                 }
+
                 is MyDataState.isLoading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
@@ -105,5 +111,6 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     override fun onDestroyActionMode(p0: ActionMode?) {
         mode = null
         SavedQuizAdapter.isActionModeOpened = false
+        SavedQuizAdapter.clickedItems.clear()
     }
 }

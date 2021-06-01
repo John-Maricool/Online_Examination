@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".QuizArrangement">
+    tools:context=".ui.fragments.QuizArrangement">
 
     <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"

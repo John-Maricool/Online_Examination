@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.usersignup
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,22 +6,20 @@ import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.fragment.app.viewModels
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
+import com.maricoolsapps.adminpart.ui.viewModels.SignUpViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
-   @Inject lateinit var auth: FirebaseAuth
-    @Inject lateinit var cloud: FirebaseFirestore
+
+    private val model: SignUpViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,9 +35,9 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
     private fun userLogin(){
         val username = binding.name.text.toString().trim()
-        val userEmail: String = binding.email.text.toString().trim { it <= ' ' }
-        val userPassword: String = binding.password.text.toString().trim { it <= ' ' }
-        val confirmPassword: String = binding.confirmPassword.text.toString().trim { it <= ' ' }
+        val userEmail: String = binding.email.text.toString().trim()
+        val userPassword: String = binding.password.text.toString().trim()
+        val confirmPassword: String = binding.confirmPassword.text.toString().trim()
 
         if (username.isEmpty()) {
             binding.name.error = "Name is required"
@@ -83,22 +81,14 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
         }
         binding.progressBar.visibility = View.VISIBLE
 
-        auth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener { task ->
-            binding.progressBar.visibility = View.GONE
-            if (task.isSuccessful) {
-                val profile = UserProfileChangeRequest.Builder()
-                        .setDisplayName(username)
-                        .build()
-                auth.currentUser?.updateProfile(profile)?.addOnSuccessListener {
-                    startActivity(Intent(activity, AdminActivity::class.java))
+        model.createUser(userEmail, userPassword).addOnSuccessListener {
+             model.updateProfileName(username)
+                 binding.progressBar.visibility = View.GONE
+                 startActivity(Intent(activity, AdminActivity::class.java))
                     activity?.finish()
-                }
-
-            } else {
-                Toast.makeText(activity, task.exception!!.message, Toast.LENGTH_SHORT).show()
-            }
+                }.addOnFailureListener {
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
         }
     }
-
-
 }

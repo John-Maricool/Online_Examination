@@ -1,19 +1,17 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
+import com.maricoolsapps.adminpart.R
+import com.maricoolsapps.adminpart.ui.viewModels.UploadQuizViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentUploadQuizBinding
+import com.maricoolsapps.adminpart.models.ServerQuizDataModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -29,14 +27,14 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
     private var _binding: FragmentUploadQuizBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var server_quiz: List<ServerQuizData>
+    private lateinit var server_quizModel: List<ServerQuizDataModel>
 
     lateinit var key: String
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentUploadQuizBinding.bind(view)
 
-        if (model.isQuizEmpty() == true) {
+        if (model.isQuizEmpty()) {
             binding.apply {
                 errorMessage.visibility = View.VISIBLE
                 keyText.visibility = View.GONE
@@ -54,7 +52,7 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
                 progressText.visibility = View.GONE
                 upload.visibility = View.VISIBLE
             }
-            server_quiz = model.map()
+            server_quizModel = model.map()
         }
 
         binding.upload.setOnClickListener {
@@ -67,51 +65,48 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
             }
         }
     }
+
     private fun showAlert() {
         val alertDialog = AlertDialog.Builder(activity)
         alertDialog.setTitle("Notice")
         alertDialog.setMessage("Once you upload your quiz, you can't update it again")
-        alertDialog.setPositiveButton("Yes", object: DialogInterface.OnClickListener{
-            override fun onClick(p0: DialogInterface?, p1: Int) {
-                sendToCloud()
+        alertDialog.setPositiveButton("Yes") { p0, p1 ->
+            addDataToServer(server_quizModel, key)
             }
-        })
         alertDialog.create().show()
-    }
-
-    private fun sendToCloud() {
-        binding.progressBar.visibility = View.VISIBLE
-        val col = cloud.collection("Admins").document(auth.currentUser.uid).collection(key)
-        val countProgress = 0
-        var counter = 0
-        val size = server_quiz.size
-        val increment = 100 / size
-
-        server_quiz.forEach { quiz ->
-            binding.progressText.visibility = View.VISIBLE
-            binding.progressBar.visibility = View.VISIBLE
-            col.add(quiz).addOnSuccessListener {
-                counter++
-                if (counter == size) {
-                    Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
-                    model.deleteQuiz()
-                    binding.progressText.visibility = View.GONE
-                    binding.progressBar.visibility = View.GONE
-                } else {
-                    binding.progressBar.progress = countProgress + increment
-                    binding.progressText.text = "$counter/$size"
-                }
-            }.addOnFailureListener {
-                Toast.makeText(activity, "Failed to Upload", Toast.LENGTH_LONG).show()
-                binding.progressText.visibility = View.GONE
-                binding.progressBar.visibility = View.GONE
-            }
-
-        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
+    private fun addDataToServer(data: List<Any>, key: String){
+
+    binding.progressBar.visibility = View.VISIBLE
+    binding.progressText.visibility = View.VISIBLE
+    val size = data.size
+    val progressIncrement = 100/size
+    data.forEach {
+        model.docRef.collection(key).add(it).addOnSuccessListener {
+            model.clicks++
+            if (model.clicks == size){
+                binding.progressBar.visibility = View.GONE
+                binding.progressText.visibility = View.GONE
+                Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
+            }
+            else{
+                binding.progressBar.progress += progressIncrement
+                binding.progressText.text = "${model.clicks}/$size"
+
+            }
+        }.addOnFailureListener {
+            binding.progressBar.visibility = View.GONE
+            binding.progressText.visibility = View.GONE
+            Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
+
+            }
+        }
+    }
+
 }

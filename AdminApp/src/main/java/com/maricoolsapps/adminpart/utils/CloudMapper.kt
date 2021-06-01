@@ -1,13 +1,14 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.utils
 
 import com.maricoolsapps.adminpart.interfaces.Mapper
+import com.maricoolsapps.adminpart.models.ServerQuizDataModel
 import com.maricoolsapps.adminpart.room.RoomEntity
 import javax.inject.Inject
 
 class CloudMapper
 @Inject
-constructor(): Mapper<RoomEntity, ServerQuizData>{
-    override fun mapFromModel(model: ServerQuizData): RoomEntity {
+constructor(): Mapper<RoomEntity, ServerQuizDataModel>{
+    override fun mapFromModel(model: ServerQuizDataModel): RoomEntity {
         return RoomEntity(
                 question = model.question,
                 firstOption = model.firstOption,
@@ -18,8 +19,8 @@ constructor(): Mapper<RoomEntity, ServerQuizData>{
         )
     }
 
-    override fun mapToModel(model: RoomEntity): ServerQuizData {
-        return ServerQuizData(
+    override fun mapToModel(model: RoomEntity): ServerQuizDataModel {
+        return ServerQuizDataModel(
                 question = model.question,
                 firstOption = model.firstOption,
                 secondOption = model.secondOption,
@@ -29,7 +30,7 @@ constructor(): Mapper<RoomEntity, ServerQuizData>{
         )
     }
 
-    fun convertToList(modelList: List<RoomEntity>): List<ServerQuizData>{
+    fun convertToList(modelList: List<RoomEntity>): List<ServerQuizDataModel>{
         return modelList.map { mapToModel(it) }
     }
 }

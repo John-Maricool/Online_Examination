@@ -1,15 +1,14 @@
-package com.maricoolsapps.adminpart.usersignup
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import com.google.firebase.auth.EmailAuthProvider
-import com.google.firebase.auth.FirebaseAuth
+import androidx.fragment.app.viewModels
+import com.maricoolsapps.adminpart.ui.viewModels.ChangePasswordViewModel
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_dialog) {
@@ -17,8 +16,7 @@ class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_di
     private var _binding: FragmentChangePasswordDialogBinding? = null
     private val binding get() = _binding!!
 
-    @Inject
-    lateinit var auth: FirebaseAuth
+    private val model: ChangePasswordViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,26 +50,25 @@ class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_di
             binding.confirmPassword.error = "Please enter a correct password"
             return
         }
-        if (newPassword != newPassword){
+        if (newPassword != confirmNewPassword){
             binding.confirmPassword.error = "Please enter a correct password"
             return
         }
         binding.progressBar.visibility = View.VISIBLE
-       val mail: String = auth.currentUser?.email.toString()
-        val credentials = EmailAuthProvider.getCredential(mail, oldPassword)
-        auth.currentUser?.reauthenticate(credentials)?.addOnCompleteListener {
-            if (it.isSuccessful){
-                auth.currentUser?.updatePassword(newPassword)?.addOnCompleteListener{
-                    if (it.isSuccessful){
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(activity, "Password Updated", Toast.LENGTH_LONG).show()
-                    }else{
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(activity, "Error Updating password", Toast.LENGTH_LONG).show()
-                    }
-                }
+        model.reAuthenticate(oldPassword)?.addOnSuccessListener {
+                model.changePassword(newPassword)?.addOnSuccessListener { me->
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(activity, "Updated", Toast.LENGTH_LONG).show()
+                    dismiss()
+                }?.addOnFailureListener {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
             }
-        }
+
+       }?.addOnFailureListener{
+           binding.progressBar.visibility = View.GONE
+           Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
+       }
     }
 
     override fun onDestroy() {

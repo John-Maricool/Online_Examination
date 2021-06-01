@@ -1,13 +1,19 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.maricoolsapps.adminpart.models.RegisteredUsersModel
 import com.maricoolsapps.adminpart.databinding.RegisteredUsersListItemBinding
 import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
+import javax.inject.Inject
 
-class RegisteredUsersAdapter(var items: List<RegisteredUsersModel>):
+class RegisteredUsersAdapter
+@Inject constructor():
         RecyclerView.Adapter<RegisteredUsersAdapter.RegisteredUsersViewHolder>() {
+
+
+    var items: List<RegisteredUsersModel> = listOf()
 
     lateinit var listener: OnItemClickListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegisteredUsersViewHolder {
@@ -19,9 +25,13 @@ class RegisteredUsersAdapter(var items: List<RegisteredUsersModel>):
         return RegisteredUsersViewHolder(binding)
     }
 
-
     fun setOnClickListener(mlistener: OnItemClickListener){
         listener = mlistener
+    }
+
+    fun setList(newList: List<RegisteredUsersModel>){
+        items = newList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
@@ -30,7 +40,7 @@ class RegisteredUsersAdapter(var items: List<RegisteredUsersModel>):
 
     override fun onBindViewHolder(holder: RegisteredUsersViewHolder, position: Int) {
         val currentPos = items[position]
-        holder.binding.uid.text = currentPos.uid.toString()
+        holder.binding.uid.text = currentPos.uid
         holder.binding.name.text = currentPos.name
         holder.binding.email.text = currentPos.email
         holder.binding.number.text = currentPos.phoneNumber

@@ -18,4 +18,5 @@ interface RoomDao {
 
     @Query("select * from question_table order by id")
     fun getAllQuiz(): List<RoomEntity>
+
     }

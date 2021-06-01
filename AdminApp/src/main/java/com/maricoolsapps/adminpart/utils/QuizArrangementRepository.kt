@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.utils
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

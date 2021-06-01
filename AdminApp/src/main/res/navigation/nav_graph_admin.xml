@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/adminPortalFragment"
-        android:name="com.maricoolsapps.adminpart.AdminPortalFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.AdminPortalFragment"
         android:label="Welcome"
         tools:layout="@layout/fragment_admin_protal" >
         <action
@@ -26,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.maricoolsapps.adminpart.usersignup.ProfileFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -38,17 +38,17 @@
     </fragment>
     <dialog
         android:id="@+id/changeNameDialog"
-        android:name="com.maricoolsapps.adminpart.usersignup.ChangeNameDialog"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangeNameDialog"
         android:label="fragment_change_name_dialog"
         tools:layout="@layout/fragment_change_name_dialog" />
     <dialog
         android:id="@+id/changePasswordDialog"
-        android:name="com.maricoolsapps.adminpart.usersignup.ChangePasswordDialog"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangePasswordDialog"
         android:label="fragment_change_password_dialog"
         tools:layout="@layout/fragment_change_password_dialog" />
     <fragment
         android:id="@+id/quizArrangement"
-        android:name="com.maricoolsapps.adminpart.QuizArrangement"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.QuizArrangement"
         android:label="Fill in the Options"
         tools:layout="@layout/fragment_quiz_arrangement" >
         <argument
@@ -63,12 +63,12 @@
     </fragment>
     <fragment
         android:id="@+id/registeredUsersFragment"
-        android:name="com.maricoolsapps.adminpart.RegisteredUsersFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.RegisteredUsersFragment"
         android:label="Registered Users"
         tools:layout="@layout/fragment_registered_users" />
     <fragment
         android:id="@+id/savedQuizFragment"
-        android:name="com.maricoolsapps.adminpart.SavedQuizFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.SavedQuizFragment"
         android:label="Saved Quiz"
         tools:layout="@layout/fragment_saved_quiz" >
         <action
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/uploadQuizFragment"
-        android:name="com.maricoolsapps.adminpart.UploadQuizFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.UploadQuizFragment"
         android:label="Upload Quiz"
         tools:layout="@layout/fragment_upload_quiz" />
 </navigation>

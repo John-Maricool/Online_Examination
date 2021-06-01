@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.usersignup
+package com.maricoolsapps.adminpart.ui.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -9,14 +9,13 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
+import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
@@ -25,7 +24,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
-    @Inject lateinit var auth: FirebaseAuth
+    private val model: ProfileViewModel by viewModels()
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,17 +34,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             if (result.resultCode == Activity.RESULT_OK){
                 val intent_data  = result.data?.data
                 binding.progress.visibility = View.VISIBLE
-                val profile = UserProfileChangeRequest.Builder()
-                        .setPhotoUri(intent_data)
-                        .build()
-                auth.currentUser?.updateProfile(profile)?.addOnCompleteListener {
-                    if (it.isSuccessful){
-                        Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
+                if (intent_data != null) {
+                    model.changeProfilePhoto(intent_data)?.addOnSuccessListener {
+                            Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
+                            binding.progress.visibility = View.GONE
+                            Glide.with(requireActivity())
+                                    .load(intent_data)
+                                    .circleCrop()
+                                    .into(binding.profileImage)
+                    }?.addOnFailureListener {
                         binding.progress.visibility = View.GONE
-                        Glide.with(requireActivity())
-                                .load(auth.currentUser?.photoUrl)
-                                .circleCrop()
-                                .into(binding.profileImage)
+                        Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -55,10 +54,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
-        auth = FirebaseAuth.getInstance()
 
         Glide.with(requireActivity())
-                .load(auth.currentUser?.photoUrl)
+                .load(model.profilePhoto)
                 .circleCrop()
                 .placeholder(R.drawable.profile)
                 .into(binding.profileImage)

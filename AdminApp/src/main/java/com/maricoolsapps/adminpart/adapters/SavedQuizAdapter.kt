@@ -1,10 +1,11 @@
-package com.maricoolsapps.adminpart
+package com.maricoolsapps.adminpart.adapters
 
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.QuizListItemBinding
 import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
 import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
@@ -17,7 +18,6 @@ class SavedQuizAdapter
         RecyclerView.Adapter<SavedQuizAdapter.myViewHolder>() {
 
     var items: MutableList<RoomEntity> = mutableListOf()
-    var isSelected = false
     lateinit var listener: OnItemClickListener
 
     init {
@@ -71,17 +71,15 @@ class SavedQuizAdapter
                 val position = bindingAdapterPosition
                 Log.d("tah", position.toString())
                     val currentItem = items[position]
-                if (isActionModeOpened == false && position != RecyclerView.NO_POSITION) {
+                if (!isActionModeOpened && position != RecyclerView.NO_POSITION) {
                         listener.onItemClick(currentItem)
                 }else {
-                    if (isSelected == false){
+                        if (!clickedItems.contains(currentItem)){
+                        clickedItems.add(currentItem)
                         it.setBackgroundColor(context.resources.getColor(R.color.colorPrimary, null))
-                    clickedItems.add(currentItem)
-                    isSelected = true
                 }else{
-                        it.setBackgroundColor(context.resources.getColor(R.color.white, null))
                         clickedItems.remove(currentItem)
-                        isSelected = false
+                        it.setBackgroundColor(context.resources.getColor(R.color.white, null))
                     }
                 }
             }
@@ -89,19 +87,12 @@ class SavedQuizAdapter
             binding.cardView.setOnLongClickListener {
                 val position = bindingAdapterPosition
                 val currentItem = items[position]
-                if (isActionModeOpened == false && position != RecyclerView.NO_POSITION){
-                        if (isSelected == false) {
-                            it.setBackgroundColor(context.resources.getColor(R.color.colorPrimary, null))
-                            clickedItems.add(currentItem)
-                            isSelected = true
-
-                        }else{
-                            it.setBackgroundColor(context.resources.getColor(R.color.white, null))
-                            clickedItems.remove(currentItem)
-                            isSelected = false
-                        }
+                if (!isActionModeOpened && position != RecyclerView.NO_POSITION){
+                    clickedItems.clear()
                     listener_long.onItemLongClick(currentItem)
                     isActionModeOpened = true
+                    it.setBackgroundColor(context.resources.getColor(R.color.colorPrimary, null))
+                    clickedItems.add(currentItem)
                 }
                 return@setOnLongClickListener true
             }
