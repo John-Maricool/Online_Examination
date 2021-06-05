@@ -2,18 +2,15 @@ package com.maricoolsapps.adminpart.ui.viewModels
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.tasks.Task
-import com.maricoolsapps.adminpart.utils.ServerUser
+import com.maricoolsapps.utilsandrepository.utils.ServerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
-@Inject constructor(val serverUser: ServerUser): ViewModel(){
+@Inject constructor(val serverRepository: ServerRepository): ViewModel(){
 
-    val profilePhoto = serverUser.getProfilePhoto()
+    val profilePhoto = serverRepository.profilePhoto
 
-    fun changeProfilePhoto(newPhoto: Uri): Task<Void>? {
-        return serverUser.changeProfilePhoto(newPhoto)
-    }
+    fun changeProfilePhoto(newPhoto: Uri) = serverRepository.changeProfilePhoto(newPhoto)
 }

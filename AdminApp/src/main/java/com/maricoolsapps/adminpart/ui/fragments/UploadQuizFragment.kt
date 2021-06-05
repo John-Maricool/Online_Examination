@@ -6,12 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.UploadQuizViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentUploadQuizBinding
-import com.maricoolsapps.adminpart.models.ServerQuizDataModel
+import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -19,10 +17,6 @@ import javax.inject.Inject
 class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
 
     private val model: UploadQuizViewModel by viewModels()
-    @Inject
-    lateinit var cloud: FirebaseFirestore
-    @Inject
-    lateinit var auth: FirebaseAuth
 
     private var _binding: FragmentUploadQuizBinding? = null
     private val binding get() = _binding!!
@@ -87,7 +81,7 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
     binding.progressText.visibility = View.VISIBLE
     val size = data.size
     val progressIncrement = 100/size
-    data.forEach {
+   /* data.forEach {
         model.docRef.collection(key).add(it).addOnSuccessListener {
             model.clicks++
             if (model.clicks == size){
@@ -105,8 +99,8 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
             binding.progressText.visibility = View.GONE
             Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
 
-            }
-        }
+            }*/
+     //   }
     }
 
 }

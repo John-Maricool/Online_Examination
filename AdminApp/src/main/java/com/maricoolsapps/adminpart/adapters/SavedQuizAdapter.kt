@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.QuizListItemBinding
-import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
-import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
-import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.utilsandrepository.interfaces.OnItemClickListener
+import com.maricoolsapps.utilsandrepository.interfaces.OnItemLongClickListener
+import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -17,17 +17,17 @@ class SavedQuizAdapter
 @Inject constructor( @ApplicationContext val context: Context) :
         RecyclerView.Adapter<SavedQuizAdapter.myViewHolder>() {
 
-    var items: MutableList<RoomEntity> = mutableListOf()
+    var items: MutableList<ServerQuizDataModel> = mutableListOf()
     lateinit var listener: OnItemClickListener
 
     init {
         isActionModeOpened = false
     }
 
-    private val selectedItems = arrayListOf<RoomEntity>()
+    private val selectedItems = arrayListOf<ServerQuizDataModel>()
     lateinit var listener_long: OnItemLongClickListener
 
-    fun getList(Items: MutableList<RoomEntity>) {
+    fun getList(Items: MutableList<ServerQuizDataModel>) {
         items = Items
         notifyDataSetChanged()
     }
@@ -67,7 +67,6 @@ class SavedQuizAdapter
 
         init {
             binding.cardView.setOnClickListener {
-
                 val position = bindingAdapterPosition
                 Log.d("tah", position.toString())
                     val currentItem = items[position]
@@ -101,6 +100,6 @@ class SavedQuizAdapter
 
     companion object{
         var isActionModeOpened = false
-        val clickedItems = mutableListOf<RoomEntity>()
+        val clickedItems = mutableListOf<ServerQuizDataModel>()
     }
 }

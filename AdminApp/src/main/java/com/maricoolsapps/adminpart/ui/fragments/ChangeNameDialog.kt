@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.ChangeNameViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +16,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ChangeNameDialog : BottomSheetDialogFragment() {
 
-   @Inject lateinit var auth:FirebaseAuth
     private val model: ChangeNameViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +26,7 @@ class ChangeNameDialog : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val displayName = auth.currentUser?.displayName
+        val displayName = model.currentName
         name.setText(displayName)
 
         save.setOnClickListener {

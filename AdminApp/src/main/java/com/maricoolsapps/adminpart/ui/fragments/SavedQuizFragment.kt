@@ -12,10 +12,10 @@ import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.SavedQuizViewModel
 import com.maricoolsapps.adminpart.adapters.SavedQuizAdapter
 import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
-import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
-import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
-import com.maricoolsapps.adminpart.room.RoomEntity
-import com.maricoolsapps.adminpart.utils.MyDataState
+import com.maricoolsapps.utilsandrepository.interfaces.OnItemClickListener
+import com.maricoolsapps.utilsandrepository.interfaces.OnItemLongClickListener
+import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
+import com.maricoolsapps.utilsandrepository.utils.MyDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -27,7 +27,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private var _binding: FragmentSavedQuizBinding? = null
     private val binding get() = _binding!!
      var mode: ActionMode? = null
-    lateinit var clickedItem: RoomEntity
+    lateinit var clickedItem: ServerQuizDataModel
 
     @Inject
     lateinit var adapter: SavedQuizAdapter
@@ -55,9 +55,9 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                     binding.progressBar.visibility = View.GONE
                 }
 
-                is MyDataState.onLoaded<List<RoomEntity>> ->{
+                is MyDataState.onLoaded<List<ServerQuizDataModel>> ->{
                     binding.progressBar.visibility = View.GONE
-                    // adapter.getList(dataState.data)
+                     //adapter.getList(dataState.data as MutableList<ServerQuizDataModel>)
                     adapter.items = dataState.data.toMutableList()
                     Log.d("view", dataState.data.toString())
 
@@ -77,12 +77,12 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     override fun onItemClick(item: Any) {
-        val action = SavedQuizFragmentDirections.actionSavedQuizFragmentToQuizArrangement(item as RoomEntity)
+        val action = SavedQuizFragmentDirections.actionSavedQuizFragmentToQuizArrangement(item as ServerQuizDataModel)
         findNavController().navigate(action)
     }
 
     override fun onItemLongClick(item: Any) {
-        clickedItem = item as RoomEntity
+        clickedItem = item as ServerQuizDataModel
          mode = activity?.startActionMode(this)
     }
 

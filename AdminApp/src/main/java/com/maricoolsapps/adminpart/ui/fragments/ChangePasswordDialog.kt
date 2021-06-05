@@ -56,7 +56,7 @@ class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_di
         }
         binding.progressBar.visibility = View.VISIBLE
         model.reAuthenticate(oldPassword)?.addOnSuccessListener {
-                model.changePassword(newPassword)?.addOnSuccessListener { me->
+                model.changePassword(newPassword)?.addOnSuccessListener { me ->
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(activity, "Updated", Toast.LENGTH_LONG).show()
                     dismiss()

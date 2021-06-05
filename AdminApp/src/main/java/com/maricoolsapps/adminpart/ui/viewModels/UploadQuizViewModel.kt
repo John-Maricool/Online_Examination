@@ -1,8 +1,8 @@
 package com.maricoolsapps.adminpart.ui.viewModels
 
 import androidx.lifecycle.*
-import com.maricoolsapps.adminpart.models.ServerQuizDataModel
-import com.maricoolsapps.adminpart.utils.UploadQuizRepository
+import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
+import com.maricoolsapps.utilsandrepository.utils.UploadQuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -10,7 +10,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UploadQuizViewModel
 @Inject constructor(
-        val repo: UploadQuizRepository
+        val repo: com.maricoolsapps.utilsandrepository.utils.UploadQuizRepository
 ): ViewModel(){
 
     val docRef = repo.docRef

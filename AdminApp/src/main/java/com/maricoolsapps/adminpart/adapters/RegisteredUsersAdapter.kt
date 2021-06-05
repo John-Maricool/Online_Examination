@@ -3,9 +3,9 @@ package com.maricoolsapps.adminpart.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.maricoolsapps.adminpart.models.RegisteredUsersModel
+import com.maricoolsapps.utilsandrepository.models.RegisteredUsersModel
 import com.maricoolsapps.adminpart.databinding.RegisteredUsersListItemBinding
-import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
+import com.maricoolsapps.utilsandrepository.interfaces.OnItemClickListener
 import javax.inject.Inject
 
 class RegisteredUsersAdapter

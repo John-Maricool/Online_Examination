@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.maricoolsapps.adminpart.ui.viewModels.QuizArrangementViewModel
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentQuizArrangementBinding
-import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,14 +31,14 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
         val countryList = arrayOf(1, 2, 3, 4)
 
         adapter = ArrayAdapter<Int>(requireContext(), android.R.layout.simple_spinner_dropdown_item, countryList)
-        binding.spinner.setAdapter(adapter)
+        binding.spinner.adapter = adapter
 
         if (args.items == null){
             binding.update.visibility = View.GONE
         }else{
             binding.add.visibility = View.GONE
             binding.update.visibility = View.VISIBLE
-            updateView(args.items)
+            updateView(args.items!!)
         }
 
         binding.update.setOnClickListener {
@@ -51,7 +51,7 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
         }
     }
 
-    private fun updateView(items: RoomEntity?) {
+    private fun updateView(items: ServerQuizDataModel) {
       binding.enterQuestion.setText(items?.question)
         binding.firstOption.setText(items?.firstOption)
         binding.secondOption.setText(items?.secondOption)
@@ -83,7 +83,7 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
             return
         }
         //create the class
-        val quiz = RoomEntity(question = question,
+        val quiz = ServerQuizDataModel(question = question,
                 firstOption = option1,
                 secondOption = option2,
                 thirdOption = option3,
@@ -95,7 +95,7 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
         Toast.makeText(activity, "Added", Toast.LENGTH_SHORT).show()
          }
         else{
-            quiz.id = args.items!!.id
+            //quiz.id = args.items!!.id
             viewModel.updateQuiz(quiz)
             Toast.makeText(activity, "Updated", Toast.LENGTH_SHORT).show()
             val action = QuizArrangementDirections.actionQuizArrangementToSavedQuizFragment()

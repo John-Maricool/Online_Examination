@@ -1,14 +1,11 @@
 package com.maricoolsapps.adminpart.ui.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.google.android.gms.tasks.Task
-import com.maricoolsapps.adminpart.utils.ServerUser
+import com.maricoolsapps.utilsandrepository.utils.ServerRepository
 import javax.inject.Inject
 
 class ChangeNameViewModel
-@Inject constructor(val serverUser: ServerUser): ViewModel(){
-
-    fun changeName(newName: String): Task<Void>? {
-       return serverUser.changeUsername(newName)
-    }
+@Inject constructor(private val serverRepository: ServerRepository): ViewModel(){
+    val currentName = serverRepository.currentName
+    fun changeName(newName: String) = serverRepository.changeName(newName)
 }

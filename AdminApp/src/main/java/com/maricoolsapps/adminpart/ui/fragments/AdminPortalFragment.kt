@@ -3,11 +3,12 @@ package com.maricoolsapps.adminpart.ui.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
+import com.maricoolsapps.adminpart.ui.viewModels.AdminPortalViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
     private var _binding: FragmentAdminProtalBinding? = null
     private val binding get() = _binding!!
 
-    @Inject lateinit var auth: FirebaseAuth
+    private val model: AdminPortalViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +48,7 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val name = auth.currentUser?.displayName
+        val name = model.currentName
         (activity as AdminActivity).supportActionBar?.title = "Welcome $name"
     }
 

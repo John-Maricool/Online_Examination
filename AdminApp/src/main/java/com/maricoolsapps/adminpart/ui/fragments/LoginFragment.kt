@@ -76,7 +76,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onStart() {
         super.onStart()
-        if (model.currentUser != null){
+        if (null != model.currentUser){
             startActivity(Intent(activity, AdminActivity::class.java))
             activity?.finish()
         }

@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maricoolsapps.adminpart.room.RoomEntity
-import com.maricoolsapps.adminpart.utils.MyDataState
-import com.maricoolsapps.adminpart.utils.SavedQuizRepository
+import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
+import com.maricoolsapps.utilsandrepository.utils.MyDataState
+import com.maricoolsapps.utilsandrepository.utils.SavedQuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,9 +19,9 @@ class SavedQuizViewModel
         private val repository: SavedQuizRepository
 ): ViewModel() {
 
-    private val _dataState: MutableLiveData<MyDataState<List<RoomEntity>>> = MutableLiveData()
+    private val _dataState: MutableLiveData<MyDataState<List<ServerQuizDataModel>>> = MutableLiveData()
 
-    val dataState: LiveData<MyDataState<List<RoomEntity>>> get() = _dataState
+    val dataState: LiveData<MyDataState<List<ServerQuizDataModel>>> get() = _dataState
 
     fun start() {
         viewModelScope.launch {
@@ -32,7 +32,7 @@ class SavedQuizViewModel
         }
     }
 
-    fun delete(quiz: List<RoomEntity>) {
+    fun delete(quiz: List<ServerQuizDataModel>) {
         viewModelScope.launch {
             repository.deleteSavedQuiz(quiz)
         }

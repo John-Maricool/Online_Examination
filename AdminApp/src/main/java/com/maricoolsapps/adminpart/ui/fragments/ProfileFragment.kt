@@ -74,22 +74,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             val action = ProfileFragmentDirections.actionProfileFragmentToChangePasswordDialog()
             findNavController().navigate(action)
         }
-
-       /* if (auth.currentUser?.isEmailVerified == true){
-            binding.confirmEmail.text = "Email Verified"
-            binding.confirmEmail.isEnabled = false
-        }else{
-            binding.confirmEmail.setOnClickListener {
-            auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
-                if (it.isComplete){
-                    binding.confirmEmail.text = "Email Verified"
-                    binding.confirmEmail.isEnabled = false
-                }
-                Toast.makeText(activity, "Email Verification sent", Toast.LENGTH_LONG).show()
-            }?.addOnFailureListener {
-                Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-            }
-            }*/
     }
 
     private fun chooseImage() {

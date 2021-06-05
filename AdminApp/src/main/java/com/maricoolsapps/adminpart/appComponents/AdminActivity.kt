@@ -8,15 +8,19 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.*
-import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.R
+import com.maricoolsapps.utilsandrepository.utils.ServerRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_admin.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AdminActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+
+    @Inject
+    lateinit var serverRepository: ServerRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +52,7 @@ class AdminActivity : AppCompatActivity() {
         dialog.setCancelable(false)
         dialog.setMessage("Are you sure you want to log out?")
         dialog.setPositiveButton("Yes"){_,_ ->
-            val auth = FirebaseAuth.getInstance()
-            auth.signOut()
+           serverRepository.signOut
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
