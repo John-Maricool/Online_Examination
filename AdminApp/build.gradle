@@ -51,6 +51,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    dependenciesInfo {
+        includeInBundle true
+        includeInApk true
+    }
 }
 
 
@@ -59,10 +63,18 @@ kapt {
     generateStubs = true
 }
 
-
 dependencies {
 
     implementation project(":UtilsAndRepository")
+
+    def room_version = "2.2.5"
+
+    //room components
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
 
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
@@ -74,6 +86,9 @@ dependencies {
     def nav_version = "2.3.5"
     def lifecycle_version = "2.3.1"
 
+
+    implementation 'com.google.firebase:firebase-auth:20.0.4'
+    implementation 'com.google.firebase:firebase-firestore:22.1.2'
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
