@@ -6,8 +6,6 @@ import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
 import javax.inject.Inject
 
 class RoomDaoImpl
-
-@Inject
 constructor(val dao: RoomDao, val mapper: CloudMapper,
 ) {
 

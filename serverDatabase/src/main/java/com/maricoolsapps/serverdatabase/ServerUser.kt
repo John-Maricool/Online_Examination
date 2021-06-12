@@ -5,10 +5,10 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import javax.inject.Inject
 
-class ServerUser
-@Inject constructor(var auth: FirebaseAuth) {
+class ServerUser(var auth: FirebaseAuth) {
 
     val signOut = auth.signOut()
+
 
      val currentUser: FirebaseUser? = auth.currentUser
 

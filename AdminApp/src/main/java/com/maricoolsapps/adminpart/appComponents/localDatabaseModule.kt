@@ -1,6 +1,8 @@
-package com.maricoolsapps.localdatabase.room
+package com.maricoolsapps.adminpart.appComponents
 
 import android.content.Context
+import com.maricoolsapps.localdatabase.room.OnlineDatabase
+import com.maricoolsapps.localdatabase.room.RoomDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object hilt_Modules {
+object localDatabaseModule {
 
     @Singleton
     @Provides

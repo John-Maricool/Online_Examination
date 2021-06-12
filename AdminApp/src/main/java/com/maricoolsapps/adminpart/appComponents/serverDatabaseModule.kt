@@ -1,18 +1,19 @@
-package com.maricoolsapps.serverdatabase
+package com.maricoolsapps.adminpart.appComponents
 
-import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.maricoolsapps.serverdatabase.ServerCloudData
+import com.maricoolsapps.serverdatabase.ServerUser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object hiltModules {
+
+object serverDatabaseModule {
 
     @Singleton
     @Provides
@@ -24,6 +25,18 @@ object hiltModules {
     @Provides
     fun provideFirebaseFirestore(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
+    }
+
+    @Singleton
+    @Provides
+    fun provideServerUser(auth: FirebaseAuth): ServerUser{
+        return ServerUser(auth)
+    }
+
+    @Singleton
+    @Provides
+    fun provideServerCloudData(cloud: FirebaseFirestore, user: ServerUser): ServerCloudData{
+        return ServerCloudData(cloud, user)
     }
 
 }

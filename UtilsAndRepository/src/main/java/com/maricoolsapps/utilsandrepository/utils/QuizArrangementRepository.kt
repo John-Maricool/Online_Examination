@@ -1,7 +1,5 @@
 package com.maricoolsapps.utilsandrepository.utils
 
-import com.maricoolsapps.localdatabase.room.RoomDao
-import com.maricoolsapps.localdatabase.room.RoomEntity
 import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
 
 

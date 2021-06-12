@@ -2,10 +2,8 @@ package com.maricoolsapps.utilsandrepository.utils
 
 import android.net.Uri
 import com.maricoolsapps.serverdatabase.ServerUser
-import javax.inject.Inject
 
-class ServerRepository
-@Inject constructor(private val user: ServerUser) {
+class ServerRepository constructor( val user: ServerUser) {
 
     val signOut = user.signOut
 

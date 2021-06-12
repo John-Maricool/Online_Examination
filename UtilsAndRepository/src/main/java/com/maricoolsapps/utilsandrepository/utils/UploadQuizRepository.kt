@@ -4,8 +4,7 @@ import com.maricoolsapps.serverdatabase.ServerCloudData
 import com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel
 import javax.inject.Inject
 
-class UploadQuizRepository
-@Inject constructor(
+class UploadQuizRepository(
         val daoImpl: RoomDaoImpl,
         val serverCloudData: ServerCloudData
 ) {

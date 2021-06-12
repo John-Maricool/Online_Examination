@@ -62,9 +62,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             binding.password.error = "Please enter a correct password"
             return
         }
-        binding.progressBar.setVisibility(View.VISIBLE)
+        binding.progressBar.visibility = View.VISIBLE
         model.logInUser(userEmail, userPassword).addOnCompleteListener{ task ->
-            binding.progressBar.setVisibility(View.GONE)
+            binding.progressBar.visibility = View.GONE
             if (task.isSuccessful) {
                startActivity(Intent(activity, AdminActivity::class.java))
                 activity?.finish()
@@ -76,7 +76,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onStart() {
         super.onStart()
-        if (null != model.currentUser){
+        if (model.currentUser != null){
             startActivity(Intent(activity, AdminActivity::class.java))
             activity?.finish()
         }
