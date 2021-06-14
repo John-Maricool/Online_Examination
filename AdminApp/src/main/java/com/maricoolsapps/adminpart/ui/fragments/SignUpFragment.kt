@@ -7,10 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.SignUpViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentSignUpBinding
+import com.maricoolsapps.adminpart.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +35,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
         _binding = null
     }
 
-    private fun userLogin(){
+    private fun userLogin() {
         val username = binding.name.text.toString().trim()
         val userEmail: String = binding.email.text.toString().trim()
         val userPassword: String = binding.password.text.toString().trim()
@@ -81,14 +83,22 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
         }
         binding.progressBar.visibility = View.VISIBLE
 
-        model.createUser(userEmail, userPassword).addOnSuccessListener {
-             model.updateProfileName(username)
-                 binding.progressBar.visibility = View.GONE
-                 startActivity(Intent(activity, AdminActivity::class.java))
+        model.createUser(userEmail, userPassword).observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
+                is MyServerDataState.onLoaded -> {
+                    model.updateProfileName(username)
+                    binding.progressBar.visibility = View.GONE
+                    startActivity(Intent(activity, AdminActivity::class.java))
                     activity?.finish()
-                }.addOnFailureListener {
-            binding.progressBar.visibility = View.GONE
-            Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-        }
+                }
+
+                is MyServerDataState.notLoaded -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(activity, result.e.toString(), Toast.LENGTH_LONG).show()
+                }
+                MyServerDataState.isLoading -> TODO()
+            }
+
+        })
     }
 }

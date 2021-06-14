@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.ChangeNameViewModel
+import com.maricoolsapps.adminpart.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_change_name_dialog.*
 import javax.inject.Inject
@@ -18,7 +20,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ChangeNameDialog : BottomSheetDialogFragment() {
 
-   @Inject lateinit var auth:FirebaseAuth
     private val model: ChangeNameViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -29,21 +30,27 @@ class ChangeNameDialog : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val displayName = auth.currentUser?.displayName
+        val displayName = model.name
         name.setText(displayName)
 
         save.setOnClickListener {
             progress.visibility = View.VISIBLE
             val newName = name.text.toString()
             if (newName.isNotEmpty()) {
-               model.changeName(newName)?.addOnSuccessListener {
-                    progress.visibility = View.GONE
-                        Toast.makeText(activity, "Name Changed", Toast.LENGTH_LONG).show()
-                        dismiss()
-                }?.addOnFailureListener {
-                   progress.visibility = View.GONE
-                   Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-               }
+                model.changeName(newName).observe(viewLifecycleOwner, Observer { result ->
+                    when (result) {
+                        is MyServerDataState.onLoaded -> {
+                            progress.visibility = View.GONE
+                            Toast.makeText(activity, "Name Changed", Toast.LENGTH_LONG).show()
+                            dismiss()
+                        }
+                        is MyServerDataState.notLoaded -> {
+                            progress.visibility = View.GONE
+                            Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
+                        }
+                        MyServerDataState.isLoading -> TODO()
+                    }
+                })
             }
         }
 

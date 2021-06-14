@@ -1,12 +1,17 @@
 package com.maricoolsapps.adminpart.utils
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ServerUser
-@Inject constructor(var auth: FirebaseAuth) {
+ constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
 
      val currentUser: FirebaseUser? = auth.currentUser
 
@@ -14,27 +19,46 @@ class ServerUser
         return currentUser?.uid
     }
 
-    fun registerUser(email: String, password: String): Task<AuthResult>{
-        return auth.createUserWithEmailAndPassword(email, password)
+    fun registerUser(email: String, password: String): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO) {
+            auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
+                data.postValue(MyServerDataState.onLoaded)
+            }.addOnFailureListener {
+                data.postValue(MyServerDataState.notLoaded(it))
+            }
+        }
+       return data
     }
 
-    fun signInUser(email: String, password: String): Task<AuthResult>{
-        return auth.signInWithEmailAndPassword(email, password)
+    fun signInUser(email: String, password: String): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO) {
+            auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+                data.postValue(MyServerDataState.onLoaded)
+            }.addOnFailureListener {
+                data.postValue(MyServerDataState.notLoaded(it))
+            }
+        }
+        return data
     }
 
-    fun updateProfileName(name: String): Task<Void>?{
-        if (currentUser != null){
+    fun updateProfileName(name: String): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO) {
             val profile = UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
-            return currentUser.updateProfile(profile)
+            currentUser?.updateProfile(profile)?.addOnSuccessListener {
+                data.postValue(MyServerDataState.onLoaded)
+            }?.addOnFailureListener {
+                data.postValue(MyServerDataState.notLoaded(it))
+            }
         }
-        else{
-            return null
-        }
+        return data
     }
 
-    private fun getUserEmail(): String?{
+     fun getUserEmail(): String?{
         return currentUser?.email
     }
 
@@ -46,36 +70,59 @@ class ServerUser
         return currentUser?.photoUrl
     }
 
-    fun changeProfilePhoto(uri: Uri): Task<Void>? {
-        val profile = UserProfileChangeRequest.Builder()
+    fun changeProfilePhoto(uri: Uri): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO) {
+            val profile = UserProfileChangeRequest.Builder()
                 .setPhotoUri(uri)
                 .build()
-       return currentUser?.updateProfile(profile)
+            currentUser?.updateProfile(profile)?.addOnSuccessListener {
+                data.postValue(MyServerDataState.onLoaded)
+            }?.addOnFailureListener {
+                data.postValue(MyServerDataState.notLoaded(it))
+            }
+        }
+        return data
     }
 
-    fun reAuthenticate(oldPassword: String): Task<Void>? {
-        val mail = getUserEmail()!!
-        val credentials = EmailAuthProvider.getCredential(mail, oldPassword)
-        return currentUser?.reauthenticate(credentials)
+    fun reAuthenticate(oldPassword: String): LiveData<MyServerDataState>{
+            val data = MutableLiveData<MyServerDataState>()
+            scope.launch(IO) {
+                val mail = getUserEmail()!!
+                val credentials = EmailAuthProvider.getCredential(mail, oldPassword)
+                 currentUser?.reauthenticate(credentials)?.addOnSuccessListener {
+                    data.postValue(MyServerDataState.onLoaded)
+                }?.addOnFailureListener {
+                    data.postValue(MyServerDataState.notLoaded(it))
+                }
+            }
+            return data
+        }
+
+    fun changeUsername(name: String): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO) {
+            val profile = UserProfileChangeRequest.Builder()
+                    .setDisplayName(name)
+                    .build()
+            currentUser?.updateProfile(profile)?.addOnSuccessListener {
+                data.postValue(MyServerDataState.onLoaded)
+            }?.addOnFailureListener {
+                data.postValue(MyServerDataState.notLoaded(it))
+            }
+        }
+        return data
     }
 
-    fun changeUsername(name: String): Task<Void>? {
-        val profile = UserProfileChangeRequest.Builder()
-                .setDisplayName(name)
-                .build()
-        if (currentUser != null) {
-            return currentUser.updateProfile(profile)
-        }else{
-            return null
+    fun changePassword(newPassword: String): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO) {
+            currentUser?.updatePassword(newPassword)?.addOnSuccessListener {
+                data.postValue(MyServerDataState.onLoaded)
+            }?.addOnFailureListener {
+                data.postValue(MyServerDataState.notLoaded(it))
+            }
         }
-    }
-
-    fun changePasword(newPassword: String): Task<Void>? {
-        if (currentUser != null) {
-            return currentUser.updatePassword(newPassword)
-        }
-        else{
-            return null
-        }
+        return data
     }
 }

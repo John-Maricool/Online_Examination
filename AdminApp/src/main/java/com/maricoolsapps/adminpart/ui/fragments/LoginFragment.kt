@@ -7,11 +7,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.maricoolsapps.adminpart.ui.viewModels.LogInViewModel
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
+import com.maricoolsapps.adminpart.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -62,16 +64,20 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             binding.password.error = "Please enter a correct password"
             return
         }
-        binding.progressBar.setVisibility(View.VISIBLE)
-        model.logInUser(userEmail, userPassword).addOnCompleteListener{ task ->
-            binding.progressBar.setVisibility(View.GONE)
-            if (task.isSuccessful) {
-               startActivity(Intent(activity, AdminActivity::class.java))
-                activity?.finish()
-            } else {
-                Toast.makeText(activity, task.exception!!.message, Toast.LENGTH_SHORT).show()
+        binding.progressBar.visibility = View.VISIBLE
+        model.logInUser(userEmail, userPassword).observe(viewLifecycleOwner, Observer {result ->
+            when(result){
+                is MyServerDataState.onLoaded -> {
+                    startActivity(Intent(activity, AdminActivity::class.java))
+                    activity?.finish()
+                }
+                is MyServerDataState.notLoaded ->{
+                    Toast.makeText(activity, result.e.toString(), Toast.LENGTH_SHORT).show()
+
+                }
+                MyServerDataState.isLoading -> TODO()
             }
-        }
+        })
     }
 
     override fun onStart() {

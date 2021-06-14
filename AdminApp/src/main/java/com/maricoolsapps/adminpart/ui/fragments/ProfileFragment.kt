@@ -10,11 +10,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
+import com.maricoolsapps.adminpart.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @Suppress("DEPRECATION")
@@ -30,22 +32,28 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-            if (result.resultCode == Activity.RESULT_OK){
-                val intent_data  = result.data?.data
+        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent_data = result.data?.data
                 binding.progress.visibility = View.VISIBLE
                 if (intent_data != null) {
-                    model.changeProfilePhoto(intent_data)?.addOnSuccessListener {
-                            Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
-                            binding.progress.visibility = View.GONE
-                            Glide.with(requireActivity())
-                                    .load(intent_data)
-                                    .circleCrop()
-                                    .into(binding.profileImage)
-                    }?.addOnFailureListener {
-                        binding.progress.visibility = View.GONE
-                        Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-                    }
+                    model.changeProfilePhoto(intent_data).observe(viewLifecycleOwner, Observer { result ->
+                        when (result) {
+                            is MyServerDataState.onLoaded -> {
+                                Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
+                                binding.progress.visibility = View.GONE
+                                Glide.with(requireActivity())
+                                        .load(intent_data)
+                                        .circleCrop()
+                                        .into(binding.profileImage)
+                            }
+                            is MyServerDataState.notLoaded -> {
+                                binding.progress.visibility = View.GONE
+                                Toast.makeText(activity, result.e.toString(), Toast.LENGTH_LONG).show()
+                            }
+                            MyServerDataState.isLoading -> TODO()
+                        }
+                    })
                 }
             }
         }
@@ -74,22 +82,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             val action = ProfileFragmentDirections.actionProfileFragmentToChangePasswordDialog()
             findNavController().navigate(action)
         }
-
-       /* if (auth.currentUser?.isEmailVerified == true){
-            binding.confirmEmail.text = "Email Verified"
-            binding.confirmEmail.isEnabled = false
-        }else{
-            binding.confirmEmail.setOnClickListener {
-            auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
-                if (it.isComplete){
-                    binding.confirmEmail.text = "Email Verified"
-                    binding.confirmEmail.isEnabled = false
-                }
-                Toast.makeText(activity, "Email Verification sent", Toast.LENGTH_LONG).show()
-            }?.addOnFailureListener {
-                Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-            }
-            }*/
     }
 
     private fun chooseImage() {

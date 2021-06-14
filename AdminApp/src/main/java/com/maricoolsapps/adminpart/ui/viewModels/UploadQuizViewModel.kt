@@ -2,6 +2,7 @@ package com.maricoolsapps.adminpart.ui.viewModels
 
 import androidx.lifecycle.*
 import com.maricoolsapps.adminpart.models.ServerQuizDataModel
+import com.maricoolsapps.adminpart.utils.MyServerDataState
 import com.maricoolsapps.adminpart.utils.UploadQuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,9 +14,7 @@ class UploadQuizViewModel
         val repo: UploadQuizRepository
 ): ViewModel(){
 
-    val docRef = repo.docRef
     var clicks = 0
-
 
     fun isQuizEmpty(): Boolean{
         return repo.isQuizEmpty()
@@ -26,6 +25,8 @@ class UploadQuizViewModel
             repo.deleteQuiz()
         }
     }
+
+    fun addToFirebase(key: String, data: Any): LiveData<MyServerDataState> = repo.addToFirebase(key, data)
 
     fun map(): List<ServerQuizDataModel>{
       return repo.map()

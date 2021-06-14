@@ -5,9 +5,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.maricoolsapps.adminpart.ui.viewModels.ChangePasswordViewModel
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
+import com.maricoolsapps.adminpart.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,25 +52,39 @@ class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_di
             binding.confirmPassword.error = "Please enter a correct password"
             return
         }
-        if (newPassword != confirmNewPassword){
+        if (newPassword != confirmNewPassword) {
             binding.confirmPassword.error = "Please enter a correct password"
             return
         }
         binding.progressBar.visibility = View.VISIBLE
-        model.reAuthenticate(oldPassword)?.addOnSuccessListener {
-                model.changePassword(newPassword)?.addOnSuccessListener { me->
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(activity, "Updated", Toast.LENGTH_LONG).show()
-                    dismiss()
-                }?.addOnFailureListener {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-            }
+        model.reAuthenticate(oldPassword).observe(viewLifecycleOwner, Observer { result ->
 
-       }?.addOnFailureListener{
-           binding.progressBar.visibility = View.GONE
-           Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-       }
+            when (result) {
+                is MyServerDataState.onLoaded -> {
+                    model.changePassword(newPassword).observe(viewLifecycleOwner, Observer { second_result ->
+                        when (second_result) {
+                            is MyServerDataState.onLoaded -> {
+                                binding.progressBar.visibility = View.GONE
+                                Toast.makeText(activity, "Updated", Toast.LENGTH_LONG).show()
+                                dismiss()
+                            }
+
+                            is MyServerDataState.notLoaded -> {
+                                binding.progressBar.visibility = View.GONE
+                                Toast.makeText(activity, second_result.e.toString(), Toast.LENGTH_LONG).show()
+                                dismiss()
+                            }
+                        }
+                    })
+                }
+
+                is MyServerDataState.notLoaded -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(activity, result.e.toString(), Toast.LENGTH_LONG).show()
+                    dismiss()
+                }
+            }
+        })
     }
 
     override fun onDestroy() {

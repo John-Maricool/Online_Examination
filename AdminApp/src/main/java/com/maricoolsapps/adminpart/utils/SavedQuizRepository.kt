@@ -7,9 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SavedQuizRepository
-@Inject
-constructor(val daoImpl: RoomDaoImpl) {
+class SavedQuizRepository(val daoImpl: RoomDaoImpl) {
 
     suspend fun getListOfSavedQuiz(): Flow<MyDataState<List<RoomEntity>>> = flow{
         emit(MyDataState.isLoading)

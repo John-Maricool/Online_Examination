@@ -4,10 +4,7 @@ import com.maricoolsapps.adminpart.utils.CloudMapper
 import com.maricoolsapps.adminpart.models.ServerQuizDataModel
 import javax.inject.Inject
 
-class RoomDaoImpl
-
-@Inject
-constructor(val dao: RoomDao, val mapper: CloudMapper,
+class RoomDaoImpl(val dao: RoomDao, val mapper: CloudMapper,
 ) {
 
     suspend fun insertQuiz(quiz: RoomEntity) = dao.insertQuiz(quiz)

@@ -5,9 +5,7 @@ import com.maricoolsapps.adminpart.models.ServerQuizDataModel
 import com.maricoolsapps.adminpart.room.RoomEntity
 import javax.inject.Inject
 
-class CloudMapper
-@Inject
-constructor(): Mapper<RoomEntity, ServerQuizDataModel>{
+class CloudMapper(): Mapper<RoomEntity, ServerQuizDataModel>{
     override fun mapFromModel(model: ServerQuizDataModel): RoomEntity {
         return RoomEntity(
                 question = model.question,

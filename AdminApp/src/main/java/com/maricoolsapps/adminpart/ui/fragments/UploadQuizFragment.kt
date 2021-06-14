@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.UploadQuizViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentUploadQuizBinding
 import com.maricoolsapps.adminpart.models.ServerQuizDataModel
+import com.maricoolsapps.adminpart.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -19,10 +21,6 @@ import javax.inject.Inject
 class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
 
     private val model: UploadQuizViewModel by viewModels()
-    @Inject
-    lateinit var cloud: FirebaseFirestore
-    @Inject
-    lateinit var auth: FirebaseAuth
 
     private var _binding: FragmentUploadQuizBinding? = null
     private val binding get() = _binding!!
@@ -70,7 +68,7 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
         val alertDialog = AlertDialog.Builder(activity)
         alertDialog.setTitle("Notice")
         alertDialog.setMessage("Once you upload your quiz, you can't update it again")
-        alertDialog.setPositiveButton("Yes") { p0, p1 ->
+        alertDialog.setPositiveButton("Yes") { _, _ ->
             addDataToServer(server_quizModel, key)
             }
         alertDialog.create().show()
@@ -88,24 +86,30 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
     val size = data.size
     val progressIncrement = 100/size
     data.forEach {
-        model.docRef.collection(key).add(it).addOnSuccessListener {
-            model.clicks++
-            if (model.clicks == size){
-                binding.progressBar.visibility = View.GONE
-                binding.progressText.visibility = View.GONE
-                Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
-            }
-            else{
-                binding.progressBar.progress += progressIncrement
-                binding.progressText.text = "${model.clicks}/$size"
+        model.addToFirebase(key, it).observe(viewLifecycleOwner, Observer {result ->
+            when(result) {
+                is MyServerDataState.onLoaded -> {
+                    model.clicks++
+                    if (model.clicks == size){
+                        binding.progressBar.visibility = View.GONE
+                        binding.progressText.visibility = View.GONE
+                        Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
+                    }
+                    else{
+                        binding.progressBar.progress += progressIncrement
+                        binding.progressText.text = "${model.clicks}/$size"
+                    }
+                }
 
+                is MyServerDataState.notLoaded -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.progressText.visibility = View.GONE
+                    Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
+                }
+                MyServerDataState.isLoading -> TODO()
             }
-        }.addOnFailureListener {
-            binding.progressBar.visibility = View.GONE
-            binding.progressText.visibility = View.GONE
-            Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
 
-            }
+        })
         }
     }
 
