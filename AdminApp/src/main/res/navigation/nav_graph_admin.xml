@@ -53,7 +53,7 @@
         tools:layout="@layout/fragment_quiz_arrangement" >
         <argument
             android:name="items"
-            app:argType="com.maricoolsapps.adminpart.room.RoomEntity"
+            app:argType="com.maricoolsapps.room_library.room.RoomEntity"
             app:nullable="true" />
         <action
             android:id="@+id/action_quizArrangement_to_savedQuizFragment"

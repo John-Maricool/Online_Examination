@@ -9,7 +9,7 @@ import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.QuizListItemBinding
 import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
 import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
-import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.room_library.room.RoomEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

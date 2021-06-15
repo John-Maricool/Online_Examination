@@ -1,7 +1,7 @@
 package com.maricoolsapps.adminpart.ui.viewModels
 
 import androidx.lifecycle.*
-import com.maricoolsapps.adminpart.models.ServerQuizDataModel
+import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.adminpart.utils.MyServerDataState
 import com.maricoolsapps.adminpart.utils.UploadQuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

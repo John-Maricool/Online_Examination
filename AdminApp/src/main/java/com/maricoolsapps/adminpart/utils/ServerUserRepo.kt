@@ -11,8 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ServerUserRepo
-@Inject
- constructor(var user: ServerUser) {
+ @Inject constructor(var user: ServerUser) {
 
      val currentUser: FirebaseUser? = user.currentUser
 
@@ -22,9 +21,8 @@ class ServerUserRepo
 
     fun signInUser(email: String, password: String): LiveData<MyServerDataState> = user.signInUser(email, password)
 
+
     fun updateProfileName(name: String): LiveData<MyServerDataState> = updateProfileName(name)
-
-
 
     private fun getUserEmail(): String? = user.getUserEmail()
 

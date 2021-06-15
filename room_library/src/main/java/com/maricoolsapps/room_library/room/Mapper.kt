@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.interfaces
+package com.maricoolsapps.room_library.room
 
 interface Mapper<CacheModel, ServerModel> {
 

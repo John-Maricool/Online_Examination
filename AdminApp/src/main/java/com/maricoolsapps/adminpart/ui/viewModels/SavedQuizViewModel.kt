@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.room_library.room.RoomEntity
 import com.maricoolsapps.adminpart.utils.MyDataState
 import com.maricoolsapps.adminpart.utils.SavedQuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -8,15 +8,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ServerCloudData(cloud: FirebaseFirestore,
-                    serverUser: ServerUser,
+class ServerCloudData(var cloud: FirebaseFirestore,
+                    var serverUser: ServerUser,
                     var scope: CoroutineScope) {
-
-     var docRef: DocumentReference
-
-    init {
-        docRef = cloud.collection(collectionName).document(serverUser.getUserId()!!)
-    }
 
     companion object{
         val collectionName = "Admins"
@@ -25,7 +19,8 @@ class ServerCloudData(cloud: FirebaseFirestore,
     fun addToFirebase(key: String, data: Any): LiveData<MyServerDataState>{
         val _data = MutableLiveData<MyServerDataState>()
         scope.launch {
-            docRef.collection(key).add(data).addOnSuccessListener {
+            val result = cloud.collection(collectionName).document(serverUser.getUserId()!!).collection(key).add(data)
+                    result.addOnSuccessListener {
                 _data.postValue(MyServerDataState.onLoaded)
             }
                     .addOnFailureListener {

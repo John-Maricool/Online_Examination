@@ -1,8 +1,6 @@
-package com.maricoolsapps.adminpart.room
+package com.maricoolsapps.room_library.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface RoomDao {

@@ -1,9 +1,5 @@
-package com.maricoolsapps.adminpart.models
+package com.maricoolsapps.room_library.room
 
-import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
 
 data class ServerQuizDataModel(var question: String,
                                var firstOption: String,

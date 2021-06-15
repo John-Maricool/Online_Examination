@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.room
+package com.maricoolsapps.room_library.room
 
 import android.os.Parcelable
 import androidx.room.Entity

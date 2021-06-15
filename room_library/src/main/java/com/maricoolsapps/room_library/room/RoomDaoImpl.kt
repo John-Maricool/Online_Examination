@@ -1,10 +1,6 @@
-package com.maricoolsapps.adminpart.room
+package com.maricoolsapps.room_library.room
 
-import com.maricoolsapps.adminpart.utils.CloudMapper
-import com.maricoolsapps.adminpart.models.ServerQuizDataModel
-import javax.inject.Inject
-
-class RoomDaoImpl(val dao: RoomDao, val mapper: CloudMapper,
+class RoomDaoImpl(val dao: RoomDao, val mapper: CloudMapper
 ) {
 
     suspend fun insertQuiz(quiz: RoomEntity) = dao.insertQuiz(quiz)
@@ -18,8 +14,7 @@ class RoomDaoImpl(val dao: RoomDao, val mapper: CloudMapper,
     fun isQuizEmpty(): Boolean{
         return dao.getAllQuiz().isEmpty()
     }
-
-     fun map(): List<ServerQuizDataModel>{
+    fun map(): List<ServerQuizDataModel>{
         var cloud_quiz = listOf<ServerQuizDataModel>()
         val quiz = dao.getAllQuiz()
         if (!isQuizEmpty()){
@@ -27,6 +22,4 @@ class RoomDaoImpl(val dao: RoomDao, val mapper: CloudMapper,
         }
         return cloud_quiz
     }
-
-
 }

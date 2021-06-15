@@ -3,7 +3,6 @@ package com.maricoolsapps.adminpart.utils
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -11,12 +10,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ServerUser
- constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
+ @Inject constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
 
      val currentUser: FirebaseUser? = auth.currentUser
 
     fun getUserId(): String?{
         return currentUser?.uid
+    }
+
+    companion object{
+        var profileUri: Uri? = null
     }
 
     fun registerUser(email: String, password: String): LiveData<MyServerDataState>{
@@ -77,6 +80,7 @@ class ServerUser
                 .setPhotoUri(uri)
                 .build()
             currentUser?.updateProfile(profile)?.addOnSuccessListener {
+                profileUri = uri
                 data.postValue(MyServerDataState.onLoaded)
             }?.addOnFailureListener {
                 data.postValue(MyServerDataState.notLoaded(it))

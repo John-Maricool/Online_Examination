@@ -14,7 +14,7 @@ import com.maricoolsapps.adminpart.adapters.SavedQuizAdapter
 import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
 import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
 import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
-import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.room_library.room.RoomEntity
 import com.maricoolsapps.adminpart.utils.MyDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

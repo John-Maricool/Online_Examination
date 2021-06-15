@@ -12,7 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-@Suppress("DEPRECATION")
 class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
 
     private var _binding: FragmentAdminProtalBinding? = null

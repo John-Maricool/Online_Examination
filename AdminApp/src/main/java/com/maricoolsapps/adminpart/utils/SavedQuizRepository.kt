@@ -1,7 +1,7 @@
 package com.maricoolsapps.adminpart.utils
 
-import com.maricoolsapps.adminpart.room.RoomDaoImpl
-import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.room_library.room.RoomDaoImpl
+import com.maricoolsapps.room_library.room.RoomEntity
 import com.maricoolsapps.adminpart.utils.MyDataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -12,11 +12,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_admin.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AdminActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+
+    @Inject
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +52,11 @@ class AdminActivity : AppCompatActivity() {
         dialog.setCancelable(false)
         dialog.setMessage("Are you sure you want to log out?")
         dialog.setPositiveButton("Yes"){_,_ ->
-            val auth = FirebaseAuth.getInstance()
             auth.signOut()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        dialog.setNegativeButton("No"){theDialog,_ ->
+        dialog.setNegativeButton("No"){theDialog, _ ->
             theDialog.cancel()
         }
         val alert = dialog.create()

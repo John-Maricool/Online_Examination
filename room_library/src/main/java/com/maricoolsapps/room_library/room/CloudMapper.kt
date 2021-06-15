@@ -1,11 +1,7 @@
-package com.maricoolsapps.adminpart.utils
+package com.maricoolsapps.room_library.room
 
-import com.maricoolsapps.adminpart.interfaces.Mapper
-import com.maricoolsapps.adminpart.models.ServerQuizDataModel
-import com.maricoolsapps.adminpart.room.RoomEntity
-import javax.inject.Inject
 
-class CloudMapper(): Mapper<RoomEntity, ServerQuizDataModel>{
+class CloudMapper : Mapper<RoomEntity, ServerQuizDataModel>{
     override fun mapFromModel(model: ServerQuizDataModel): RoomEntity {
         return RoomEntity(
                 question = model.question,
@@ -31,4 +27,5 @@ class CloudMapper(): Mapper<RoomEntity, ServerQuizDataModel>{
     fun convertToList(modelList: List<RoomEntity>): List<ServerQuizDataModel>{
         return modelList.map { mapToModel(it) }
     }
+
 }

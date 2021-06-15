@@ -1,3 +1,4 @@
+include ':room_library'
 include ':StudentApp'
 include ':AdminApp'
 rootProject.name = "Online Examination Project"

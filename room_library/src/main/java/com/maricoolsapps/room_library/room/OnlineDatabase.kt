@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.room
+package com.maricoolsapps.room_library.room
 
 import android.content.Context
 import androidx.room.Database
@@ -16,7 +16,7 @@ abstract class OnlineDatabase: RoomDatabase() {
 
         fun getDatabase(
                 context: Context
-        ): OnlineDatabase{
+        ): OnlineDatabase {
             return INSTANCE
                     ?: synchronized(this){
                         val instance = Room.databaseBuilder(

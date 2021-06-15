@@ -7,15 +7,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.UploadQuizViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentUploadQuizBinding
-import com.maricoolsapps.adminpart.models.ServerQuizDataModel
+import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.adminpart.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {

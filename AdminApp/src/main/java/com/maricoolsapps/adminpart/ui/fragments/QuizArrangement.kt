@@ -11,7 +11,7 @@ import androidx.navigation.fragment.navArgs
 import com.maricoolsapps.adminpart.ui.viewModels.QuizArrangementViewModel
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentQuizArrangementBinding
-import com.maricoolsapps.adminpart.room.RoomEntity
+import com.maricoolsapps.room_library.room.RoomEntity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

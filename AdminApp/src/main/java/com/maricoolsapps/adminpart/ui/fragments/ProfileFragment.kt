@@ -17,9 +17,9 @@ import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
 import com.maricoolsapps.adminpart.utils.MyServerDataState
+import com.maricoolsapps.adminpart.utils.ServerUser
 import dagger.hilt.android.AndroidEntryPoint
 
-@Suppress("DEPRECATION")
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -88,12 +88,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         intent.type = "image/*"
         resultLauncher.launch(intent)
-         }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
-
 }
