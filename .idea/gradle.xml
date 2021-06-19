@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/AdminApp" />
             <option value="$PROJECT_DIR$/StudentApp" />
             <option value="$PROJECT_DIR$/room_library" />
+            <option value="$PROJECT_DIR$/utils" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.utils
+package com.maricoolsapps.utils
 
 import java.lang.Exception
 

@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.models
+package com.maricoolsapps.utils.models
 
 data class RegisteredUsersModel(
         val uid: String,

@@ -8,11 +8,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maricoolsapps.adminpart.R
-import com.maricoolsapps.adminpart.models.RegisteredUsersModel
+import com.maricoolsapps.utils.models.RegisteredUsersModel
 import com.maricoolsapps.adminpart.ui.viewModels.RegisteredUsersViewModel
 import com.maricoolsapps.adminpart.adapters.RegisteredUsersAdapter
 import com.maricoolsapps.adminpart.databinding.FragmentRegisteredUsersBinding
-import com.maricoolsapps.adminpart.utils.MyDataState
+import com.maricoolsapps.utils.MyDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -34,24 +34,23 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users) {
         binding.recyclerView.setHasFixedSize(false)
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
 
-        model.start()
     }
 
     private fun startMonitoring(){
-        model.dataState.observe(viewLifecycleOwner, Observer {dataState ->
+        model.start().observe(viewLifecycleOwner, Observer {dataState ->
             when(dataState){
-                is MyDataState.notLoaded ->{
+                is com.maricoolsapps.utils.MyDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE
                 }
-                is MyDataState.onLoaded<MutableList<RegisteredUsersModel>> ->{
+                is com.maricoolsapps.utils.MyDataState.onLoaded ->{
                     binding.progressBar.visibility = View.GONE
                     // adapter.getList(dataState.data)
-                    adapter.items = dataState.data.toList()
+                    adapter.items = dataState.data as List<RegisteredUsersModel>
                     Log.d("view", dataState.data.toString())
 
                     binding.recyclerView.adapter = adapter
                 }
-                is MyDataState.isLoading -> {
+                is com.maricoolsapps.utils.MyDataState.isLoading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
             }

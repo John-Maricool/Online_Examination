@@ -12,10 +12,10 @@ import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.SavedQuizViewModel
 import com.maricoolsapps.adminpart.adapters.SavedQuizAdapter
 import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
-import com.maricoolsapps.adminpart.interfaces.OnItemClickListener
-import com.maricoolsapps.adminpart.interfaces.OnItemLongClickListener
+import com.maricoolsapps.utils.interfaces.OnItemClickListener
+import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.room_library.room.RoomEntity
-import com.maricoolsapps.adminpart.utils.MyDataState
+import com.maricoolsapps.utils.MyDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -51,20 +51,20 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private fun startMonitoring(){
         model.dataState.observe(viewLifecycleOwner, Observer {dataState ->
             when(dataState){
-                is MyDataState.notLoaded ->{
+                is com.maricoolsapps.utils.MyDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE
                 }
 
-                is MyDataState.onLoaded<List<RoomEntity>> ->{
+                is com.maricoolsapps.utils.MyDataState.onLoaded ->{
                     binding.progressBar.visibility = View.GONE
                     // adapter.getList(dataState.data)
-                    adapter.items = dataState.data.toMutableList()
+                    adapter.items = dataState.data as MutableList<RoomEntity>
                     Log.d("view", dataState.data.toString())
 
                     binding.recyclerView.adapter = adapter
                 }
 
-                is MyDataState.isLoading -> {
+                is com.maricoolsapps.utils.MyDataState.isLoading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
             }

@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -16,8 +17,7 @@ import com.bumptech.glide.Glide
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
-import com.maricoolsapps.adminpart.utils.MyServerDataState
-import com.maricoolsapps.adminpart.utils.ServerUser
+import com.maricoolsapps.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +27,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private val binding get() = _binding!!
 
     private val model: ProfileViewModel by viewModels()
+
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,12 +41,24 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     model.changeProfilePhoto(intent_data).observe(viewLifecycleOwner, Observer { result ->
                         when (result) {
                             is MyServerDataState.onLoaded -> {
-                                Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
-                                binding.progress.visibility = View.GONE
-                                Glide.with(requireActivity())
-                                        .load(intent_data)
-                                        .circleCrop()
-                                        .into(binding.profileImage)
+                                model.updateProfileInFirestore(intent_data.toString()).observe(viewLifecycleOwner, Observer {inner_result->
+                                    when(inner_result){
+                                        MyServerDataState.onLoaded ->{
+                                            Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
+                                            binding.progress.visibility = View.GONE
+                                            Glide.with(requireActivity())
+                                                    .load(intent_data)
+                                                    .circleCrop()
+                                                    .into(binding.profileImage)
+                                        }
+                                        is MyServerDataState.notLoaded ->{
+                                            binding.progress.visibility = View.GONE
+                                            Toast.makeText(activity, inner_result.e.toString(), Toast.LENGTH_LONG).show()
+                                        }
+                                        MyServerDataState.isLoading -> TODO()
+                                    }
+                                })
+
                             }
                             is MyServerDataState.notLoaded -> {
                                 binding.progress.visibility = View.GONE
@@ -63,11 +76,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
 
-        Glide.with(requireActivity())
-                .load(model.profilePhoto)
-                .circleCrop()
-                .placeholder(R.drawable.profile)
-                .into(binding.profileImage)
+        model.profilePhoto.observe(viewLifecycleOwner, Observer { uri ->
+            Glide.with(requireActivity())
+                    .load(uri?.toUri())
+                    .circleCrop()
+                    .placeholder(R.drawable.profile)
+                    .into(binding.profileImage)
+        })
 
         binding.imageChooser.setOnClickListener {
             chooseImage()
@@ -90,8 +105,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         resultLauncher.launch(intent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

@@ -8,14 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.ChangeNameViewModel
-import com.maricoolsapps.adminpart.utils.MyServerDataState
+import com.maricoolsapps.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_change_name_dialog.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChangeNameDialog : BottomSheetDialogFragment() {
@@ -39,16 +36,16 @@ class ChangeNameDialog : BottomSheetDialogFragment() {
             if (newName.isNotEmpty()) {
                 model.changeName(newName).observe(viewLifecycleOwner, Observer { result ->
                     when (result) {
-                        is MyServerDataState.onLoaded -> {
+                        is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
                             progress.visibility = View.GONE
                             Toast.makeText(activity, "Name Changed", Toast.LENGTH_LONG).show()
                             dismiss()
                         }
-                        is MyServerDataState.notLoaded -> {
+                        is com.maricoolsapps.utils.MyServerDataState.notLoaded -> {
                             progress.visibility = View.GONE
                             Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
                         }
-                        MyServerDataState.isLoading -> TODO()
+                        com.maricoolsapps.utils.MyServerDataState.isLoading -> TODO()
                     }
                 })
             }

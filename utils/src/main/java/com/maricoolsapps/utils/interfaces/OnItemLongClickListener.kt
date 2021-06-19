@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.interfaces
+package com.maricoolsapps.utils.interfaces
 
 interface OnItemLongClickListener {
 

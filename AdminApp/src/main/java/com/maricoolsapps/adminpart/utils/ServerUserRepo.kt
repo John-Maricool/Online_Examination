@@ -2,39 +2,34 @@ package com.maricoolsapps.adminpart.utils
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
-import javax.inject.Inject
+import com.maricoolsapps.utils.ServerUser
 
 class ServerUserRepo
- @Inject constructor(var user: ServerUser) {
+  constructor(var user: ServerUser) {
 
      val currentUser: FirebaseUser? = user.currentUser
 
     fun getUserId(): String? = user.getUserId()
 
-    fun registerUser(email: String, password: String): LiveData<MyServerDataState> = user.registerUser(email, password)
+    fun registerUser(email: String, password: String, name: String): LiveData<com.maricoolsapps.utils.MyServerDataState> = user.registerUser(email, password, name)
 
-    fun signInUser(email: String, password: String): LiveData<MyServerDataState> = user.signInUser(email, password)
+    fun signInUser(email: String, password: String): LiveData<com.maricoolsapps.utils.MyServerDataState> = user.signInUser(email, password)
 
-
-    fun updateProfileName(name: String): LiveData<MyServerDataState> = updateProfileName(name)
+    fun updateProfileName(name: String): LiveData<com.maricoolsapps.utils.MyServerDataState> = user.updateProfileName(name)
 
     private fun getUserEmail(): String? = user.getUserEmail()
 
     fun getUserName(): String? = user.getUserName()
 
-    fun getProfilePhoto(): Uri? = user.getProfilePhoto()
+    fun getProfilePhoto(): LiveData<Uri?> = user.getProfilePhoto()
 
-    fun changeProfilePhoto(uri: Uri): LiveData<MyServerDataState> = user.changeProfilePhoto(uri)
 
-    fun reAuthenticate(oldPassword: String): LiveData<MyServerDataState> = user.reAuthenticate(oldPassword)
+    fun changeProfilePhoto(uri: Uri): LiveData<com.maricoolsapps.utils.MyServerDataState> = user.changeProfilePhoto(uri)
 
-    fun changeUsername(name: String): LiveData<MyServerDataState> = user.changeUsername(name)
+    fun reAuthenticate(oldPassword: String): LiveData<com.maricoolsapps.utils.MyServerDataState> = user.reAuthenticate(oldPassword)
 
-    fun changePassword(newPassword: String): LiveData<MyServerDataState> = user.changePassword(newPassword)
+    fun changeUsername(name: String): LiveData<com.maricoolsapps.utils.MyServerDataState> = user.changeUsername(name)
+
+    fun changePassword(newPassword: String): LiveData<com.maricoolsapps.utils.MyServerDataState> = user.changePassword(newPassword)
 }

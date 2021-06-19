@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/studentSignup">
+
+    <fragment
+        android:id="@+id/studentSignup"
+        android:name="com.maricoolsapps.studentapp.StudentSignup"
+        android:label="fragment_student_signup"
+        tools:layout="@layout/fragment_student_signup" >
+        <action
+            android:id="@+id/action_studentSignup_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.maricoolsapps.studentapp.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+</navigation>

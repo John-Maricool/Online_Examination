@@ -9,19 +9,29 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.ui.viewModels.LogInViewModel
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
-import com.maricoolsapps.adminpart.utils.MyServerDataState
+import com.maricoolsapps.utils.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment : Fragment(R.layout.fragment_login) {
+class LoginFragment : Fragment(R.layout.fragment_login), FirebaseAuth.AuthStateListener {
 
    private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val model: LogInViewModel by viewModels()
+
+    @Inject
+    lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        auth.addAuthStateListener (this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -37,6 +47,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        auth.removeAuthStateListener(this)
     }
 
     private fun userLogin(){
@@ -64,25 +75,26 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             binding.password.error = "Please enter a correct password"
             return
         }
+
         binding.progressBar.visibility = View.VISIBLE
         model.logInUser(userEmail, userPassword).observe(viewLifecycleOwner, Observer {result ->
             when(result){
-                is MyServerDataState.onLoaded -> {
+                is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
+                    binding.progressBar.visibility = View.GONE
                     startActivity(Intent(activity, AdminActivity::class.java))
                     activity?.finish()
                 }
-                is MyServerDataState.notLoaded ->{
+                is com.maricoolsapps.utils.MyServerDataState.notLoaded ->{
+                    binding.progressBar.visibility = View.GONE
                     Toast.makeText(activity, result.e.toString(), Toast.LENGTH_SHORT).show()
-
                 }
-                MyServerDataState.isLoading -> TODO()
+                com.maricoolsapps.utils.MyServerDataState.isLoading -> TODO()
             }
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        if (model.currentUser != null){
+    override fun onAuthStateChanged(p0: FirebaseAuth) {
+        if (auth.currentUser != null){
             startActivity(Intent(activity, AdminActivity::class.java))
             activity?.finish()
         }

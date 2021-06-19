@@ -2,19 +2,18 @@ package com.maricoolsapps.adminpart.utils
 
 import com.maricoolsapps.room_library.room.RoomDaoImpl
 import com.maricoolsapps.room_library.room.RoomEntity
-import com.maricoolsapps.adminpart.utils.MyDataState
+import com.maricoolsapps.utils.MyDataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
 class SavedQuizRepository(val daoImpl: RoomDaoImpl) {
 
-    suspend fun getListOfSavedQuiz(): Flow<MyDataState<List<RoomEntity>>> = flow{
-        emit(MyDataState.isLoading)
+    suspend fun getListOfSavedQuiz(): Flow<com.maricoolsapps.utils.MyDataState> = flow{
+        emit(com.maricoolsapps.utils.MyDataState.isLoading)
         try{
-            emit(MyDataState.onLoaded(daoImpl.getAllQuiz()))
+            emit(com.maricoolsapps.utils.MyDataState.onLoaded(daoImpl.getAllQuiz()))
         }catch (e: Exception){
-            emit(MyDataState.notLoaded(e))
+            emit(com.maricoolsapps.utils.MyDataState.notLoaded(e))
         }
     }
 

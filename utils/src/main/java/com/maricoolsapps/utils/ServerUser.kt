@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.utils
+package com.maricoolsapps.utils
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -7,11 +7,9 @@ import com.google.firebase.auth.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ServerUser
- @Inject constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
-
+  constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
      val currentUser: FirebaseUser? = auth.currentUser
 
     fun getUserId(): String?{
@@ -22,10 +20,11 @@ class ServerUser
         var profileUri: Uri? = null
     }
 
-    fun registerUser(email: String, password: String): LiveData<MyServerDataState>{
+    fun registerUser(email: String, password: String, name: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
             auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
+                updateProfileName(name)
                 data.postValue(MyServerDataState.onLoaded)
             }.addOnFailureListener {
                 data.postValue(MyServerDataState.notLoaded(it))
@@ -69,8 +68,12 @@ class ServerUser
         return currentUser?.displayName
     }
 
-    fun getProfilePhoto(): Uri?{
-        return currentUser?.photoUrl
+    fun getProfilePhoto(): LiveData<Uri?>{
+        val data = MutableLiveData<Uri?>()
+        scope.launch(IO) {
+            data.postValue(currentUser?.photoUrl)
+        }
+        return data
     }
 
     fun changeProfilePhoto(uri: Uri): LiveData<MyServerDataState>{
