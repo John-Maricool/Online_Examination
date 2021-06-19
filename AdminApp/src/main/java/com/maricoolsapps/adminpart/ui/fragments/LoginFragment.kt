@@ -14,7 +14,7 @@ import com.maricoolsapps.adminpart.ui.viewModels.LogInViewModel
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentLoginBinding
-import com.maricoolsapps.utils.MyServerDataState
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -79,16 +79,16 @@ class LoginFragment : Fragment(R.layout.fragment_login), FirebaseAuth.AuthStateL
         binding.progressBar.visibility = View.VISIBLE
         model.logInUser(userEmail, userPassword).observe(viewLifecycleOwner, Observer {result ->
             when(result){
-                is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
+                is MyServerDataState.onLoaded -> {
                     binding.progressBar.visibility = View.GONE
                     startActivity(Intent(activity, AdminActivity::class.java))
                     activity?.finish()
                 }
-                is com.maricoolsapps.utils.MyServerDataState.notLoaded ->{
+                is MyServerDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(activity, result.e.toString(), Toast.LENGTH_SHORT).show()
                 }
-                com.maricoolsapps.utils.MyServerDataState.isLoading -> TODO()
+                MyServerDataState.isLoading -> TODO()
             }
         })
     }

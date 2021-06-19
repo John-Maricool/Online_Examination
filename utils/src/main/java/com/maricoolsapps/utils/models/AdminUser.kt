@@ -1,6 +1,5 @@
 package com.maricoolsapps.utils.models
 
-import android.net.Uri
 
 data class AdminUser(
         val name: String,

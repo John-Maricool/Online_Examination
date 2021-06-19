@@ -3,20 +3,21 @@ package com.maricoolsapps.adminpart.utils
 import androidx.lifecycle.LiveData
 import com.maricoolsapps.room_library.room.RoomDaoImpl
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
-import com.maricoolsapps.utils.ServerCloudData
+import com.maricoolsapps.utils.cloud_data.AdminCloudData
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import javax.inject.Inject
 
 class UploadQuizRepository
 @Inject constructor(
         val daoImpl: RoomDaoImpl,
-        val serverCloudData: ServerCloudData
+        val adminCloudData: AdminCloudData
 ) {
 
     fun isQuizEmpty(): Boolean{
         return daoImpl.isQuizEmpty()
     }
 
-    fun addToFirebase(data: Any): LiveData<com.maricoolsapps.utils.MyServerDataState> = serverCloudData.addToFirebase(data)
+    fun addToFirebase(data: Any): LiveData<MyServerDataState> = adminCloudData.addToFirebase(data)
 
     suspend fun deleteQuiz(){
         daoImpl.deleteQuiz(daoImpl.getAllQuiz())

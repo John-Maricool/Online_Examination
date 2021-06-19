@@ -1,12 +1,13 @@
 package com.maricoolsapps.adminpart.utils
 
 import androidx.lifecycle.LiveData
-import com.maricoolsapps.utils.ServerCloudData
+import com.maricoolsapps.utils.cloud_data.AdminCloudData
+import com.maricoolsapps.utils.datastate.MyDataState
 import javax.inject.Inject
 
 class RegisteredUsersRepository
 @Inject
-constructor(var cloud: ServerCloudData) {
+constructor(var cloud: AdminCloudData) {
 
-    fun getList(): LiveData<com.maricoolsapps.utils.MyDataState> = cloud.getList()
+    fun getList(): LiveData<MyDataState> = cloud.getList()
 }

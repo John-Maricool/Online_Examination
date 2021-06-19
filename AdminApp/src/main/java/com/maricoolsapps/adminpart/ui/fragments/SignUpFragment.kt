@@ -12,7 +12,7 @@ import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.SignUpViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentSignUpBinding
-import com.maricoolsapps.utils.MyServerDataState
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -85,28 +85,28 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
         model.createUser(userEmail, userPassword, username).observe(viewLifecycleOwner, Observer {result ->
             when (result) {
-                is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
+                is MyServerDataState.onLoaded -> {
                     model.createFirestoreUser(userEmail, username).observe(viewLifecycleOwner, Observer {inner_result ->
                         when(inner_result){
-                            is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
+                            is MyServerDataState.onLoaded -> {
                                 binding.progressBar.visibility = View.GONE
                                 startActivity(Intent(activity, AdminActivity::class.java))
                                 activity?.finish()
                             }
-                            is com.maricoolsapps.utils.MyServerDataState.notLoaded -> {
+                            is MyServerDataState.notLoaded -> {
                                 binding.progressBar.visibility = View.GONE
                                 Toast.makeText(activity, inner_result.e.toString(), Toast.LENGTH_LONG).show()
                             }
-                            com.maricoolsapps.utils.MyServerDataState.isLoading -> TODO()
+                            MyServerDataState.isLoading -> TODO()
                         }
                     })
                 }
 
-                is com.maricoolsapps.utils.MyServerDataState.notLoaded -> {
+                is MyServerDataState.notLoaded -> {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(activity, result.e.toString(), Toast.LENGTH_LONG).show()
                 }
-                com.maricoolsapps.utils.MyServerDataState.isLoading -> TODO()
+                MyServerDataState.isLoading -> TODO()
             }
 
         })

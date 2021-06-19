@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import com.maricoolsapps.adminpart.ui.viewModels.ChangePasswordViewModel
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
-import com.maricoolsapps.utils.MyServerDataState
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -60,16 +60,16 @@ class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_di
         model.reAuthenticate(oldPassword).observe(viewLifecycleOwner, Observer { result ->
 
             when (result) {
-                is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
+                is MyServerDataState.onLoaded -> {
                     model.changePassword(newPassword).observe(viewLifecycleOwner, Observer { second_result ->
                         when (second_result) {
-                            is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
+                            is MyServerDataState.onLoaded -> {
                                 binding.progressBar.visibility = View.GONE
                                 Toast.makeText(activity, "Updated", Toast.LENGTH_LONG).show()
                                 dismiss()
                             }
 
-                            is com.maricoolsapps.utils.MyServerDataState.notLoaded -> {
+                            is MyServerDataState.notLoaded -> {
                                 binding.progressBar.visibility = View.GONE
                                 Toast.makeText(activity, second_result.e.toString(), Toast.LENGTH_LONG).show()
                                 dismiss()
@@ -78,7 +78,7 @@ class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_di
                     })
                 }
 
-                is com.maricoolsapps.utils.MyServerDataState.notLoaded -> {
+                is MyServerDataState.notLoaded -> {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(activity, result.e.toString(), Toast.LENGTH_LONG).show()
                     dismiss()

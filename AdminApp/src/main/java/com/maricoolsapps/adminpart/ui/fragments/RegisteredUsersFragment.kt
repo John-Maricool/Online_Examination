@@ -12,7 +12,7 @@ import com.maricoolsapps.utils.models.RegisteredUsersModel
 import com.maricoolsapps.adminpart.ui.viewModels.RegisteredUsersViewModel
 import com.maricoolsapps.adminpart.adapters.RegisteredUsersAdapter
 import com.maricoolsapps.adminpart.databinding.FragmentRegisteredUsersBinding
-import com.maricoolsapps.utils.MyDataState
+import com.maricoolsapps.utils.datastate.MyDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -39,10 +39,10 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users) {
     private fun startMonitoring(){
         model.start().observe(viewLifecycleOwner, Observer {dataState ->
             when(dataState){
-                is com.maricoolsapps.utils.MyDataState.notLoaded ->{
+                is MyDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE
                 }
-                is com.maricoolsapps.utils.MyDataState.onLoaded ->{
+                is MyDataState.onLoaded ->{
                     binding.progressBar.visibility = View.GONE
                     // adapter.getList(dataState.data)
                     adapter.items = dataState.data as List<RegisteredUsersModel>
@@ -50,7 +50,7 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users) {
 
                     binding.recyclerView.adapter = adapter
                 }
-                is com.maricoolsapps.utils.MyDataState.isLoading -> {
+                is MyDataState.isLoading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
             }

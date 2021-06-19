@@ -15,7 +15,7 @@ import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
 import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.room_library.room.RoomEntity
-import com.maricoolsapps.utils.MyDataState
+import com.maricoolsapps.utils.datastate.MyDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -51,11 +51,11 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private fun startMonitoring(){
         model.dataState.observe(viewLifecycleOwner, Observer {dataState ->
             when(dataState){
-                is com.maricoolsapps.utils.MyDataState.notLoaded ->{
+                is MyDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE
                 }
 
-                is com.maricoolsapps.utils.MyDataState.onLoaded ->{
+                is MyDataState.onLoaded ->{
                     binding.progressBar.visibility = View.GONE
                     // adapter.getList(dataState.data)
                     adapter.items = dataState.data as MutableList<RoomEntity>
@@ -64,7 +64,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                     binding.recyclerView.adapter = adapter
                 }
 
-                is com.maricoolsapps.utils.MyDataState.isLoading -> {
+                is MyDataState.isLoading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
             }

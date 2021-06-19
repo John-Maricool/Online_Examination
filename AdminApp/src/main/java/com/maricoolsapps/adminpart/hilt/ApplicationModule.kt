@@ -3,7 +3,7 @@ package com.maricoolsapps.adminpart.hilt
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maricoolsapps.adminpart.utils.*
-import com.maricoolsapps.utils.ServerCloudData
+import com.maricoolsapps.utils.cloud_data.AdminCloudData
 import com.maricoolsapps.utils.ServerUser
 import dagger.Module
 import dagger.Provides
@@ -46,7 +46,7 @@ object ApplicationModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideServerCloudData(cloud: FirebaseFirestore, scope: CoroutineScope, user: ServerUser): ServerCloudData {
-        return ServerCloudData(cloud, user, scope)
+    fun provideServerCloudData(cloud: FirebaseFirestore, scope: CoroutineScope, user: ServerUser): AdminCloudData {
+        return AdminCloudData(cloud, user, scope)
     }
 }

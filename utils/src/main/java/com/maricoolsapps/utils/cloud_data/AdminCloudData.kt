@@ -1,24 +1,26 @@
-package com.maricoolsapps.utils
+package com.maricoolsapps.utils.cloud_data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import com.maricoolsapps.utils.ServerUser
+import com.maricoolsapps.utils.datastate.MyDataState
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.models.AdminUser
 import com.maricoolsapps.utils.models.RegisteredUsersModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class ServerCloudData(var cloud: FirebaseFirestore,
-                      var serverUser: ServerUser,
-                      var scope: CoroutineScope) {
+class AdminCloudData(var cloud: FirebaseFirestore,
+                     var serverUser: ServerUser,
+                     var scope: CoroutineScope) {
 
     companion object {
         const val collectionName = "Admins"
         const val documentUserName = "User Details"
         const val quizDocs = "Quiz"
         const val registeredStudents = "Registered Students"
-
     }
 
     fun addToFirebase(data: Any): LiveData<MyServerDataState> {

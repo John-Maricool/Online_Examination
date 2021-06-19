@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.maricoolsapps.room_library.room.RoomEntity
-import com.maricoolsapps.utils.MyDataState
+import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.adminpart.utils.SavedQuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -19,9 +19,9 @@ class SavedQuizViewModel
         private val repository: SavedQuizRepository
 ): ViewModel() {
 
-    private val _dataState: MutableLiveData<com.maricoolsapps.utils.MyDataState> = MutableLiveData()
+    private val _dataState: MutableLiveData<MyDataState> = MutableLiveData()
 
-    val dataState: LiveData<com.maricoolsapps.utils.MyDataState> get() = _dataState
+    val dataState: LiveData<MyDataState> get() = _dataState
 
     fun start() {
         viewModelScope.launch {

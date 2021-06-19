@@ -11,7 +11,7 @@ import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.UploadQuizViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentUploadQuizBinding
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
-import com.maricoolsapps.utils.MyServerDataState
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -85,7 +85,7 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
     data.forEach {
         model.addToFirebase(it).observe(viewLifecycleOwner, Observer {result ->
             when(result) {
-                is com.maricoolsapps.utils.MyServerDataState.onLoaded -> {
+                is MyServerDataState.onLoaded -> {
                     model.clicks++
                     if (model.clicks == size){
                         binding.progressBar.visibility = View.GONE
@@ -98,12 +98,12 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
                     }
                 }
 
-                is com.maricoolsapps.utils.MyServerDataState.notLoaded -> {
+                is MyServerDataState.notLoaded -> {
                     binding.progressBar.visibility = View.GONE
                     binding.progressText.visibility = View.GONE
                     Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
                 }
-                com.maricoolsapps.utils.MyServerDataState.isLoading -> TODO()
+                MyServerDataState.isLoading -> TODO()
             }
 
         })

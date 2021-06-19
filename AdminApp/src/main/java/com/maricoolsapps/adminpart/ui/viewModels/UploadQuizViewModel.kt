@@ -2,7 +2,7 @@ package com.maricoolsapps.adminpart.ui.viewModels
 
 import androidx.lifecycle.*
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
-import com.maricoolsapps.utils.MyServerDataState
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.adminpart.utils.UploadQuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ class UploadQuizViewModel
         }
     }
 
-    fun addToFirebase(data: Any): LiveData<com.maricoolsapps.utils.MyServerDataState> = repo.addToFirebase(data)
+    fun addToFirebase(data: Any): LiveData<MyServerDataState> = repo.addToFirebase(data)
 
     fun map(): List<ServerQuizDataModel>{
       return repo.map()
