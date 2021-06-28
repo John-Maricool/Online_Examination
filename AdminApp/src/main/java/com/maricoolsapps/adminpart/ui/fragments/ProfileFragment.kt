@@ -38,31 +38,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 val intent_data = result.data?.data
                 binding.progress.visibility = View.VISIBLE
                 if (intent_data != null) {
-                    model.changeProfilePhoto(intent_data).observe(viewLifecycleOwner, Observer { result ->
-                        when (result) {
+                    model.changeProfilePhoto(intent_data).observe(viewLifecycleOwner, Observer { res ->
+                        when (res) {
                             is MyServerDataState.onLoaded -> {
-                                model.updateProfileInFirestore(intent_data.toString()).observe(viewLifecycleOwner, Observer {inner_result->
-                                    when(inner_result){
-                                        MyServerDataState.onLoaded ->{
                                             Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
                                             binding.progress.visibility = View.GONE
                                             Glide.with(requireActivity())
                                                     .load(intent_data)
                                                     .circleCrop()
                                                     .into(binding.profileImage)
-                                        }
-                                        is MyServerDataState.notLoaded ->{
-                                            binding.progress.visibility = View.GONE
-                                            Toast.makeText(activity, inner_result.e.toString(), Toast.LENGTH_LONG).show()
-                                        }
-                                        MyServerDataState.isLoading -> TODO()
-                                    }
-                                })
-
                             }
                             is MyServerDataState.notLoaded -> {
                                 binding.progress.visibility = View.GONE
-                                Toast.makeText(activity, result.e.toString(), Toast.LENGTH_LONG).show()
+                                Toast.makeText(activity, res.e.toString(), Toast.LENGTH_LONG).show()
                             }
                             MyServerDataState.isLoading -> TODO()
                         }
@@ -78,7 +66,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
         model.profilePhoto.observe(viewLifecycleOwner, Observer { uri ->
             Glide.with(requireActivity())
-                    .load(uri?.toUri())
+                    .load(uri)
                     .circleCrop()
                     .placeholder(R.drawable.profile)
                     .into(binding.profileImage)

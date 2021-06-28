@@ -8,12 +8,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.SignUpViewModel
 import com.maricoolsapps.adminpart.databinding.FragmentSignUpBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.models.AdminUser
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
@@ -21,6 +24,8 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var auth: FirebaseAuth
     private val model: SignUpViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,20 +91,8 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
         model.createUser(userEmail, userPassword, username).observe(viewLifecycleOwner, Observer {result ->
             when (result) {
                 is MyServerDataState.onLoaded -> {
-                    model.createFirestoreUser(userEmail, username).observe(viewLifecycleOwner, Observer {inner_result ->
-                        when(inner_result){
-                            is MyServerDataState.onLoaded -> {
-                                binding.progressBar.visibility = View.GONE
-                                startActivity(Intent(activity, AdminActivity::class.java))
-                                activity?.finish()
-                            }
-                            is MyServerDataState.notLoaded -> {
-                                binding.progressBar.visibility = View.GONE
-                                Toast.makeText(activity, inner_result.e.toString(), Toast.LENGTH_LONG).show()
-                            }
-                            MyServerDataState.isLoading -> TODO()
-                        }
-                    })
+                    val user = AdminUser(username, userEmail)
+                    sendDataToFirestore(user)
                 }
 
                 is MyServerDataState.notLoaded -> {
@@ -108,7 +101,23 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
                 }
                 MyServerDataState.isLoading -> TODO()
             }
-
         })
     }
+
+    private fun sendDataToFirestore(user: AdminUser) {
+            model.sendToFirestore(user, auth).observe(viewLifecycleOwner, Observer {
+                when(it){
+                    MyServerDataState.onLoaded ->{
+                        binding.progressBar.visibility = View.GONE
+                        startActivity(Intent(activity, AdminActivity::class.java))
+                        activity?.finish()}
+
+                    is MyServerDataState.notLoaded -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(activity, it.e.toString(), Toast.LENGTH_LONG).show()
+                    }
+                    MyServerDataState.isLoading -> TODO()
+                }
+            })
+        }
 }

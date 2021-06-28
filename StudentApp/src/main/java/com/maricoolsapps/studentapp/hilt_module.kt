@@ -6,19 +6,23 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(SingletonComponent::class)
 object hilt_module {
 
-    @Provides
+    /*@Provides
+    @Singleton
     fun provideCloudFirestore(): FirebaseFirestore{
         return FirebaseFirestore.getInstance()
     }
 
     @Provides
+    @Singleton
     fun provideFirebaseAuth(): FirebaseAuth{
         return FirebaseAuth.getInstance()
     }
-
+*/
 }

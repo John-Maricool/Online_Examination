@@ -19,6 +19,8 @@ class UploadQuizRepository
 
     fun addToFirebase(data: Any): LiveData<MyServerDataState> = adminCloudData.addToFirebase(data)
 
+    val deleteQuizDocs: LiveData<Boolean> = adminCloudData.deleteAllQuizDocs()
+
     suspend fun deleteQuiz(){
         daoImpl.deleteQuiz(daoImpl.getAllQuiz())
     }

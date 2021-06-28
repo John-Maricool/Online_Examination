@@ -14,6 +14,7 @@ class RoomDaoImpl(val dao: RoomDao, val mapper: CloudMapper
     fun isQuizEmpty(): Boolean{
         return dao.getAllQuiz().isEmpty()
     }
+
     fun map(): List<ServerQuizDataModel>{
         var cloud_quiz = listOf<ServerQuizDataModel>()
         val quiz = dao.getAllQuiz()

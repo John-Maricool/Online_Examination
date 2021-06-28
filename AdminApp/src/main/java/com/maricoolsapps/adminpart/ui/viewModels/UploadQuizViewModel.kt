@@ -26,6 +26,9 @@ class UploadQuizViewModel
         }
     }
 
+    val deleteQuizDocs: LiveData<Boolean> = repo.deleteQuizDocs
+
+
     fun addToFirebase(data: Any): LiveData<MyServerDataState> = repo.addToFirebase(data)
 
     fun map(): List<ServerQuizDataModel>{

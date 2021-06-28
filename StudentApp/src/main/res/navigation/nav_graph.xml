@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/studentSignup"
-        android:name="com.maricoolsapps.studentapp.StudentSignup"
+        android:name="com.maricoolsapps.studentapp.StudentSignUp"
         android:label="fragment_student_signup"
         tools:layout="@layout/fragment_student_signup" >
         <action

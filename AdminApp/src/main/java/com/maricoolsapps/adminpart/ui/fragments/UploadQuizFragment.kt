@@ -13,6 +13,7 @@ import com.maricoolsapps.adminpart.databinding.FragmentUploadQuizBinding
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_quiz_arrangement.*
 
 @AndroidEntryPoint
 class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
@@ -32,8 +33,6 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
         if (model.isQuizEmpty()) {
             binding.apply {
                 errorMessage.visibility = View.VISIBLE
-                keyText.visibility = View.GONE
-                key.visibility = View.GONE
                 progressBar.visibility = View.GONE
                 upload.visibility = View.GONE
                 progressText.visibility = View.GONE
@@ -41,8 +40,6 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
         } else {
             binding.apply {
                 errorMessage.visibility = View.GONE
-                keyText.visibility = View.VISIBLE
-                key.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
                 progressText.visibility = View.GONE
                 upload.visibility = View.VISIBLE
@@ -51,24 +48,12 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
         }
 
         binding.upload.setOnClickListener {
-             key = binding.key.text.toString().trim()
-            if (key.isEmpty()) {
-                Toast.makeText(activity, "You inserted nothing", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            } else {
-                showAlert()
-            }
+            addDataToServer(server_quizModel)
         }
-    }
 
-    private fun showAlert() {
-        val alertDialog = AlertDialog.Builder(activity)
-        alertDialog.setTitle("Notice")
-        alertDialog.setMessage("Once you upload your quiz, you can't update it again")
-        alertDialog.setPositiveButton("Yes") { _, _ ->
-            addDataToServer(server_quizModel, key)
-            }
-        alertDialog.create().show()
+        binding.overWrite.setOnClickListener{
+            deleteQuizOnline()
+        }
     }
 
     override fun onDestroy() {
@@ -76,7 +61,7 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
         _binding = null
     }
 
-    private fun addDataToServer(data: List<Any>, key: String){
+    private fun addDataToServer(data: List<Any>){
 
     binding.progressBar.visibility = View.VISIBLE
     binding.progressText.visibility = View.VISIBLE
@@ -110,4 +95,18 @@ class UploadQuizFragment : Fragment(R.layout.fragment_upload_quiz) {
         }
     }
 
+    private fun deleteQuizOnline(){
+        binding.progressBar.visibility = View.VISIBLE
+        binding.progressText.visibility = View.VISIBLE
+        model.deleteQuizDocs.observe(viewLifecycleOwner, Observer {
+            when(it){
+                true -> {
+                    addDataToServer(server_quizModel)
+                }
+                false -> {
+                    Toast.makeText(activity, "Check Your internet connection", Toast.LENGTH_LONG).show()
+                }
+            }
+        })
+    }
 }

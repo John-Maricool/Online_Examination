@@ -9,10 +9,55 @@
       "client_info": {
         "mobilesdk_app_id": "1:362981904387:android:3e95bebcc5fdaf87e9be36",
         "android_client_info": {
+          "package_name": "com.maricoolsapps.onlineexaminationproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "362981904387-nuh35pqhtqs0g9m8nslsjjdjfv0uf8sg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maricoolsapps.onlineexaminationproject",
+            "certificate_hash": "e100957bdbb51cc518c83d25b6a1b81068f328b6"
+          }
+        },
+        {
+          "client_id": "362981904387-p9i4ab5skt76qii5p2h292252pdrf2no.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAI3CT5HeADN-peP2VQVgRc8KL65WhULtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "362981904387-p9i4ab5skt76qii5p2h292252pdrf2no.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362981904387:android:bfc5717380872d75e9be36",
+        "android_client_info": {
           "package_name": "com.maricoolsapps.studentapp"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "362981904387-fug6ibh6uhid2hest8j1dtg9d26lp1qv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maricoolsapps.studentapp",
+            "certificate_hash": "e100957bdbb51cc518c83d25b6a1b81068f328b6"
+          }
+        },
         {
           "client_id": "362981904387-p9i4ab5skt76qii5p2h292252pdrf2no.apps.googleusercontent.com",
           "client_type": 3

@@ -8,11 +8,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maricoolsapps.adminpart.R
-import com.maricoolsapps.utils.models.RegisteredUsersModel
 import com.maricoolsapps.adminpart.ui.viewModels.RegisteredUsersViewModel
 import com.maricoolsapps.adminpart.adapters.RegisteredUsersAdapter
 import com.maricoolsapps.adminpart.databinding.FragmentRegisteredUsersBinding
 import com.maricoolsapps.utils.datastate.MyDataState
+import com.maricoolsapps.utils.models.StudentUser
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,13 +30,14 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentRegisteredUsersBinding.bind(view)
 
-
         binding.recyclerView.setHasFixedSize(false)
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
 
+        startMonitoring()
     }
 
     private fun startMonitoring(){
+        binding.progressBar.visibility = View.VISIBLE
         model.start().observe(viewLifecycleOwner, Observer {dataState ->
             when(dataState){
                 is MyDataState.notLoaded ->{
@@ -45,7 +46,7 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users) {
                 is MyDataState.onLoaded ->{
                     binding.progressBar.visibility = View.GONE
                     // adapter.getList(dataState.data)
-                    adapter.items = dataState.data as List<RegisteredUsersModel>
+                    adapter.items = dataState.data as List<StudentUser>
                     Log.d("view", dataState.data.toString())
 
                     binding.recyclerView.adapter = adapter

@@ -7,10 +7,12 @@ import com.google.firebase.auth.*
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ServerUser
   constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
+
      val currentUser: FirebaseUser? = auth.currentUser
 
     fun getUserId(): String?{

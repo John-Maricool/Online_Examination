@@ -3,9 +3,9 @@ package com.maricoolsapps.adminpart.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.maricoolsapps.utils.models.RegisteredUsersModel
 import com.maricoolsapps.adminpart.databinding.RegisteredUsersListItemBinding
 import com.maricoolsapps.utils.interfaces.OnItemClickListener
+import com.maricoolsapps.utils.models.StudentUser
 import javax.inject.Inject
 
 class RegisteredUsersAdapter
@@ -13,7 +13,7 @@ class RegisteredUsersAdapter
         RecyclerView.Adapter<RegisteredUsersAdapter.RegisteredUsersViewHolder>() {
 
 
-    var items: List<RegisteredUsersModel> = listOf()
+    var items: List<StudentUser> = listOf()
 
     lateinit var listener: OnItemClickListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegisteredUsersViewHolder {
@@ -29,7 +29,7 @@ class RegisteredUsersAdapter
         listener = mlistener
     }
 
-    fun setList(newList: List<RegisteredUsersModel>){
+    fun setList(newList: List<StudentUser>){
         items = newList
         notifyDataSetChanged()
     }
@@ -40,10 +40,9 @@ class RegisteredUsersAdapter
 
     override fun onBindViewHolder(holder: RegisteredUsersViewHolder, position: Int) {
         val currentPos = items[position]
-        holder.binding.uid.text = currentPos.uid
         holder.binding.name.text = currentPos.name
         holder.binding.email.text = currentPos.email
-        holder.binding.number.text = currentPos.phoneNumber
+        holder.binding.number.text = currentPos.number
     }
 
     inner class RegisteredUsersViewHolder(var binding: RegisteredUsersListItemBinding):

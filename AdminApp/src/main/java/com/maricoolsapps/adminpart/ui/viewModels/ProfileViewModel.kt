@@ -11,11 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
-@Inject constructor(val serverUser: ServerUserRepo, val cloudData: AdminCloudData): ViewModel(){
+@Inject constructor(val serverUser: ServerUserRepo): ViewModel(){
 
-    val profilePhoto: LiveData<String?> = cloudData.getProfileUri()
-
-    fun updateProfileInFirestore(newPhoto: String): LiveData<MyServerDataState> = cloudData.updateProfileUri(newPhoto)
-
+    val profilePhoto: LiveData<Uri?> = serverUser.getProfilePhoto()
     fun changeProfilePhoto(newPhoto: Uri): LiveData<MyServerDataState> = serverUser.changeProfilePhoto(newPhoto)
 }

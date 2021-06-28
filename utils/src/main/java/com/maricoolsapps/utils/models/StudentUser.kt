@@ -1,16 +1,12 @@
 package com.maricoolsapps.utils.models
 
-
 data class StudentUser(
-        val name: String,
-        val email: String,
-        val number: String?,
-        val quizStatus: String
+        var name: String,
+        var regNo: String?,
+        var email: String,
+        var number: String,
+        var isRegistered: Boolean,
+        var isActivated: Boolean
 ){
-    constructor(): this("", "", "", isAnswered)
-
-    companion object{
-        val isAnswered = "Answered"
-        val notAnswered = "unAnswered"
-    }
+    constructor(): this("", null, "", "", false, true)
 }
