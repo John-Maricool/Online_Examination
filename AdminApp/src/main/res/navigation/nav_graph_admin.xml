@@ -20,9 +20,7 @@
         <action
             android:id="@+id/action_adminPortalFragment_to_savedQuizFragment"
             app:destination="@id/savedQuizFragment" />
-        <action
-            android:id="@+id/action_adminPortalFragment_to_uploadQuizFragment"
-            app:destination="@id/uploadQuizFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -77,9 +75,4 @@
             app:popUpTo="@id/savedQuizFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <fragment
-        android:id="@+id/uploadQuizFragment"
-        android:name="com.maricoolsapps.adminpart.ui.fragments.UploadQuizFragment"
-        android:label="Upload Quiz"
-        tools:layout="@layout/fragment_upload_quiz" />
 </navigation>

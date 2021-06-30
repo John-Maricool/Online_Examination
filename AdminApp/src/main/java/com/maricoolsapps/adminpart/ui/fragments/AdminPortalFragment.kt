@@ -38,11 +38,6 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
             findNavController().navigate(action)
         }
 
-        binding.uploadQuiz.setOnClickListener {
-            val action = AdminPortalFragmentDirections.actionAdminPortalFragmentToUploadQuizFragment()
-            findNavController().navigate(action)
-        }
-
         binding.registeredUsers.setOnClickListener {
             val action = AdminPortalFragmentDirections.actionAdminPortalFragmentToRegisteredUsersFragment()
             findNavController().navigate(action)

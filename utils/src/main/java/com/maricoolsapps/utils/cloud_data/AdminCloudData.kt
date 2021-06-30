@@ -24,14 +24,18 @@ class AdminCloudData(var cloud: FirebaseFirestore,
                      var serverUser: ServerUser,
                      var scope: CoroutineScope) {
 
-    val userDoc =  cloud.collection(collectionName).document(serverUser.getUserId()!!)
+    val userDoc =  cloud.collection(collectionName)
+            .document(serverUser.getUserId()!!)
+
 
     fun CreateFirestoreUser(user: AdminUser, auth: FirebaseAuth)
             : LiveData<MyServerDataState> {
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
             if (auth.currentUser != null){
-                cloud.collection(collectionName).document(auth.currentUser.uid).set(user).addOnSuccessListener {
+                cloud.collection(collectionName)
+                        .document(auth.currentUser.uid).set(user)
+                        .addOnSuccessListener {
                     data.postValue(MyServerDataState.onLoaded)
                 }.addOnFailureListener {
                     data.postValue(MyServerDataState.notLoaded(it))
@@ -49,12 +53,16 @@ class AdminCloudData(var cloud: FirebaseFirestore,
             userDoc.collection(quizDocs).get()
                     .addOnSuccessListener {
                         val docs = it.documents
-                        docs.forEach{snapshot ->
-                            snapshot.reference.delete().addOnSuccessListener {
-                                _data.postValue(true)
-                            }.addOnFailureListener {
-                                _data.postValue(false)
+                        if (docs.size > 0) {
+                            docs.forEach { snapshot ->
+                                snapshot.reference.delete().addOnSuccessListener {
+                                    _data.postValue(true)
+                                }.addOnFailureListener {
+                                    _data.postValue(false)
+                                }
                             }
+                        }else{
+                            _data.postValue(null)
                         }
                     }.addOnFailureListener {
                         _data.postValue(false)

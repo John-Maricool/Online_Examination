@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.maricoolsapps.room_library.room.RoomEntity
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.adminpart.utils.SavedQuizRepository
+import com.maricoolsapps.room_library.room.ServerQuizDataModel
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -19,6 +21,8 @@ class SavedQuizViewModel
         private val repository: SavedQuizRepository
 ): ViewModel() {
 
+    var clicks = 0
+
     private val _dataState: MutableLiveData<MyDataState> = MutableLiveData()
 
     val dataState: LiveData<MyDataState> get() = _dataState
@@ -27,8 +31,7 @@ class SavedQuizViewModel
         viewModelScope.launch {
             repository.getListOfSavedQuiz().onEach {
                 _dataState.value = it
-            }
-                    .launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -36,5 +39,13 @@ class SavedQuizViewModel
         viewModelScope.launch {
             repository.deleteSavedQuiz(quiz)
         }
+    }
+
+    fun clearQuizDocs() = repository.clearQuizDocs()
+
+    fun addToFirebase(data: Any): LiveData<MyServerDataState> = repository.addToFirebase(data)
+
+    fun map(): List<ServerQuizDataModel> {
+        return repository.map()
     }
 }

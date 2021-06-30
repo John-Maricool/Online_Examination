@@ -8,6 +8,7 @@ import com.maricoolsapps.room_library.room.CloudMapper
 import com.maricoolsapps.room_library.room.OnlineDatabase
 import com.maricoolsapps.room_library.room.RoomDao
 import com.maricoolsapps.room_library.room.RoomDaoImpl
+import com.maricoolsapps.utils.cloud_data.AdminCloudData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,11 +54,11 @@ object ApplicationModuleSecond {
         return QuizArrangementRepository(dao)
     }
 
-    @Singleton
+  /*  @Singleton
     @Provides
-    fun provideSavedQuizRepo(dao: RoomDaoImpl): SavedQuizRepository{
-        return SavedQuizRepository(dao)
+    fun provideSavedQuizRepo(dao: RoomDaoImpl, cloud: AdminCloudData): SavedQuizRepository{
+        return SavedQuizRepository(dao, cloud)
     }
-
+*/
 
 }

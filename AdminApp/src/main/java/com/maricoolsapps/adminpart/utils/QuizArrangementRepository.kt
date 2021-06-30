@@ -6,7 +6,7 @@ import com.maricoolsapps.room_library.room.RoomEntity
 class QuizArrangementRepository constructor(var dao: RoomDaoImpl) {
 
     suspend fun addQuiz(quiz: RoomEntity){
-            //insert the quiz to rom
+            //insert the quiz to room
             dao.insertQuiz(quiz)
     }
 

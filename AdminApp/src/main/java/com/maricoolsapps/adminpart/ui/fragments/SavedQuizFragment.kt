@@ -3,6 +3,9 @@ package com.maricoolsapps.adminpart.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -15,7 +18,9 @@ import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
 import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.room_library.room.RoomEntity
+import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.datastate.MyDataState
+import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -40,6 +45,58 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         model.start()
         startMonitoring()
+        setHasOptionsMenu(true)
+    }
+
+    private fun sendToFirebase() {
+        if (binding.recyclerView.isNotEmpty()){
+            binding.progressBar.visibility = View.VISIBLE
+            binding.progressText.visibility = View.VISIBLE
+            clearDocsAndSend()
+        }
+    }
+
+    private fun clearDocsAndSend() {
+        model.clearQuizDocs().observe(viewLifecycleOwner, Observer {
+            when(it){
+                true -> {send()}
+                false -> {Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()}
+                null -> send()
+            }
+        })
+    }
+
+    private fun send() {
+        val data = model.map()
+        model.clicks = 0
+
+        val size = data.size
+        val progressIncrement = 100 / size
+        data.forEach {
+            model.addToFirebase(it).observe(viewLifecycleOwner, Observer { result ->
+                when (result) {
+                    is MyServerDataState.onLoaded -> {
+                        model.clicks++
+                        if (model.clicks == size) {
+                            binding.progressBar.visibility = View.GONE
+                            binding.progressText.visibility = View.GONE
+                            Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
+                        } else {
+                            binding.progressBar.progress += progressIncrement
+                            binding.progressText.text = "${model.clicks}/$size"
+                        }
+                    }
+
+                    is MyServerDataState.notLoaded -> {
+                        binding.progressBar.visibility = View.GONE
+                        binding.progressText.visibility = View.GONE
+                        Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
+                    }
+                    MyServerDataState.isLoading -> TODO()
+                }
+
+            })
+        }
     }
 
     override fun onStart() {
@@ -60,8 +117,13 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                     // adapter.getList(dataState.data)
                     adapter.items = dataState.data as MutableList<RoomEntity>
                     Log.d("view", dataState.data.toString())
-
                     binding.recyclerView.adapter = adapter
+
+                   /* if (binding.recyclerView.isEmpty()){
+                        binding.overWrite.visibility = View.GONE
+                    }else{
+                        binding.overWrite.visibility = View.VISIBLE
+                    }*/
                 }
 
                 is MyDataState.isLoading -> {
@@ -84,6 +146,32 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     override fun onItemLongClick(item: Any) {
         clickedItem = item as RoomEntity
          mode = activity?.startActionMode(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+       super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.cloud_upload, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.cloud_upload -> {
+                showDialog()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showDialog() {
+        val alertDialogBuilder =  AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Notice")
+        alertDialogBuilder.setMessage("You can only upload the quiz once, any new upload overrides the existing one").setPositiveButton("Yes") { dialog, _ ->
+            sendToFirebase()
+            dialog?.dismiss()
+        }.setNegativeButton("No"){ dialogInterface, _ ->
+            dialogInterface.cancel()
+        }.show()
     }
 
     override fun onActionItemClicked(p0: ActionMode?, item: MenuItem?): Boolean {
