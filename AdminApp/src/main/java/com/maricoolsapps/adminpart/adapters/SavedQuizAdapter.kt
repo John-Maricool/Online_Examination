@@ -24,13 +24,12 @@ class SavedQuizAdapter
         isActionModeOpened = false
     }
 
-    private val selectedItems = arrayListOf<RoomEntity>()
     lateinit var listener_long: OnItemLongClickListener
 
-    fun getList(Items: MutableList<RoomEntity>) {
+   /* fun getList(Items: MutableList<RoomEntity>) {
         items = Items
         notifyDataSetChanged()
-    }
+    }*/
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
         val binding = QuizListItemBinding.inflate(
@@ -69,7 +68,6 @@ class SavedQuizAdapter
             binding.cardView.setOnClickListener {
 
                 val position = bindingAdapterPosition
-                Log.d("tah", position.toString())
                     val currentItem = items[position]
                 if (!isActionModeOpened && position != RecyclerView.NO_POSITION) {
                         listener.onItemClick(currentItem)

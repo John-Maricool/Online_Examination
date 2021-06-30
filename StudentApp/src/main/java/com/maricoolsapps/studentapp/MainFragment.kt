@@ -23,7 +23,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private val model: MainViewModel by viewModels()
 
     lateinit var builder: AlertDialog.Builder
-    lateinit var bar: ProgressBar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -114,6 +113,7 @@ private fun registerForQuiz(text: String) {
             MyServerDataState.onLoaded -> {
                 Toast.makeText(activity, "Successfully registered", Toast.LENGTH_LONG).show()
                 binding.progrgess.visibility = View.GONE
+                checkIfPreviouslyRegistered()
             }
             is MyServerDataState.notLoaded -> {
                 Toast.makeText(activity, "Check your internet connection and try again", Toast.LENGTH_LONG).show()

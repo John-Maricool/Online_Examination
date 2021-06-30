@@ -2,7 +2,7 @@ package com.maricoolsapps.studentapp
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.maricoolsapps.utils.ServerUser
+import com.maricoolsapps.utils.user.ServerUser
 import com.maricoolsapps.utils.cloud_data.StudentCloudData
 import dagger.Module
 import dagger.Provides

@@ -9,5 +9,8 @@ class RegisteredUsersRepository
 @Inject
 constructor(var cloud: AdminCloudData) {
 
-    fun getList(): LiveData<MyDataState> = cloud.getList()
+    fun getList(): LiveData<MyDataState> = cloud.getRegisteredStudents()
+
+    fun deleteStudents(ids: List<String>) = cloud.deleteRegisteredStudent(ids)
+
 }

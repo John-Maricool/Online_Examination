@@ -1,4 +1,4 @@
-package com.maricoolsapps.utils
+package com.maricoolsapps.utils.user
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -7,16 +7,18 @@ import com.google.firebase.auth.*
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ServerUser
   constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
 
-     val currentUser: FirebaseUser? = auth.currentUser
+     var currentUser: FirebaseUser? = auth.currentUser
 
-    fun getUserId(): String?{
-        return currentUser?.uid
+    fun getUserId(): String{
+        auth.addAuthStateListener {auth ->
+            currentUser =  auth.currentUser
+        }
+        return currentUser?.uid!!
     }
 
     companion object{

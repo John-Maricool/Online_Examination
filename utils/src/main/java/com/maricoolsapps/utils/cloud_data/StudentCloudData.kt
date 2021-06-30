@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
-import com.maricoolsapps.utils.ServerUser
-import com.maricoolsapps.utils.constants.collectionName
-import com.maricoolsapps.utils.constants.studentsCollectionName
-import com.maricoolsapps.utils.constants.studentsDocumentUserName
+import com.maricoolsapps.utils.user.ServerUser
+import com.maricoolsapps.utils.others.constants.collectionName
+import com.maricoolsapps.utils.others.constants.studentsCollectionName
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.models.StudentUser
 import kotlinx.coroutines.CoroutineScope
@@ -40,8 +39,8 @@ class StudentCloudData(var cloud: FirebaseFirestore,
                 userDataDoc.get().addOnCompleteListener { snapshot ->
             if (snapshot.isSuccessful){
                 cloud.collection(collectionName).document(id)
-                        .collection("Registered Students")
-                        .add(snapshot.result?.toObject(StudentUser::class.java)!!)
+                        .collection("Registered Students").document(serverUser.getUserId())
+                        .set(snapshot.result?.toObject(StudentUser::class.java)!!)
                 dataLiveData.postValue(MyServerDataState.onLoaded)
             }
                     else{

@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.maricoolsapps.adminpart.utils.*
 import com.maricoolsapps.utils.cloud_data.AdminCloudData
-import com.maricoolsapps.utils.ServerUser
+import com.maricoolsapps.utils.user.ServerUser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

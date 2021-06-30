@@ -11,4 +11,6 @@ class RegisteredUsersViewModel
         private val repository: RegisteredUsersRepository
 ): ViewModel() {
     fun start() = repository.getList()
+    fun deleteStudents(ids: List<String>) = repository.deleteStudents(ids)
+
 }

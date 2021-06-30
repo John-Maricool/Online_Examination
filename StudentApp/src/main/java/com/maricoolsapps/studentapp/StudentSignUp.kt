@@ -113,6 +113,7 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
             null
         }else{
             StudentUser(
+                    id = auth.currentUser.uid,
                     name = name,
                     email = email,
                     number = phoneNumber,

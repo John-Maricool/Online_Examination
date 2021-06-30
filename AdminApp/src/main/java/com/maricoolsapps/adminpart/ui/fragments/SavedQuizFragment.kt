@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,21 +19,22 @@ import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
 import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.room_library.room.RoomEntity
-import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.others.ActionModeImpl
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickListener, OnItemLongClickListener, ActionMode.Callback {
+class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickListener, OnItemLongClickListener {
 
     private val model: SavedQuizViewModel by viewModels()
 
     private var _binding: FragmentSavedQuizBinding? = null
     private val binding get() = _binding!!
-     var mode: ActionMode? = null
     lateinit var clickedItem: RoomEntity
+
+    lateinit var actionMode: SavedQuizActionMode
 
     @Inject
     lateinit var adapter: SavedQuizAdapter
@@ -42,10 +44,17 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
 
         _binding = FragmentSavedQuizBinding.bind(view)
         binding.recyclerView.setHasFixedSize(false)
+        actionMode = SavedQuizActionMode(activity as AppCompatActivity)
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
         model.start()
         startMonitoring()
         setHasOptionsMenu(true)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        adapter.setOnClickListener(this)
+        adapter.setOnLongClickListener(this)
     }
 
     private fun sendToFirebase() {
@@ -105,12 +114,6 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        adapter.setOnClickListener(this)
-        adapter.setOnLongClickListener(this)
-    }
-
     private fun startMonitoring(){
         model.dataState.observe(viewLifecycleOwner, Observer {dataState ->
             when(dataState){
@@ -133,11 +136,6 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     override fun onItemClick(item: Any) {
         val action = SavedQuizFragmentDirections.actionSavedQuizFragmentToQuizArrangement(item as RoomEntity)
         findNavController().navigate(action)
@@ -145,7 +143,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
 
     override fun onItemLongClick(item: Any) {
         clickedItem = item as RoomEntity
-         mode = activity?.startActionMode(this)
+        actionMode.start()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -174,31 +172,33 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         }.show()
     }
 
-    override fun onActionItemClicked(p0: ActionMode?, item: MenuItem?): Boolean {
-        when(item?.itemId){
-            R.id.delete -> {
-                adapter.items.removeAll(SavedQuizAdapter.clickedItems)
-                model.delete(SavedQuizAdapter.clickedItems)
-                mode?.finish()
-                adapter.notifyDataSetChanged()
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+    inner class SavedQuizActionMode
+     constructor(activity: AppCompatActivity): ActionModeImpl(activity){
+        override fun performAction(mode: ActionMode?, item: MenuItem?) {
+            when(item?.itemId){
+                R.id.delete -> {
+                    adapter.items.removeAll(SavedQuizAdapter.clickedItems)
+                    model.delete(SavedQuizAdapter.clickedItems)
+                    mode?.finish()
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
-        return true
-    }
 
-    override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        mode?.menuInflater?.inflate(R.menu.action_mode, menu)
-        mode?.title = "Choose your options"
-        return true
-    }
+        override fun createActionMode(mode: ActionMode?, menu: Menu?) {
+            mode?.menuInflater?.inflate(R.menu.action_mode, menu)
+            mode?.title = "Choose your options"
+        }
 
-    override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
-        return false
-    }
-
-    override fun onDestroyActionMode(p0: ActionMode?) {
-        mode = null
-        SavedQuizAdapter.isActionModeOpened = false
-        SavedQuizAdapter.clickedItems.clear()
+        override fun DestroyActionMode(mode: ActionMode?) {
+            mode?.finish()
+            SavedQuizAdapter.isActionModeOpened = false
+            SavedQuizAdapter.clickedItems.clear()
+        }
     }
 }

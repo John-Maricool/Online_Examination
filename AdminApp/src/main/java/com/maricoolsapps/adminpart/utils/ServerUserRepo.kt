@@ -3,7 +3,7 @@ package com.maricoolsapps.adminpart.utils
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.*
-import com.maricoolsapps.utils.ServerUser
+import com.maricoolsapps.utils.user.ServerUser
 import com.maricoolsapps.utils.datastate.MyServerDataState
 
 class ServerUserRepo
