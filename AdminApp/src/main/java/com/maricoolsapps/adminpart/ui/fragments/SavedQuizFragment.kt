@@ -59,8 +59,11 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private fun clearDocsAndSend() {
         model.clearQuizDocs().observe(viewLifecycleOwner, Observer {
             when(it){
-                true -> {send()}
-                false -> {Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()}
+                true -> send()
+                false -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.progressText.visibility = View.GONE
+                    Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()}
                 null -> send()
             }
         })
@@ -81,6 +84,9 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                             binding.progressBar.visibility = View.GONE
                             binding.progressText.visibility = View.GONE
                             Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
+                            model.deleteQuiz()
+                            adapter.items.clear()
+                            adapter.notifyDataSetChanged()
                         } else {
                             binding.progressBar.progress += progressIncrement
                             binding.progressText.text = "${model.clicks}/$size"
@@ -118,12 +124,6 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                     adapter.items = dataState.data as MutableList<RoomEntity>
                     Log.d("view", dataState.data.toString())
                     binding.recyclerView.adapter = adapter
-
-                   /* if (binding.recyclerView.isEmpty()){
-                        binding.overWrite.visibility = View.GONE
-                    }else{
-                        binding.overWrite.visibility = View.VISIBLE
-                    }*/
                 }
 
                 is MyDataState.isLoading -> {

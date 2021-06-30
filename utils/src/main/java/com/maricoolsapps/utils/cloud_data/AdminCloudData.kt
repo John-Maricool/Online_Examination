@@ -53,13 +53,14 @@ class AdminCloudData(var cloud: FirebaseFirestore,
             userDoc.collection(quizDocs).get()
                     .addOnSuccessListener {
                         val docs = it.documents
-                        if (docs.size > 0) {
-                            docs.forEach { snapshot ->
-                                snapshot.reference.delete().addOnSuccessListener {
-                                    _data.postValue(true)
-                                }.addOnFailureListener {
-                                    _data.postValue(false)
+                        if (docs.isNotEmpty()) {
+                            try {
+                                for (doc in docs) {
+                                    doc.reference.delete()
                                 }
+                                _data.postValue(true)
+                            } catch (e: Exception) {
+                                _data.postValue(false)
                             }
                         }else{
                             _data.postValue(null)

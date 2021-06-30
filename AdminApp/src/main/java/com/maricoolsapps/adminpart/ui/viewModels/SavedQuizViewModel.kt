@@ -10,6 +10,7 @@ import com.maricoolsapps.adminpart.utils.SavedQuizRepository
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -41,6 +42,11 @@ class SavedQuizViewModel
         }
     }
 
+    fun deleteQuiz(){
+        viewModelScope.launch(IO) {
+            repository.deleteQuiz()
+        }
+    }
     fun clearQuizDocs() = repository.clearQuizDocs()
 
     fun addToFirebase(data: Any): LiveData<MyServerDataState> = repository.addToFirebase(data)
