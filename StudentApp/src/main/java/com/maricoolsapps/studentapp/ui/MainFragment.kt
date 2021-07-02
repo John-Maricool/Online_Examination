@@ -1,15 +1,15 @@
-package com.maricoolsapps.studentapp
+package com.maricoolsapps.studentapp.ui
 
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.maricoolsapps.studentapp.R
 import com.maricoolsapps.studentapp.databinding.FragmentMainBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,11 +76,12 @@ private fun showDialog() {
     input.inputType = InputType.TYPE_CLASS_TEXT
     builder.setView(input)
 
-    builder.setPositiveButton("OK") { dialog, which ->
+    builder.setPositiveButton("OK") { dialog, _ ->
         val text = input.text.toString().trim()
         if (text.isNotEmpty()) {
             binding.progrgess.visibility = View.VISIBLE
             checkIfRegistered(text)
+
             dialog.dismiss()
         } else {
             Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()

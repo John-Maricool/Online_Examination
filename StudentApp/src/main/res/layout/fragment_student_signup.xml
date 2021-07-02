@@ -7,7 +7,7 @@
     android:background="@drawable/gradient"
     android:gravity="center"
     android:padding="16dp"
-    tools:context=".StudentSignUp">
+    tools:context=".ui.StudentSignUp">
 
     <TextView
         android:layout_width="wrap_content"

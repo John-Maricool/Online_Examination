@@ -1,7 +1,9 @@
-package com.maricoolsapps.studentapp
+package com.maricoolsapps.studentapp.hilt
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.maricoolsapps.utils.user.ServerUser
 import com.maricoolsapps.utils.cloud_data.StudentCloudData
 import dagger.Module
@@ -36,7 +38,7 @@ object StudentApplicationModule {
     @ActivityRetainedScoped
     @Provides
     fun provideFirebaseFirestore(): FirebaseFirestore{
-        return FirebaseFirestore.getInstance()
+        return Firebase.firestore
     }
 
     @ActivityRetainedScoped

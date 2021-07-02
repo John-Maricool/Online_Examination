@@ -61,10 +61,8 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         if (binding.recyclerView.isNotEmpty()){
             binding.progressBar.visibility = View.VISIBLE
             binding.progressText.visibility = View.VISIBLE
-            clearDocsAndSend()
         }
     }
-
     private fun clearDocsAndSend() {
         model.clearQuizDocs().observe(viewLifecycleOwner, Observer {
             when(it){
@@ -164,11 +162,14 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private fun showDialog() {
         val alertDialogBuilder =  AlertDialog.Builder(requireContext())
         alertDialogBuilder.setTitle("Notice")
-        alertDialogBuilder.setMessage("You can only upload the quiz once, any new upload overrides the existing one").setPositiveButton("Yes") { dialog, _ ->
+        alertDialogBuilder.setMessage("You cannot edit any quiz after uploading").setPositiveButton("New Write") { dialog, _ ->
             sendToFirebase()
+            clearDocsAndSend()
             dialog?.dismiss()
-        }.setNegativeButton("No"){ dialogInterface, _ ->
-            dialogInterface.cancel()
+        }.setNegativeButton("Add to Existing"){ dialogInterface, _ ->
+            sendToFirebase()
+            send()
+            dialogInterface.dismiss()
         }.show()
     }
 

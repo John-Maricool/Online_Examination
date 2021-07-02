@@ -1,4 +1,4 @@
-package com.maricoolsapps.studentapp
+package com.maricoolsapps.studentapp.application
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

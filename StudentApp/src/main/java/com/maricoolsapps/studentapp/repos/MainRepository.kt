@@ -1,4 +1,4 @@
-package com.maricoolsapps.studentapp
+package com.maricoolsapps.studentapp.repos
 
 import androidx.lifecycle.LiveData
 import com.maricoolsapps.utils.cloud_data.StudentCloudData

@@ -52,15 +52,15 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             return
         }
 
-        if (userEmail.isEmpty()) {
-            binding.email.error = "Email is required"
+        if (userEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+            binding.email.error = "Email Error"
             binding.email.requestFocus()
             return
         }
 
 
-        if (userPassword.isEmpty()) {
-            binding.password.error = "Password is required"
+        if (userPassword.isEmpty() || userPassword.length < 6) {
+            binding.password.error = "Password Error"
             binding.password.requestFocus()
             return
         }
@@ -77,17 +77,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             return
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            binding.email.error = "Please enter a correct email"
-            return
-        }
-
-        if (userPassword.length < 6) {
-            binding.password.error = "Please enter a correct password"
-            return
-        }
         binding.progressBar.visibility = View.VISIBLE
-
         model.createUser(userEmail, userPassword, username).observe(viewLifecycleOwner, Observer {result ->
             when (result) {
                 is MyServerDataState.onLoaded -> {

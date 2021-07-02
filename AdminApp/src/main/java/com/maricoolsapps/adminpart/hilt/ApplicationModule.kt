@@ -2,6 +2,8 @@ package com.maricoolsapps.adminpart.hilt
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.maricoolsapps.adminpart.utils.*
 import com.maricoolsapps.utils.cloud_data.AdminCloudData
 import com.maricoolsapps.utils.user.ServerUser
@@ -41,7 +43,7 @@ object ApplicationModule {
     @ActivityRetainedScoped
     @Provides
     fun provideFirebaseFirestore(): FirebaseFirestore{
-        return FirebaseFirestore.getInstance()
+        return Firebase.firestore
     }
 
     @ActivityRetainedScoped

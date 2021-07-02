@@ -1,4 +1,4 @@
-package com.maricoolsapps.studentapp
+package com.maricoolsapps.studentapp.repos
 
 import com.maricoolsapps.utils.cloud_data.StudentCloudData
 import com.maricoolsapps.utils.models.StudentUser

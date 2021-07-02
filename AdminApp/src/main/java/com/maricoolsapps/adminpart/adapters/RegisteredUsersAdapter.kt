@@ -36,11 +36,6 @@ class RegisteredUsersAdapter
         listener_long = mlistener
     }
 
-    /*fun setList(newList: List<StudentUser>){
-        items = newList
-        notifyDataSetChanged()
-    }*/
-
     override fun getItemCount(): Int {
         return items.size
     }

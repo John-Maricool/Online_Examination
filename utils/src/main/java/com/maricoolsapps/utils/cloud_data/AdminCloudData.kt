@@ -16,28 +16,27 @@ import com.maricoolsapps.utils.others.constants.studentsCollectionName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
 class AdminCloudData(var cloud: FirebaseFirestore,
                      var serverUser: ServerUser,
                      var scope: CoroutineScope) {
 
-    fun CreateFirestoreUser(user: AdminUser, auth: FirebaseAuth)
+    fun CreateFirestoreUser(user: AdminUser, Auth: FirebaseAuth)
             : LiveData<MyServerDataState> {
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
-            auth.addAuthStateListener { auth ->
-                if (auth.currentUser != null) {
-                    cloud.collection(collectionName)
-                            .document(auth.currentUser.uid).set(user)
-                            .addOnSuccessListener {
-                                data.postValue(MyServerDataState.onLoaded)
-                            }.addOnFailureListener {
-                                data.postValue(MyServerDataState.notLoaded(it))
-                            }
-                } else {
-                    data.postValue(MyServerDataState.notLoaded(Exception("Error")))
-                }
+            try {
+                if (Auth.currentUser != null) {
+                        cloud.collection(collectionName)
+                                .document(Auth.currentUser.uid).set(user).await()
+                        data.postValue(MyServerDataState.onLoaded)
+                    } else {
+                        data.postValue(MyServerDataState.notLoaded(Exception("Error")))
+                    }
+            } catch (e: Exception) {
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
         return data
@@ -46,10 +45,9 @@ class AdminCloudData(var cloud: FirebaseFirestore,
     fun deleteAllQuizDocs(): LiveData<Boolean> {
         val _data = MutableLiveData<Boolean>()
         scope.launch {
-            cloud.collection(collectionName)
-                    .document(serverUser.getUserId()).collection(quizDocs).get()
-                    .addOnSuccessListener {
-                        val docs = it.documents
+            try{
+            val shot = cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).get().await()
+                        val docs = shot.documents
                         if (docs.isNotEmpty()) {
                             try {
                                 for (doc in docs) {
@@ -62,7 +60,7 @@ class AdminCloudData(var cloud: FirebaseFirestore,
                         } else {
                             _data.postValue(null)
                         }
-                    }.addOnFailureListener {
+                    }  catch (e: Exception){
                         _data.postValue(false)
                     }
         }
@@ -72,13 +70,11 @@ class AdminCloudData(var cloud: FirebaseFirestore,
     fun addToFirebase(data: Any): LiveData<MyServerDataState> {
         val _data = MutableLiveData<MyServerDataState>()
         scope.launch {
-            val result = cloud.collection(collectionName)
-                    .document(serverUser.getUserId()).collection(quizDocs).add(data)
-            result.addOnSuccessListener {
+            try{
+            val result = cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).add(data).await()
                 _data.postValue(MyServerDataState.onLoaded)
-            }
-                    .addOnFailureListener {
-                        _data.postValue(MyServerDataState.notLoaded(it))
+            }catch (e: Exception) {
+                        _data.postValue(MyServerDataState.notLoaded(e))
                     }
         }
         return _data
@@ -87,12 +83,12 @@ class AdminCloudData(var cloud: FirebaseFirestore,
     fun getRegisteredStudents(): LiveData<MyDataState> {
         val data = MutableLiveData<MyDataState>()
         scope.launch(IO) {
-            cloud.collection(collectionName)
-                    .document(serverUser.getUserId()).collection(registeredStudents).get()
-                    .addOnSuccessListener {
+            try{
+            val it = cloud.collection(collectionName)
+                    .document(serverUser.getUserId()).collection(registeredStudents).get().await()
                         val ans = it.toObjects(StudentUser::class.java)
                         data.postValue(MyDataState.onLoaded(ans))
-                    }.addOnFailureListener { e ->
+                    }catch (e: Exception) {
                         data.postValue(MyDataState.notLoaded(e))
                     }
         }
@@ -105,8 +101,8 @@ class AdminCloudData(var cloud: FirebaseFirestore,
             try {
                 ids.forEach { id ->
                     cloud.collection(collectionName)
-                            .document(serverUser.getUserId()).collection(registeredStudents).document(id).delete()
-                    cloud.collection(studentsCollectionName).document(id).update("registered", false)
+                            .document(serverUser.getUserId()).collection(registeredStudents).document(id).delete().await()
+                    cloud.collection(studentsCollectionName).document(id).update("registered", false).await()
                 }
                 data.postValue(true)
             } catch (E: Exception) {

@@ -1,9 +1,9 @@
-package com.maricoolsapps.studentapp
+package com.maricoolsapps.studentapp.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.maricoolsapps.studentapp.repos.MainRepository
 import com.maricoolsapps.utils.datastate.MyServerDataState
-import com.maricoolsapps.utils.models.StudentUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

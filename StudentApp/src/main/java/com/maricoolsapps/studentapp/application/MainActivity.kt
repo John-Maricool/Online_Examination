@@ -1,4 +1,4 @@
-package com.maricoolsapps.studentapp
+package com.maricoolsapps.studentapp.application
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +7,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.maricoolsapps.studentapp.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -8,6 +8,8 @@ import com.maricoolsapps.utils.datastate.MyServerDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class ServerUser
   constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
@@ -28,11 +30,12 @@ class ServerUser
     fun registerUser(email: String, password: String, name: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
-            auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
+            try{
+            auth.createUserWithEmailAndPassword(email, password).await()
                 updateProfileName(name)
                 data.postValue(MyServerDataState.onLoaded)
-            }.addOnFailureListener {
-                data.postValue(MyServerDataState.notLoaded(it))
+            }catch (e: Exception) {
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
        return data
@@ -41,10 +44,11 @@ class ServerUser
     fun signInUser(email: String, password: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
-            auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+            try{
+            auth.signInWithEmailAndPassword(email, password).await()
                 data.postValue(MyServerDataState.onLoaded)
-            }.addOnFailureListener {
-                data.postValue(MyServerDataState.notLoaded(it))
+            }catch (e: Exception){
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
         return data
@@ -53,13 +57,14 @@ class ServerUser
     fun updateProfileName(name: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
+            try{
             val profile = UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
-            currentUser?.updateProfile(profile)?.addOnSuccessListener {
+            currentUser?.updateProfile(profile)?.await()
                 data.postValue(MyServerDataState.onLoaded)
-            }?.addOnFailureListener {
-                data.postValue(MyServerDataState.notLoaded(it))
+            }catch (e: Exception) {
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
         return data
@@ -84,14 +89,15 @@ class ServerUser
     fun changeProfilePhoto(uri: Uri): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
+            try{
             val profile = UserProfileChangeRequest.Builder()
                 .setPhotoUri(uri)
                 .build()
-            currentUser?.updateProfile(profile)?.addOnSuccessListener {
+            currentUser?.updateProfile(profile)?.await()
                 profileUri = uri
                 data.postValue(MyServerDataState.onLoaded)
-            }?.addOnFailureListener {
-                data.postValue(MyServerDataState.notLoaded(it))
+            }catch (e: Exception) {
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
         return data
@@ -100,12 +106,13 @@ class ServerUser
     fun reAuthenticate(oldPassword: String): LiveData<MyServerDataState>{
             val data = MutableLiveData<MyServerDataState>()
             scope.launch(IO) {
+                try{
                 val mail = getUserEmail()!!
                 val credentials = EmailAuthProvider.getCredential(mail, oldPassword)
-                 currentUser?.reauthenticate(credentials)?.addOnSuccessListener {
+                 currentUser?.reauthenticate(credentials)?.await()
                     data.postValue(MyServerDataState.onLoaded)
-                }?.addOnFailureListener {
-                    data.postValue(MyServerDataState.notLoaded(it))
+                }catch (e: Exception){
+                    data.postValue(MyServerDataState.notLoaded(e))
                 }
             }
             return data
@@ -114,13 +121,14 @@ class ServerUser
     fun changeUsername(name: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
+            try{
             val profile = UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
-            currentUser?.updateProfile(profile)?.addOnSuccessListener {
+            currentUser?.updateProfile(profile)?.await()
                 data.postValue(MyServerDataState.onLoaded)
-            }?.addOnFailureListener {
-                data.postValue(MyServerDataState.notLoaded(it))
+            }catch (e: Exception) {
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
         return data
@@ -129,10 +137,11 @@ class ServerUser
     fun changePassword(newPassword: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
-            currentUser?.updatePassword(newPassword)?.addOnSuccessListener {
+            try{
+                currentUser?.updatePassword(newPassword)?.await()
                 data.postValue(MyServerDataState.onLoaded)
-            }?.addOnFailureListener {
-                data.postValue(MyServerDataState.notLoaded(it))
+            }catch (e: Exception){
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
         return data
