@@ -9,9 +9,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.toObjects
+import com.maricoolsapps.room_library.room.RoomEntity
+import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.studentapp.R
 import com.maricoolsapps.studentapp.databinding.FragmentMainBinding
+import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.others.constants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,6 +38,10 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             checkIfPreviouslyRegistered()
         }
 
+        binding.start.setOnClickListener {
+            downloadQuiz()
+        }
+
         checkIfPreviouslyRegistered()
 
             binding.registerButton.setOnClickListener {
@@ -39,9 +49,44 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
     }
 
+    private fun downloadQuiz() {
+        binding.progrgess.visibility = View.VISIBLE
+        model.getQuizFromServer().observe(viewLifecycleOwner, { state ->
+            when(state){
+                is MyDataState.onLoaded -> {val snap = state.data as QuerySnapshot
+                val result = snap.toObjects<ServerQuizDataModel>()
+                    contimueProgress(result)
+                }
+                MyDataState.isLoading -> TODO()
+                is MyDataState.notLoaded -> {binding.progrgess.visibility = View.GONE
+                    Toast.makeText(activity, "Not Uploaded", Toast.LENGTH_LONG).show()}
+            }
+        })
+    }
+
+    private fun contimueProgress(result: List<ServerQuizDataModel>) {
+        val local_res: List<RoomEntity> = model.mapToLocalDb(result)
+        model.insertToLocalDatabase(local_res).observe(viewLifecycleOwner, {  bool ->
+            when(bool){
+                true -> {binding.progrgess.visibility = View.GONE
+                    Toast.makeText(activity, "Uploaded Successfully", Toast.LENGTH_LONG).show()}
+            }
+
+        })
+    }
+
+    /*private fun checkIfTimeReached() {
+        model.isTimeReached().observe(viewLifecycleOwner, Observer {
+            when(it){
+                true -> {Toast.makeText(activity, "Time Reached", Toast.LENGTH_LONG).show()}
+                false -> {Toast.makeText(activity, "Time never Reach", Toast.LENGTH_LONG).show()}
+            }
+        })
+    }*/
+
     private fun checkIfPreviouslyRegistered() {
         binding.str.isRefreshing = true
-        model.checkIfPreviouslyRegistered().observe(viewLifecycleOwner, Observer { result ->
+        model.checkIfPreviouslyRegistered().observe(viewLifecycleOwner, { result ->
         when (result) {
             false -> {
                 binding.str.isRefreshing = false
@@ -67,7 +112,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     })
 }
 
-private fun showDialog() {
+    private fun showDialog() {
     builder = AlertDialog.Builder(requireContext())
     builder.setTitle("Register")
 
@@ -92,7 +137,7 @@ private fun showDialog() {
     builder.show()
 }
 
-private fun checkIfRegistered(text: String) {
+    private fun checkIfRegistered(text: String) {
     model.checkIfAdminDocExist(text).observe(viewLifecycleOwner, Observer { result ->
         when (result) {
             true -> registerForQuiz(text)
@@ -108,7 +153,8 @@ private fun checkIfRegistered(text: String) {
     })
 }
 
-private fun registerForQuiz(text: String) {
+    private fun registerForQuiz(text: String) {
+    constants.admin_id = text
     model.registerForQuiz(text).observe(viewLifecycleOwner, Observer {
         when (it) {
             MyServerDataState.onLoaded -> {
@@ -126,7 +172,7 @@ private fun registerForQuiz(text: String) {
     })
 }
 
-override fun onDestroyView() {
+    override fun onDestroyView() {
     super.onDestroyView()
     _binding = null
 }

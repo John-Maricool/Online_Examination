@@ -11,7 +11,9 @@ import com.maricoolsapps.utils.others.constants.registeredStudents
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.models.AdminUser
+import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
+import com.maricoolsapps.utils.others.constants.settings
 import com.maricoolsapps.utils.others.constants.studentsCollectionName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -71,7 +73,7 @@ class AdminCloudData(var cloud: FirebaseFirestore,
         val _data = MutableLiveData<MyServerDataState>()
         scope.launch {
             try{
-            val result = cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).add(data).await()
+                cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).add(data).await()
                 _data.postValue(MyServerDataState.onLoaded)
             }catch (e: Exception) {
                         _data.postValue(MyServerDataState.notLoaded(e))
@@ -110,6 +112,19 @@ class AdminCloudData(var cloud: FirebaseFirestore,
             }
         }
         return data
+    }
+
+    fun quizSetting(data: QuizSettingModel): LiveData<Boolean>{
+        val _data = MutableLiveData<Boolean>()
+        scope.launch(IO) {
+            try{
+                cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).document(settings).set(data).await()
+                _data.postValue(true)
+            }catch (e: Exception){
+                _data.postValue(false)
+            }
+        }
+        return _data
     }
 
 }

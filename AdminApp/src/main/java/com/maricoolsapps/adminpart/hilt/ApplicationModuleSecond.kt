@@ -1,22 +1,16 @@
 package com.maricoolsapps.adminpart.hilt
 
 import android.content.Context
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.maricoolsapps.adminpart.utils.*
 import com.maricoolsapps.room_library.room.CloudMapper
 import com.maricoolsapps.room_library.room.OnlineDatabase
 import com.maricoolsapps.room_library.room.RoomDao
 import com.maricoolsapps.room_library.room.RoomDaoImpl
-import com.maricoolsapps.utils.cloud_data.AdminCloudData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module

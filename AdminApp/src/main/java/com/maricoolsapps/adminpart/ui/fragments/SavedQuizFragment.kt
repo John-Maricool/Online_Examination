@@ -19,6 +19,7 @@ import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
 import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.room_library.room.RoomEntity
+import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.ActionModeImpl
@@ -32,9 +33,9 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
 
     private var _binding: FragmentSavedQuizBinding? = null
     private val binding get() = _binding!!
-    lateinit var clickedItem: RoomEntity
+    private lateinit var clickedItem: RoomEntity
 
-    lateinit var actionMode: SavedQuizActionMode
+    private lateinit var actionMode: SavedQuizActionMode
 
     @Inject
     lateinit var adapter: SavedQuizAdapter
@@ -77,7 +78,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     private fun send() {
-        val data = model.map()
+        val data: List<ServerQuizDataModel> = model.map()
         model.clicks = 0
 
         val size = data.size
@@ -88,20 +89,20 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                     is MyServerDataState.onLoaded -> {
                         model.clicks++
                         if (model.clicks == size) {
-                            binding.progressBar.visibility = View.GONE
+                            binding.progressUpload.visibility = View.GONE
                             binding.progressText.visibility = View.GONE
                             Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
                             model.deleteQuiz()
                             adapter.items.clear()
                             adapter.notifyDataSetChanged()
                         } else {
-                            binding.progressBar.progress += progressIncrement
+                            binding.progressUpload.progress += progressIncrement
                             binding.progressText.text = "${model.clicks}/$size"
                         }
                     }
 
                     is MyServerDataState.notLoaded -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.progressUpload.visibility = View.GONE
                         binding.progressText.visibility = View.GONE
                         Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
                     }
@@ -163,8 +164,11 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         val alertDialogBuilder =  AlertDialog.Builder(requireContext())
         alertDialogBuilder.setTitle("Notice")
         alertDialogBuilder.setMessage("You cannot edit any quiz after uploading").setPositiveButton("New Write") { dialog, _ ->
-            sendToFirebase()
-            clearDocsAndSend()
+           /* sendToFirebase()
+            clearDocsAndSend()*/
+            val quiz = model.map().toTypedArray()
+            val action = SavedQuizFragmentDirections.actionSavedQuizFragmentToUploadQuizSettingsFragment(quiz)
+            findNavController().navigate(action)
             dialog?.dismiss()
         }.setNegativeButton("Add to Existing"){ dialogInterface, _ ->
             sendToFirebase()

@@ -28,4 +28,8 @@ class CloudMapper : Mapper<RoomEntity, ServerQuizDataModel>{
         return modelList.map { mapToModel(it) }
     }
 
+    fun convertToRoomList(modelList: List<ServerQuizDataModel>): List<RoomEntity>{
+        return modelList.map { mapFromModel(it) }
+    }
+
 }

@@ -7,6 +7,7 @@ import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.cloud_data.AdminCloudData
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.models.QuizSettingModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -39,5 +40,7 @@ class SavedQuizRepository
     fun map(): List<ServerQuizDataModel>{
         return daoImpl.map()
     }
+
+    fun uploadQuizSettings(settings: QuizSettingModel) = adminCloudData.quizSetting(settings)
 
 }

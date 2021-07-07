@@ -74,5 +74,17 @@
             app:destination="@id/quizArrangement"
             app:popUpTo="@id/savedQuizFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_savedQuizFragment_to_uploadQuizSettingsFragment"
+            app:destination="@id/uploadQuizSettingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/uploadQuizSettingsFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.UploadQuizSettingsFragment"
+        android:label="Quiz Settings"
+        tools:layout="@layout/fragment_upload_quiz_settings" >
+        <argument
+            android:name="quiz"
+            app:argType="com.maricoolsapps.room_library.room.ServerQuizDataModel[]" />
     </fragment>
 </navigation>

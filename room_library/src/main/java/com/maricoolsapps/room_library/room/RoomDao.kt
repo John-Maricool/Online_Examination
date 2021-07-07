@@ -8,6 +8,10 @@ interface RoomDao {
     @Insert
     fun insertQuiz(quiz: RoomEntity)
 
+
+    @Insert
+    fun insertQuiz(quiz: List<RoomEntity>)
+
     @Update
     fun updateQuiz(quiz: RoomEntity)
 

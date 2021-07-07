@@ -10,13 +10,24 @@
         android:name="com.maricoolsapps.studentapp.ui.StudentSignUp"
         android:label="fragment_student_signup"
         tools:layout="@layout/fragment_student_signup" >
+
         <action
             android:id="@+id/action_studentSignup_to_mainFragment"
             app:destination="@id/mainFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.maricoolsapps.studentapp.ui.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_mainQuiz"
+            app:destination="@id/mainQuiz" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainQuiz"
+        android:name="com.maricoolsapps.studentapp.MainQuiz"
+        android:label="Quiz"
+        tools:layout="@layout/fragment_main_quiz" />
 </navigation>

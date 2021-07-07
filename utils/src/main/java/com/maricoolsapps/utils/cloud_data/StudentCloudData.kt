@@ -3,19 +3,27 @@ package com.maricoolsapps.utils.cloud_data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
+import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.user.ServerUser
 import com.maricoolsapps.utils.others.constants.collectionName
 import com.maricoolsapps.utils.others.constants.studentsCollectionName
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
+import com.maricoolsapps.utils.others.constants
+import com.maricoolsapps.utils.others.constants.admin_id
+import com.maricoolsapps.utils.others.constants.quizDocs
+import com.maricoolsapps.utils.others.constants.settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
+import java.util.*
 
 class StudentCloudData(var cloud: FirebaseFirestore,
                        var serverUser: ServerUser,
@@ -91,4 +99,36 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         return dataLiveData
     }
 
+    fun checkIfItsTimeToAccessQuiz(): LiveData<Boolean>{
+        val data = MutableLiveData<Boolean>()
+        val date = Calendar.getInstance().time.time
+        scope.launch {
+            try {
+               val snapshot =  cloud.collection(collectionName).document(constants.admin_id).collection(quizDocs).document(settings).get().await()
+                val model = snapshot.toObject<QuizSettingModel>()
+                val cloud_date = model?.stamp?.toDate()?.time
+                if (date < cloud_date!!){
+                    data.postValue(null)
+                }else{
+                    data.postValue(true)
+                }
+            }catch (e: Exception){
+                data.postValue(false)
+            }
+        }
+        return data
+    }
+
+     fun downloadQuiz(): LiveData<MyDataState> {
+        val data = MutableLiveData<MyDataState>()
+        scope.launch {
+            try {
+                val ans = cloud.collection(collectionName).document("EH4tf4KhiFWU1rZuLPsTMuUYCbl2").collection(quizDocs).get().await()
+                data.postValue(MyDataState.onLoaded(ans))
+            }catch (e: Exception){
+                data.postValue(MyDataState.notLoaded(e))
+            }
+        }
+         return data
+    }
 }
