@@ -125,7 +125,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val text = input.text.toString().trim()
         if (text.isNotEmpty()) {
             binding.progrgess.visibility = View.VISIBLE
-            checkIfRegistered(text)
+            registerForQuiz(text)
 
             dialog.dismiss()
         } else {
@@ -137,25 +137,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     builder.show()
 }
 
-    private fun checkIfRegistered(text: String) {
-    model.checkIfAdminDocExist(text).observe(viewLifecycleOwner, Observer { result ->
-        when (result) {
-            true -> registerForQuiz(text)
-            false -> {
-                Toast.makeText(activity, "This Admin uid dosen't exist", Toast.LENGTH_LONG).show()
-                binding.progrgess.visibility = View.GONE
-            }
-            null -> {
-                Toast.makeText(activity, "Check your Internet Connection and try again", Toast.LENGTH_LONG).show()
-                binding.progrgess.visibility = View.GONE
-            }
-        }
-    })
-}
-
     private fun registerForQuiz(text: String) {
     constants.admin_id = text
-    model.registerForQuiz(text).observe(viewLifecycleOwner, Observer {
+    model.registerForQuiz(text).observe(viewLifecycleOwner, {
         when (it) {
             MyServerDataState.onLoaded -> {
                 Toast.makeText(activity, "Successfully registered", Toast.LENGTH_LONG).show()
@@ -163,7 +147,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 checkIfPreviouslyRegistered()
             }
             is MyServerDataState.notLoaded -> {
-                Toast.makeText(activity, "Check your internet connection and try again", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, it.e.toString(), Toast.LENGTH_LONG).show()
                 binding.progrgess.visibility = View.GONE
             }
             MyServerDataState.isLoading -> {

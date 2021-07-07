@@ -16,9 +16,11 @@ import com.maricoolsapps.utils.models.StudentUser
 import com.maricoolsapps.utils.others.constants
 import com.maricoolsapps.utils.others.constants.admin_id
 import com.maricoolsapps.utils.others.constants.quizDocs
+import com.maricoolsapps.utils.others.constants.registeredStudents
 import com.maricoolsapps.utils.others.constants.settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -48,17 +50,29 @@ class StudentCloudData(var cloud: FirebaseFirestore,
 
     fun registerForQuiz(id: String): LiveData<MyServerDataState> {
         val dataLiveData = MutableLiveData<MyServerDataState>()
-        scope.launch {
-            try{
-        userDataDoc.update("registered", true).await()
-                val snapshot = userDataDoc.get().await()
-                cloud.collection(collectionName).document(id)
-                        .collection("Registered Students").document(serverUser.getUserId())
-                        .set(snapshot.toObject<StudentUser>()!!).await()
-                 dataLiveData.postValue(MyServerDataState.onLoaded)
+        scope.launch(IO) {
+          val job = async(IO) {
+                checkIfAdminDocExist(id)
             }
-                    catch (e: Exception){
-                dataLiveData.postValue(MyServerDataState.notLoaded(Exception("Error")))
+            job.await().let {
+                when(it){
+                    true -> {
+                        try{
+                            userDataDoc.update("registered", true).await()
+                            val snapshot = userDataDoc.get().await()
+                            cloud.collection(collectionName).document(id)
+                                    .collection(registeredStudents).document(serverUser.getUserId())
+                                    .set(snapshot.toObject<StudentUser>()!!).await()
+                            dataLiveData.postValue(MyServerDataState.onLoaded)
+                        }
+                        catch (e: Exception){
+                            dataLiveData.postValue(MyServerDataState.notLoaded(Exception("Check Internet")))
+                        }
+                    }
+                    false -> {
+                        dataLiveData.postValue(MyServerDataState.notLoaded(Exception("Wrong ID")))
+                    }
+                }
             }
         }
         return dataLiveData
@@ -82,21 +96,13 @@ class StudentCloudData(var cloud: FirebaseFirestore,
     return dataLiveData
 }
 
-    fun checkIfAdminDocExist(id: String): LiveData<Boolean> {
-        val dataLiveData = MutableLiveData<Boolean>()
-        scope.launch(IO) {
-            try {
-                val res = cloud.collection(collectionName).document(id).get(Source.SERVER).await()
-                if (res.exists()) {
-                    dataLiveData.postValue(true)
-                } else {
-                    dataLiveData.postValue(false)
-                }
-            } catch (e: Exception) {
-                dataLiveData.postValue(null)
-            }
+    private suspend fun checkIfAdminDocExist(id: String): Boolean {
+        return try {
+            val res = cloud.collection(collectionName).document(id).get(Source.SERVER).await()
+            res.exists()
+        } catch (e: Exception) {
+            false
         }
-        return dataLiveData
     }
 
     fun checkIfItsTimeToAccessQuiz(): LiveData<Boolean>{

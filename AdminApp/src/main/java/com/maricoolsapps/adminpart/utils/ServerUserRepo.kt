@@ -11,7 +11,7 @@ class ServerUserRepo
 
      val currentUser: FirebaseUser? = user.currentUser
 
-    fun getUserId(): String? = user.getUserId()
+    fun getUserId(): String = user.getUserId()
 
     fun registerUser(email: String, password: String, name: String): LiveData<MyServerDataState> = user.registerUser(email, password, name)
 

@@ -23,7 +23,7 @@ class MainViewModel
     fun registerForQuiz(id: String): LiveData<MyServerDataState> = repository.registerForQuiz(id)
     fun checkIfPreviouslyRegistered(): LiveData<Boolean> = repository.checkIfPreviouslyRegistered()
     fun isTimeReached() = repository.isTimeReached()
-    fun checkIfAdminDocExist(id: String): LiveData<Boolean> = repository.checkIfAdminDocExist(id)
+   // fun checkIfAdminDocExist(id: String): LiveData<Boolean> = repository.checkIfAdminDocExist(id)
 
       fun insertToLocalDatabase(data: List<RoomEntity>): LiveData<Boolean> {
          val _data = MutableLiveData<Boolean>()

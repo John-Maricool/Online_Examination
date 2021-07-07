@@ -81,7 +81,7 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
                         binding.progress.visibility = View.VISIBLE
                         val data = giveCorrectInputs()
                         if (data != null) {
-                            model.createUser(data).observe(viewLifecycleOwner, Observer {
+                            model.createUser(data).observe(viewLifecycleOwner, {
                                 when(it){
                                     MyServerDataState.onLoaded -> {
                                         binding.progress.visibility = View.GONE

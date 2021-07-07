@@ -20,7 +20,7 @@ class MainRepository
 
     fun registerForQuiz(id: String): LiveData<MyServerDataState>  = cloud.registerForQuiz(id)
     fun checkIfPreviouslyRegistered(): LiveData<Boolean> = cloud.checkIfPreviouslyRegistered()
-    fun checkIfAdminDocExist(id: String): LiveData<Boolean> = cloud.checkIfAdminDocExist(id)
+    //fun checkIfAdminDocExist(id: String): LiveData<Boolean> = cloud.checkIfAdminDocExist(id)
     fun isTimeReached() = cloud.checkIfItsTimeToAccessQuiz()
 
     suspend fun insertToLocalDatabase(data: List<RoomEntity>) {
