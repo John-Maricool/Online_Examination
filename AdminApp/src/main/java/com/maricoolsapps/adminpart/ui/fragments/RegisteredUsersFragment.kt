@@ -54,7 +54,7 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
 
     private fun startMonitoring(){
         binding.progressBar.visibility = View.VISIBLE
-        model.start().observe(viewLifecycleOwner, Observer {dataState ->
+        model.start().observe(viewLifecycleOwner, { dataState ->
             when(dataState){
                 is MyDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE

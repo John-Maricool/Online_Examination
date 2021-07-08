@@ -78,12 +78,15 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
         }
 
         binding.progressBar.visibility = View.VISIBLE
-        model.createUser(userEmail, userPassword, username).observe(viewLifecycleOwner, Observer {result ->
+
+        val user = AdminUser(username, userEmail)
+
+        model.signUser(user, auth, userPassword).observe(viewLifecycleOwner, { result ->
             when (result) {
                 is MyServerDataState.onLoaded -> {
-                    val user = AdminUser(username, userEmail)
-                    sendDataToFirestore(user)
-                }
+                    binding.progressBar.visibility = View.GONE
+                    startActivity(Intent(activity, AdminActivity::class.java))
+                    activity?.finish()}
 
                 is MyServerDataState.notLoaded -> {
                     binding.progressBar.visibility = View.GONE
@@ -93,21 +96,4 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             }
         })
     }
-
-    private fun sendDataToFirestore(user: AdminUser) {
-            model.sendToFirestore(user, auth).observe(viewLifecycleOwner, Observer {
-                when(it){
-                    MyServerDataState.onLoaded ->{
-                        binding.progressBar.visibility = View.GONE
-                        startActivity(Intent(activity, AdminActivity::class.java))
-                        activity?.finish()}
-
-                    is MyServerDataState.notLoaded -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(activity, it.e.toString(), Toast.LENGTH_LONG).show()
-                    }
-                    MyServerDataState.isLoading -> TODO()
-                }
-            })
-        }
 }

@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
+import com.maricoolsapps.utils.user.ServerUser
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
     private var _binding: FragmentAdminProtalBinding? = null
     private val binding get() = _binding!!
 
-    @Inject lateinit var auth: FirebaseAuth
+    @Inject lateinit var user: ServerUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +50,11 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val name = auth.currentUser?.displayName
+    override fun onStart() {
+        super.onStart()
+        val name = user.getUserName()
         (activity as AdminActivity).supportActionBar?.title = "Welcome $name"
+
     }
 
     override fun onDestroyView() {

@@ -11,20 +11,11 @@ class ServerUserRepo
 
      val currentUser: FirebaseUser? = user.currentUser
 
-    fun getUserId(): String = user.getUserId()
-
-    fun registerUser(email: String, password: String, name: String): LiveData<MyServerDataState> = user.registerUser(email, password, name)
-
     fun signInUser(email: String, password: String): LiveData<MyServerDataState> = user.signInUser(email, password)
-
-    fun updateProfileName(name: String): LiveData<MyServerDataState> = user.updateProfileName(name)
-
-    private fun getUserEmail(): String? = user.getUserEmail()
 
     fun getUserName(): String? = user.getUserName()
 
     fun getProfilePhoto(): LiveData<Uri?> = user.getProfilePhoto()
-
 
     fun changeProfilePhoto(uri: Uri): LiveData<MyServerDataState> = user.changeProfilePhoto(uri)
 

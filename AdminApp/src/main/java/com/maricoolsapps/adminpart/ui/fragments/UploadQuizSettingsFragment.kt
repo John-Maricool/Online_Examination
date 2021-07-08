@@ -67,7 +67,7 @@ class UploadQuizSettingsFragment : Fragment(R.layout.fragment_upload_quiz_settin
     }
 
     private fun addSettingsToFirebase(setting: QuizSettingModel) {
-        model.uploadQuizSettings(setting).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        model.uploadQuizSettings(setting).observe(viewLifecycleOwner, {
             when(it){
                 true -> sendDataToFirebase()
                 false -> Toast.makeText(activity, "Error sending data", Toast.LENGTH_SHORT).show()
@@ -81,7 +81,7 @@ class UploadQuizSettingsFragment : Fragment(R.layout.fragment_upload_quiz_settin
         val size = quiz.size
         val progressIncrement = 100 / size
         quiz.forEach {
-            model.addToFirebase(it).observe(viewLifecycleOwner, androidx.lifecycle.Observer {state ->
+            model.addToFirebase(it).observe(viewLifecycleOwner, { state ->
                 when(state) {
                     is MyServerDataState.onLoaded -> {
                         model.clicks++

@@ -64,8 +64,9 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
             binding.progressText.visibility = View.VISIBLE
         }
     }
+
     private fun clearDocsAndSend() {
-        model.clearQuizDocs().observe(viewLifecycleOwner, Observer {
+        model.clearQuizDocs().observe(viewLifecycleOwner, {
             when(it){
                 true -> send()
                 false -> {

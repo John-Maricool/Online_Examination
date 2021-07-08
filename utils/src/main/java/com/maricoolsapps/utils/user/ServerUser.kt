@@ -27,19 +27,15 @@ class ServerUser
         var profileUri: Uri? = null
     }
 
-    fun registerUser(email: String, password: String, name: String): LiveData<MyServerDataState>{
-        val data = MutableLiveData<MyServerDataState>()
-        scope.launch(IO) {
-            try{
+    suspend fun registerUser(email: String, password: String, name: String): Boolean{
+        return try{
             auth.createUserWithEmailAndPassword(email, password).await()
-                updateProfileName(name)
-                data.postValue(MyServerDataState.onLoaded)
-            }catch (e: Exception) {
-                data.postValue(MyServerDataState.notLoaded(e))
-            }
+            updateProfileName(name)
+            true
+        }catch (e: Exception) {
+            false
         }
-       return data
-    }
+        }
 
     fun signInUser(email: String, password: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()
@@ -54,20 +50,17 @@ class ServerUser
         return data
     }
 
-    fun updateProfileName(name: String): LiveData<MyServerDataState>{
-        val data = MutableLiveData<MyServerDataState>()
-        scope.launch(IO) {
-            try{
+    suspend fun updateProfileName(name: String): Boolean{
+        return try{
             val profile = UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
             currentUser?.updateProfile(profile)?.await()
-                data.postValue(MyServerDataState.onLoaded)
-            }catch (e: Exception) {
-                data.postValue(MyServerDataState.notLoaded(e))
-            }
+            true
+        }catch (e: Exception) {
+            false
         }
-        return data
+
     }
 
      fun getUserEmail(): String?{

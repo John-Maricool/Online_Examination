@@ -25,23 +25,18 @@ class AdminCloudData(var cloud: FirebaseFirestore,
                      var serverUser: ServerUser,
                      var scope: CoroutineScope) {
 
-    fun CreateFirestoreUser(user: AdminUser, Auth: FirebaseAuth)
-            : LiveData<MyServerDataState> {
-        val data = MutableLiveData<MyServerDataState>()
-        scope.launch(IO) {
-            try {
-                if (Auth.currentUser != null) {
-                        cloud.collection(collectionName)
-                                .document(Auth.currentUser.uid).set(user).await()
-                        data.postValue(MyServerDataState.onLoaded)
-                    } else {
-                        data.postValue(MyServerDataState.notLoaded(Exception("Error")))
-                    }
-            } catch (e: Exception) {
-                data.postValue(MyServerDataState.notLoaded(e))
-            }
+   suspend fun CreateFirestoreUser(user: AdminUser, Auth: FirebaseAuth): Boolean {
+       return try {
+           if (Auth.currentUser != null) {
+               cloud.collection(collectionName)
+                       .document(Auth.currentUser.uid).set(user).await()
+               true
+           } else {
+               false
+           }
+       } catch (e: Exception) {
+           false
         }
-        return data
     }
 
     fun deleteAllQuizDocs(): LiveData<Boolean> {
