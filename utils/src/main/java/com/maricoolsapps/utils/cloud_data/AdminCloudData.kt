@@ -108,18 +108,4 @@ class AdminCloudData(var cloud: FirebaseFirestore,
         }
         return data
     }
-
-    fun quizSetting(data: QuizSettingModel): LiveData<Boolean>{
-        val _data = MutableLiveData<Boolean>()
-        scope.launch(IO) {
-            try{
-                cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).document(settings).set(data).await()
-                _data.postValue(true)
-            }catch (e: Exception){
-                _data.postValue(false)
-            }
-        }
-        return _data
-    }
-
 }

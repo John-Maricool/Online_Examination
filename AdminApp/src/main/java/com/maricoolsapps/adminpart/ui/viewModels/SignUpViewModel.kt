@@ -20,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel
 @Inject constructor(val serverUser: ServerUser, val cloud: AdminCloudData): ViewModel(){
+
     fun signUser(user: AdminUser, auth: FirebaseAuth, password: String): LiveData<MyServerDataState>{
         val state = MutableLiveData<MyServerDataState>()
         viewModelScope.launch(IO) {

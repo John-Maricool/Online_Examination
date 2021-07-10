@@ -29,11 +29,10 @@ class QuizArrangement : Fragment(R.layout.fragment_quiz_arrangement) {
         _binding = FragmentQuizArrangementBinding.bind(view)
 
         val countryList = arrayOf(1, 2, 3, 4)
-
         adapter = ArrayAdapter<Int>(requireContext(), android.R.layout.simple_spinner_dropdown_item, countryList)
-        binding.spinner.setAdapter(adapter)
+        binding.spinner.adapter = adapter
 
-        if (args.items == null){
+       if (args.items == null){
             binding.update.visibility = View.GONE
         }else{
             binding.add.visibility = View.GONE

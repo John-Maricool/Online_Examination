@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.toObjects
 import com.maricoolsapps.room_library.room.RoomEntity
@@ -51,28 +52,20 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     private fun downloadQuiz() {
         binding.progrgess.visibility = View.VISIBLE
-        model.getQuizFromServer().observe(viewLifecycleOwner, { state ->
+        model.insertToLocalDatabase().observe(viewLifecycleOwner, { state ->
             when(state){
-                is MyDataState.onLoaded -> {val snap = state.data as QuerySnapshot
-                val result = snap.toObjects<ServerQuizDataModel>()
-                    contimueProgress(result)
-                }
-                MyDataState.isLoading -> TODO()
-                is MyDataState.notLoaded -> {binding.progrgess.visibility = View.GONE
+                true -> {binding.progrgess.visibility = View.GONE
+                    Toast.makeText(activity, "Uploaded Successfully", Toast.LENGTH_LONG).show()
+                navigateToQuiz()}
+                false ->{  binding.progrgess.visibility = View.GONE
                     Toast.makeText(activity, "Not Uploaded", Toast.LENGTH_LONG).show()}
             }
         })
     }
 
-    private fun contimueProgress(result: List<ServerQuizDataModel>) {
-        val local_res: List<RoomEntity> = model.mapToLocalDb(result)
-        model.insertToLocalDatabase(local_res).observe(viewLifecycleOwner, {  bool ->
-            when(bool){
-                true -> {binding.progrgess.visibility = View.GONE
-                    Toast.makeText(activity, "Uploaded Successfully", Toast.LENGTH_LONG).show()}
-            }
-
-        })
+    private fun navigateToQuiz() {
+        val action  = MainFragmentDirections.actionMainFragmentToMainQuiz()
+        findNavController().navigate(action)
     }
 
     /*private fun checkIfTimeReached() {

@@ -10,6 +10,7 @@ import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maricoolsapps.adminpart.R
@@ -34,7 +35,6 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private var _binding: FragmentSavedQuizBinding? = null
     private val binding get() = _binding!!
     private lateinit var clickedItem: RoomEntity
-
     private lateinit var actionMode: SavedQuizActionMode
 
     @Inject
@@ -50,6 +50,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         model.start()
         startMonitoring()
         setHasOptionsMenu(true)
+
     }
 
     override fun onStart() {
@@ -60,7 +61,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
 
     private fun sendToFirebase() {
         if (binding.recyclerView.isNotEmpty()){
-            binding.progressBar.visibility = View.VISIBLE
+            binding.progressUpload.visibility = View.VISIBLE
             binding.progressText.visibility = View.VISIBLE
         }
     }
@@ -70,7 +71,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
             when(it){
                 true -> send()
                 false -> {
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressUpload.visibility = View.GONE
                     binding.progressText.visibility = View.GONE
                     Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()}
                 null -> send()
@@ -81,15 +82,15 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private fun send() {
         val data: List<ServerQuizDataModel> = model.map()
         model.clicks = 0
-
         val size = data.size
         val progressIncrement = 100 / size
         data.forEach {
-            model.addToFirebase(it).observe(viewLifecycleOwner, Observer { result ->
+            model.addToFirebase(it).observe(viewLifecycleOwner, { result ->
                 when (result) {
                     is MyServerDataState.onLoaded -> {
                         model.clicks++
                         if (model.clicks == size) {
+                            binding.progressBar.visibility = View.GONE
                             binding.progressUpload.visibility = View.GONE
                             binding.progressText.visibility = View.GONE
                             Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
@@ -103,13 +104,13 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                     }
 
                     is MyServerDataState.notLoaded -> {
+                        binding.progressBar.visibility = View.GONE
                         binding.progressUpload.visibility = View.GONE
                         binding.progressText.visibility = View.GONE
                         Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
                     }
                     MyServerDataState.isLoading -> TODO()
                 }
-
             })
         }
     }
@@ -123,8 +124,8 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
 
                 is MyDataState.onLoaded ->{
                     binding.progressBar.visibility = View.GONE
-                    // adapter.getList(dataState.data)
-                    adapter.items = dataState.data as MutableList<RoomEntity>
+                   val list = dataState.data as MutableList<RoomEntity>
+                    adapter.items = list
                     Log.d("view", dataState.data.toString())
                     binding.recyclerView.adapter = adapter
                 }
@@ -165,11 +166,8 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         val alertDialogBuilder =  AlertDialog.Builder(requireContext())
         alertDialogBuilder.setTitle("Notice")
         alertDialogBuilder.setMessage("You cannot edit any quiz after uploading").setPositiveButton("New Write") { dialog, _ ->
-           /* sendToFirebase()
-            clearDocsAndSend()*/
-            val quiz = model.map().toTypedArray()
-            val action = SavedQuizFragmentDirections.actionSavedQuizFragmentToUploadQuizSettingsFragment(quiz)
-            findNavController().navigate(action)
+            sendToFirebase()
+            clearDocsAndSend()
             dialog?.dismiss()
         }.setNegativeButton("Add to Existing"){ dialogInterface, _ ->
             sendToFirebase()

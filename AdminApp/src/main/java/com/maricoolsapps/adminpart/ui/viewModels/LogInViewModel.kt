@@ -11,8 +11,6 @@ import javax.inject.Inject
 class LogInViewModel
 @Inject constructor(val serverUser: ServerUserRepo): ViewModel(){
 
-    val currentUser = serverUser.currentUser
-
     fun logInUser(email: String, password: String): LiveData<MyServerDataState> = serverUser.signInUser(email, password)
 
 }

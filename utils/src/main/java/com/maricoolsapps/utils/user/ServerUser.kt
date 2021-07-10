@@ -14,13 +14,8 @@ import java.lang.Exception
 class ServerUser
   constructor(var auth: FirebaseAuth, var scope: CoroutineScope) {
 
-     var currentUser: FirebaseUser? = auth.currentUser
-
     fun getUserId(): String{
-        auth.addAuthStateListener {auth ->
-            currentUser =  auth.currentUser
-        }
-        return currentUser?.uid!!
+        return auth.currentUser?.uid!!
     }
 
     companion object{
@@ -55,7 +50,7 @@ class ServerUser
             val profile = UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
-            currentUser?.updateProfile(profile)?.await()
+            auth.currentUser?.updateProfile(profile)?.await()
             true
         }catch (e: Exception) {
             false
@@ -64,17 +59,17 @@ class ServerUser
     }
 
      fun getUserEmail(): String?{
-        return currentUser?.email
+        return auth.currentUser?.email
     }
 
     fun getUserName(): String?{
-        return currentUser?.displayName
+        return auth.currentUser?.displayName
     }
 
     fun getProfilePhoto(): LiveData<Uri?>{
         val data = MutableLiveData<Uri?>()
         scope.launch(IO) {
-            data.postValue(currentUser?.photoUrl)
+            data.postValue(auth.currentUser?.photoUrl)
         }
         return data
     }
@@ -86,7 +81,7 @@ class ServerUser
             val profile = UserProfileChangeRequest.Builder()
                 .setPhotoUri(uri)
                 .build()
-            currentUser?.updateProfile(profile)?.await()
+            auth.currentUser?.updateProfile(profile)?.await()
                 profileUri = uri
                 data.postValue(MyServerDataState.onLoaded)
             }catch (e: Exception) {
@@ -102,7 +97,7 @@ class ServerUser
                 try{
                 val mail = getUserEmail()!!
                 val credentials = EmailAuthProvider.getCredential(mail, oldPassword)
-                 currentUser?.reauthenticate(credentials)?.await()
+                 auth.currentUser?.reauthenticate(credentials)?.await()
                     data.postValue(MyServerDataState.onLoaded)
                 }catch (e: Exception){
                     data.postValue(MyServerDataState.notLoaded(e))
@@ -118,7 +113,7 @@ class ServerUser
             val profile = UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
-            currentUser?.updateProfile(profile)?.await()
+            auth.currentUser?.updateProfile(profile)?.await()
                 data.postValue(MyServerDataState.onLoaded)
             }catch (e: Exception) {
                 data.postValue(MyServerDataState.notLoaded(e))
@@ -131,7 +126,7 @@ class ServerUser
         val data = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
             try{
-                currentUser?.updatePassword(newPassword)?.await()
+                auth.currentUser?.updatePassword(newPassword)?.await()
                 data.postValue(MyServerDataState.onLoaded)
             }catch (e: Exception){
                 data.postValue(MyServerDataState.notLoaded(e))

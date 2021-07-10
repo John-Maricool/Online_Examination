@@ -5,7 +5,6 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.appComponents.AdminActivity
 import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
@@ -54,7 +53,6 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
         super.onStart()
         val name = user.getUserName()
         (activity as AdminActivity).supportActionBar?.title = "Welcome $name"
-
     }
 
     override fun onDestroyView() {

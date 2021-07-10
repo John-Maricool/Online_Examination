@@ -2,6 +2,7 @@ package com.maricoolsapps.utils.cloud_data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
@@ -11,6 +12,7 @@ import com.maricoolsapps.utils.user.ServerUser
 import com.maricoolsapps.utils.others.constants.collectionName
 import com.maricoolsapps.utils.others.constants.studentsCollectionName
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.models.AdminUser
 import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
 import com.maricoolsapps.utils.others.constants
@@ -31,21 +33,20 @@ class StudentCloudData(var cloud: FirebaseFirestore,
                        var serverUser: ServerUser,
                        var scope: CoroutineScope) {
 
-    val userDataDoc = cloud.collection(studentsCollectionName)
-            .document(serverUser.getUserId())
+   // val userDataDoc =
 
-    fun CreateFirestoreUser(user: StudentUser)
-            : LiveData<MyServerDataState> {
-        val data = MutableLiveData<MyServerDataState>()
-        scope.launch(IO) {
-            try{
-            userDataDoc.set(user).await()
-                data.postValue(MyServerDataState.onLoaded)
-            }catch (e: Exception) {
-                data.postValue(MyServerDataState.notLoaded(e))
+    suspend fun CreateFirestoreUser(user: StudentUser, Auth: FirebaseAuth): Boolean {
+        return try {
+            if (Auth.currentUser != null) {
+                cloud.collection(studentsCollectionName)
+                        .document(Auth.currentUser.uid).set(user).await()
+                true
+            } else {
+                false
             }
+        } catch (e: Exception) {
+            false
         }
-        return data
     }
 
     fun registerForQuiz(id: String): LiveData<MyServerDataState> {
@@ -58,8 +59,10 @@ class StudentCloudData(var cloud: FirebaseFirestore,
                 when(it){
                     true -> {
                         try{
-                            userDataDoc.update("registered", true).await()
-                            val snapshot = userDataDoc.get().await()
+                            cloud.collection(studentsCollectionName)
+                                    .document(serverUser.getUserId()).update("registered", true).await()
+                            val snapshot = cloud.collection(studentsCollectionName)
+                                    .document(serverUser.getUserId()).get().await()
                             cloud.collection(collectionName).document(id)
                                     .collection(registeredStudents).document(serverUser.getUserId())
                                     .set(snapshot.toObject<StudentUser>()!!).await()
@@ -82,7 +85,8 @@ class StudentCloudData(var cloud: FirebaseFirestore,
     val dataLiveData = MutableLiveData<Boolean>()
     scope.launch(IO) {
         try{
-        val snapshot = userDataDoc.get().await()
+        val snapshot = cloud.collection(studentsCollectionName)
+                .document(serverUser.getUserId()).get().await()
                 val data = snapshot.toObject<StudentUser>()
             if (data!!.isRegistered) {
                         dataLiveData.postValue(true)
@@ -125,16 +129,12 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         return data
     }
 
-     fun downloadQuiz(): LiveData<MyDataState> {
-        val data = MutableLiveData<MyDataState>()
-        scope.launch {
-            try {
-                val ans = cloud.collection(collectionName).document("EH4tf4KhiFWU1rZuLPsTMuUYCbl2").collection(quizDocs).get().await()
-                data.postValue(MyDataState.onLoaded(ans))
-            }catch (e: Exception){
-                data.postValue(MyDataState.notLoaded(e))
-            }
-        }
-         return data
+     suspend fun downloadQuiz(): MyDataState {
+         return try {
+             val ans = cloud.collection(collectionName).document("EH4tf4KhiFWU1rZuLPsTMuUYCbl2").collection(quizDocs).get(Source.SERVER).await()
+             MyDataState.onLoaded(ans)
+         }catch (e: Exception){
+             MyDataState.notLoaded(e)
+         }
     }
 }

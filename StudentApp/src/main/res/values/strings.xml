@@ -10,4 +10,13 @@
     <string name="registration_status_registered">You are currently registered for an Online exam</string>
     <string name="register_for_quiz_btn">Register</string>
     <string name="start_quiz_btn">START</string>
+    <string name="login">Login</string>
+    <string name="create_new">Create Account</string>
+    <string name="prompt_password">password</string>
+    <string name="prompt_email">email</string>
+    <string name="student_name">Name</string>
+    <string name="confirm_password">confirm password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="Phone_number">Phone Number</string>
+    <string name="reg_number">Reg Number (optional)</string>
 </resources>

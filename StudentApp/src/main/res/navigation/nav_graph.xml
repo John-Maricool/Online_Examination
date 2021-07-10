@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/studentSignup">
+    app:startDestination="@id/studentLogInFragment">
 
     <fragment
         android:id="@+id/studentSignup"
@@ -27,7 +27,19 @@
     </fragment>
     <fragment
         android:id="@+id/mainQuiz"
-        android:name="com.maricoolsapps.studentapp.MainQuiz"
+        android:name="com.maricoolsapps.studentapp.ui.MainQuizFragment"
         android:label="Quiz"
         tools:layout="@layout/fragment_main_quiz" />
+    <fragment
+        android:id="@+id/studentLogInFragment"
+        android:name="com.maricoolsapps.studentapp.ui.StudentLogInFragment"
+        android:label="student_log_in_fragment"
+        tools:layout="@layout/student_log_in_fragment" >
+        <action
+            android:id="@+id/action_studentLogInFragment_to_studentSignup"
+            app:destination="@id/studentSignup" />
+        <action
+            android:id="@+id/action_studentLogInFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
 </navigation>

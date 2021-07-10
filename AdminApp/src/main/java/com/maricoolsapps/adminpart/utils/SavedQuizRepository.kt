@@ -41,6 +41,5 @@ class SavedQuizRepository
         return daoImpl.map()
     }
 
-    fun uploadQuizSettings(settings: QuizSettingModel) = adminCloudData.quizSetting(settings)
 
 }

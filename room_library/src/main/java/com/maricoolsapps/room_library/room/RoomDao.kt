@@ -5,9 +5,8 @@ import androidx.room.*
 @Dao
 interface RoomDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertQuiz(quiz: RoomEntity)
-
 
     @Insert
     fun insertQuiz(quiz: List<RoomEntity>)

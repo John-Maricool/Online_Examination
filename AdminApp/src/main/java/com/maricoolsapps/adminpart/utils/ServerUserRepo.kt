@@ -9,8 +9,6 @@ import com.maricoolsapps.utils.datastate.MyServerDataState
 class ServerUserRepo
   constructor(var user: ServerUser) {
 
-     val currentUser: FirebaseUser? = user.currentUser
-
     fun signInUser(email: String, password: String): LiveData<MyServerDataState> = user.signInUser(email, password)
 
     fun getUserName(): String? = user.getUserName()

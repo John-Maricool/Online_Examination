@@ -8,6 +8,7 @@ import com.maricoolsapps.room_library.room.RoomDaoImpl
 import com.maricoolsapps.room_library.room.RoomEntity
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.cloud_data.StudentCloudData
+import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
@@ -31,7 +32,7 @@ class MainRepository
        return roomDaoImpl.mapToRoom(data)
     }
 
-    fun getQuizFromServer() = cloud.downloadQuiz()
+    suspend fun getQuizFromServer(): MyDataState = cloud.downloadQuiz()
 
     suspend fun allQuiz(): Int{
         return roomDaoImpl.getAllQuiz().size
