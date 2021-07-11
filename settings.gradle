@@ -1,3 +1,6 @@
+include ':UtilsAndRepository'
+include ':serverDatabase'
+include ':localDatabase'
 include ':StudentApp'
 include ':AdminApp'
 rootProject.name = "Online Examination Project"

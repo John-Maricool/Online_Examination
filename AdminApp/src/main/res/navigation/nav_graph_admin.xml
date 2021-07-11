@@ -8,16 +8,25 @@
 
     <fragment
         android:id="@+id/adminPortalFragment"
-        android:name="com.maricoolsapps.adminpart.AdminPortalFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.AdminPortalFragment"
         android:label="Welcome"
         tools:layout="@layout/fragment_admin_protal" >
         <action
             android:id="@+id/action_adminPortalFragment_to_quizArrangement"
             app:destination="@id/quizArrangement" />
+        <action
+            android:id="@+id/action_adminPortalFragment_to_registeredUsersFragment"
+            app:destination="@id/registeredUsersFragment" />
+        <action
+            android:id="@+id/action_adminPortalFragment_to_savedQuizFragment"
+            app:destination="@id/savedQuizFragment" />
+        <action
+            android:id="@+id/action_adminPortalFragment_to_uploadQuizFragment"
+            app:destination="@id/uploadQuizFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.maricoolsapps.adminpart.ProfileFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -29,17 +38,48 @@
     </fragment>
     <dialog
         android:id="@+id/changeNameDialog"
-        android:name="com.maricoolsapps.adminpart.ChangeNameDialog"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangeNameDialog"
         android:label="fragment_change_name_dialog"
         tools:layout="@layout/fragment_change_name_dialog" />
     <dialog
         android:id="@+id/changePasswordDialog"
-        android:name="com.maricoolsapps.adminpart.ChangePasswordDialog"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangePasswordDialog"
         android:label="fragment_change_password_dialog"
         tools:layout="@layout/fragment_change_password_dialog" />
     <fragment
         android:id="@+id/quizArrangement"
-        android:name="com.maricoolsapps.adminpart.QuizArrangement"
-        android:label="fragment_quiz_arrangement"
-        tools:layout="@layout/fragment_quiz_arrangement" />
+        android:name="com.maricoolsapps.adminpart.ui.fragments.QuizArrangement"
+        android:label="Fill in the Options"
+        tools:layout="@layout/fragment_quiz_arrangement" >
+        <argument
+            android:name="items"
+            app:argType="com.maricoolsapps.utilsandrepository.models.ServerQuizDataModel"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_quizArrangement_to_savedQuizFragment"
+            app:destination="@id/savedQuizFragment"
+            app:popUpTo="@id/quizArrangement"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/registeredUsersFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.RegisteredUsersFragment"
+        android:label="Registered Users"
+        tools:layout="@layout/fragment_registered_users" />
+    <fragment
+        android:id="@+id/savedQuizFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.SavedQuizFragment"
+        android:label="Saved Quiz"
+        tools:layout="@layout/fragment_saved_quiz" >
+        <action
+            android:id="@+id/action_savedQuizFragment_to_quizArrangement"
+            app:destination="@id/quizArrangement"
+            app:popUpTo="@id/savedQuizFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/uploadQuizFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.UploadQuizFragment"
+        android:label="Upload Quiz"
+        tools:layout="@layout/fragment_upload_quiz" />
 </navigation>
