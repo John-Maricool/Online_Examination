@@ -50,7 +50,7 @@ class SavedQuizViewModel
 
     fun clearQuizDocs() = repository.clearQuizDocs()
 
-    fun addToFirebase(data: Any): LiveData<MyServerDataState> = repository.addToFirebase(data)
+    fun addToFirebase(data: Any, time: Int): LiveData<MyServerDataState> = repository.addToFirebase(data, time)
 
     fun map(): List<ServerQuizDataModel> {
         return repository.map()

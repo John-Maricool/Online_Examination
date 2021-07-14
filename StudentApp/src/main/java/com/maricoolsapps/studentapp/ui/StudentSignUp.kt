@@ -118,8 +118,10 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
                     email = email,
                     number = phoneNumber,
                     regNo = regNo,
-                    isActivated = true,
-                    isRegistered = false
+                    isActivated = false,
+                    isRegistered = false,
+                    adminId = null,
+                    quizScore = null
             )
         }
     }
@@ -127,13 +129,5 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (auth.currentUser != null){
-            val action = StudentSignUpDirections.actionStudentSignupToMainFragment()
-            findNavController().navigate(action)
-        }
     }
 }

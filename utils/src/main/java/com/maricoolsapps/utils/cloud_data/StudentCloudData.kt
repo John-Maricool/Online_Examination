@@ -4,36 +4,32 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.toObject
+import com.google.protobuf.ListValue
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.user.ServerUser
 import com.maricoolsapps.utils.others.constants.collectionName
 import com.maricoolsapps.utils.others.constants.studentsCollectionName
 import com.maricoolsapps.utils.datastate.MyServerDataState
-import com.maricoolsapps.utils.models.AdminUser
 import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
-import com.maricoolsapps.utils.others.constants
-import com.maricoolsapps.utils.others.constants.admin_id
 import com.maricoolsapps.utils.others.constants.quizDocs
+import com.maricoolsapps.utils.others.constants.quizTime
 import com.maricoolsapps.utils.others.constants.registeredStudents
 import com.maricoolsapps.utils.others.constants.settings
+import com.maricoolsapps.utils.others.constants.time
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
-import java.util.*
 
 class StudentCloudData(var cloud: FirebaseFirestore,
                        var serverUser: ServerUser,
                        var scope: CoroutineScope) {
-
-   // val userDataDoc =
 
     suspend fun CreateFirestoreUser(user: StudentUser, Auth: FirebaseAuth): Boolean {
         return try {
@@ -59,6 +55,7 @@ class StudentCloudData(var cloud: FirebaseFirestore,
                 when(it){
                     true -> {
                         try{
+                            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("adminId", id)
                             cloud.collection(studentsCollectionName)
                                     .document(serverUser.getUserId()).update("registered", true).await()
                             val snapshot = cloud.collection(studentsCollectionName)
@@ -110,31 +107,83 @@ class StudentCloudData(var cloud: FirebaseFirestore,
     }
 
     fun checkIfItsTimeToAccessQuiz(): LiveData<Boolean>{
-        val data = MutableLiveData<Boolean>()
-        val date = Calendar.getInstance().time.time
+        val bool = MutableLiveData<Boolean>()
         scope.launch {
-            try {
-               val snapshot =  cloud.collection(collectionName).document(constants.admin_id).collection(quizDocs).document(settings).get().await()
-                val model = snapshot.toObject<QuizSettingModel>()
-                val cloud_date = model?.stamp?.toDate()?.time
-                if (date < cloud_date!!){
-                    data.postValue(null)
-                }else{
-                    data.postValue(true)
+             try {
+                val snapshot = cloud.collection(studentsCollectionName).document(serverUser.getUserId()).get().await()
+                val user = snapshot.toObject<StudentUser>()
+                if (user!!.isActivated) {
+                   bool.postValue(true)
+                } else {
+                    bool.postValue(false)
                 }
+            } catch (e: Exception) {
+                bool.postValue(null)
+            }
+        }
+        return bool
+    }
+
+     suspend fun downloadQuiz(): MyDataState {
+         return try {
+             val id = cloud.collection(studentsCollectionName).document(serverUser.getUserId()).get().await()
+             val ids = id.toObject<StudentUser>()?.adminId
+             val job =  cloud.collection(collectionName).document(ids!!).collection(settings).document(quizTime).get(Source.SERVER).await()
+                 time = job.toObject<QuizSettingModel>()?.time
+             val ans = cloud.collection(collectionName).document(ids).collection(quizDocs).get(Source.SERVER).await()
+             MyDataState.onLoaded(ans)
+         }catch (e: Exception){
+             MyDataState.notLoaded(e)
+         }
+    }
+
+    fun deactivateStudent(): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch {
+            try{
+                cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("activated", false).await()
+                val user = cloud.collection(studentsCollectionName).document(serverUser.getUserId()).get().await()
+                val id = user.toObject<StudentUser>()?.adminId
+                cloud.collection(collectionName).document(id!!).collection(registeredStudents)
+                        .document(serverUser.getUserId()).update("activated", false).await()
+                data.postValue(MyServerDataState.onLoaded)
             }catch (e: Exception){
-                data.postValue(false)
+                data.postValue(MyServerDataState.notLoaded(e))
             }
         }
         return data
     }
 
-     suspend fun downloadQuiz(): MyDataState {
-         return try {
-             val ans = cloud.collection(collectionName).document("EH4tf4KhiFWU1rZuLPsTMuUYCbl2").collection(quizDocs).get(Source.SERVER).await()
-             MyDataState.onLoaded(ans)
-         }catch (e: Exception){
-             MyDataState.notLoaded(e)
-         }
+    fun sendQuizResult(score: Int): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        val userDoc =  cloud.collection(studentsCollectionName).document(serverUser.getUserId())
+        scope.launch {
+            try{
+               userDoc.update("quizScore", score).await()
+                       val user = userDoc.get().await()
+                val id = user.toObject<StudentUser>()?.adminId
+                cloud.collection(collectionName).document(id!!).collection(registeredStudents)
+                        .document(serverUser.getUserId()).update("quizScore", score).await()
+                data.postValue(MyServerDataState.onLoaded)
+            }catch (e: Exception){
+                data.postValue(MyServerDataState.notLoaded(e))
+            }
+        }
+        return data
+    }
+
+    fun getStudent(): LiveData<MyDataState>{
+        val data = MutableLiveData<MyDataState>()
+        val userDoc =  cloud.collection(studentsCollectionName).document(serverUser.getUserId())
+        scope.launch {
+            try{
+                val user = userDoc.get().await()
+                val user_obj = user.toObject<StudentUser>()
+                data.postValue(MyDataState.onLoaded(user_obj as StudentUser))
+            }catch (e: Exception){
+                data.postValue(MyDataState.notLoaded(e))
+            }
+        }
+        return data
     }
 }

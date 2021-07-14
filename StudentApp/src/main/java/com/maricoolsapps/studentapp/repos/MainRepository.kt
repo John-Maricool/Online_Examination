@@ -21,11 +21,14 @@ class MainRepository
 
     fun registerForQuiz(id: String): LiveData<MyServerDataState>  = cloud.registerForQuiz(id)
     fun checkIfPreviouslyRegistered(): LiveData<Boolean> = cloud.checkIfPreviouslyRegistered()
-    //fun checkIfAdminDocExist(id: String): LiveData<Boolean> = cloud.checkIfAdminDocExist(id)
     fun isTimeReached() = cloud.checkIfItsTimeToAccessQuiz()
 
     suspend fun insertToLocalDatabase(data: List<RoomEntity>) {
          roomDaoImpl.insertQuiz(data)
+    }
+
+    suspend fun deleteAllQuiz() {
+        roomDaoImpl.deleteQuiz(roomDaoImpl.getAllQuiz())
     }
 
     fun mapToLocalDb(data: List<ServerQuizDataModel>): List<RoomEntity>{
@@ -33,8 +36,4 @@ class MainRepository
     }
 
     suspend fun getQuizFromServer(): MyDataState = cloud.downloadQuiz()
-
-    suspend fun allQuiz(): Int{
-        return roomDaoImpl.getAllQuiz().size
-    }
 }

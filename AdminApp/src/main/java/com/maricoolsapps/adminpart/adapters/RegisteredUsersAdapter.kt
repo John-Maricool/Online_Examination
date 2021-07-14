@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.RegisteredUsersListItemBinding
+import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.utils.models.StudentUser
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -22,6 +23,7 @@ class RegisteredUsersAdapter
     }
 
     lateinit var listener_long: OnItemLongClickListener
+    lateinit var listener: OnItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RegisteredUsersViewHolder {
         val binding = RegisteredUsersListItemBinding.inflate(
@@ -39,25 +41,25 @@ class RegisteredUsersAdapter
     override fun getItemCount(): Int {
         return items.size
     }
+    fun setOnClickListener(mlistener: OnItemClickListener) {
+        listener = mlistener
+    }
 
     override fun onBindViewHolder(holder: RegisteredUsersViewHolder, position: Int) {
         val currentPos = items[position]
         holder.binding.name.text = "Name: ${currentPos.name}"
         holder.binding.email.text = "Email: ${currentPos.email}"
-        holder.binding.number.text = "PhoneNumber: ${currentPos.number}"
     }
 
     inner class RegisteredUsersViewHolder(var binding: RegisteredUsersListItemBinding):
             RecyclerView.ViewHolder(binding.root){
 
         init{
-
             binding.cardView.setOnClickListener {
-
                 val position = bindingAdapterPosition
                 val currentItem = items[position]
                 if (!isActionModeOpened && position != RecyclerView.NO_POSITION) {
-                    return@setOnClickListener
+                    listener.onItemClick(currentItem)
                 }else {
                     if (!clickedItems.contains(currentItem)){
                         clickedItems.add(currentItem)
@@ -85,6 +87,6 @@ class RegisteredUsersAdapter
 
     companion object{
         var isActionModeOpened = false
-        val clickedItems = mutableListOf<StudentUser>()
+        var clickedItems = mutableListOf<StudentUser>()
     }
 }

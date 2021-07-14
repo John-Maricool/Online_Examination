@@ -13,7 +13,6 @@ import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -25,14 +24,12 @@ class MainViewModel
 
     fun registerForQuiz(id: String): LiveData<MyServerDataState> = repository.registerForQuiz(id)
     fun checkIfPreviouslyRegistered(): LiveData<Boolean> = repository.checkIfPreviouslyRegistered()
-    fun isTimeReached() = repository.isTimeReached()
-    // fun checkIfAdminDocExist(id: String): LiveData<Boolean> = repository.checkIfAdminDocExist(id)
-
+    fun isTimeReached(): LiveData<Boolean> = repository.isTimeReached()
     fun insertToLocalDatabase(): LiveData<Boolean> {
         val _data = MutableLiveData<Boolean>()
         viewModelScope.launch(IO) {
+            withContext(Dispatchers.Main) { repository.deleteAllQuiz() }
             val job = async (IO){ repository.getQuizFromServer() }
-
             job.await().let { state ->
                 when (state) {
                     is MyDataState.onLoaded -> {

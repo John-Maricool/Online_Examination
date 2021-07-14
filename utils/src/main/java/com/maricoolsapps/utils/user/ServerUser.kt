@@ -55,7 +55,6 @@ class ServerUser
         }catch (e: Exception) {
             false
         }
-
     }
 
      fun getUserEmail(): String?{

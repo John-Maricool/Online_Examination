@@ -1,9 +1,12 @@
 package com.maricoolsapps.adminpart.appComponents
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -13,6 +16,7 @@ import com.maricoolsapps.adminpart.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_admin.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class AdminActivity : AppCompatActivity() {
@@ -39,6 +43,19 @@ class AdminActivity : AppCompatActivity() {
         menu.findItem(R.id.log_out).setOnMenuItemClickListener {
             logOut()
         }
+        menu.findItem(R.id.id).setOnMenuItemClickListener {
+            showAdminIdAndCopy()
+        }
+    }
+
+    private fun showAdminIdAndCopy(): Boolean {
+        val id = auth.currentUser.uid
+        Toast.makeText(this, "Your id is $id", Toast.LENGTH_SHORT).show()
+        val manager: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("id", id)
+        manager.setPrimaryClip(clipData)
+        Toast.makeText(this, "Your Id is copied", Toast.LENGTH_SHORT).show()
+        return true
     }
 
     private fun logOut(): Boolean {
@@ -51,12 +68,12 @@ class AdminActivity : AppCompatActivity() {
         dialog.setTitle("Log Out")
         dialog.setCancelable(false)
         dialog.setMessage("Are you sure you want to log out?")
-        dialog.setPositiveButton("Yes"){_,_ ->
+        dialog.setPositiveButton("Yes"){ _, _ ->
             auth.signOut()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        dialog.setNegativeButton("No"){theDialog, _ ->
+        dialog.setNegativeButton("No"){ theDialog, _ ->
             theDialog.cancel()
         }
         val alert = dialog.create()

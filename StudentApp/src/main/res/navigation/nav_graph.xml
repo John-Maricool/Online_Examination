@@ -29,7 +29,11 @@
         android:id="@+id/mainQuiz"
         android:name="com.maricoolsapps.studentapp.ui.MainQuizFragment"
         android:label="Quiz"
-        tools:layout="@layout/fragment_main_quiz" />
+        tools:layout="@layout/fragment_main_quiz" >
+        <action
+            android:id="@+id/action_mainQuiz_to_quizResultFragment"
+            app:destination="@id/quizResultFragment" />
+    </fragment>
     <fragment
         android:id="@+id/studentLogInFragment"
         android:name="com.maricoolsapps.studentapp.ui.StudentLogInFragment"
@@ -42,4 +46,9 @@
             android:id="@+id/action_studentLogInFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/quizResultFragment"
+        android:name="com.maricoolsapps.studentapp.ui.QuizResultFragment"
+        android:label="fragment_quiz_result"
+        tools:layout="@layout/fragment_quiz_result" />
 </navigation>

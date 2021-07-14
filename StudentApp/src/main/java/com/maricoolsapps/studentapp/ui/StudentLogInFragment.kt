@@ -1,6 +1,5 @@
 package com.maricoolsapps.studentapp.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -22,8 +21,15 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
 
     private var _binding: StudentLogInFragmentBinding? = null
     private val binding get() = _binding!!
+
     @Inject
     lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        auth.addAuthStateListener (this)
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,8 +93,7 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
 
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         if (auth.currentUser != null){
-             val action = StudentLogInFragmentDirections.actionStudentLogInFragmentToMainFragment()
-            findNavController().navigate(action)
+            findNavController().navigate(R.id.mainFragment)
         }
     }
 }

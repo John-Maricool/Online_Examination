@@ -1,16 +1,16 @@
 package com.maricoolsapps.adminpart.ui.fragments
 
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.*
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.maricoolsapps.adminpart.R
@@ -66,26 +66,26 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         }
     }
 
-    private fun clearDocsAndSend() {
+    private fun clearDocsAndSend(time: Int) {
         model.clearQuizDocs().observe(viewLifecycleOwner, {
             when(it){
-                true -> send()
+                true -> send(time)
                 false -> {
                     binding.progressUpload.visibility = View.GONE
                     binding.progressText.visibility = View.GONE
                     Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()}
-                null -> send()
+                null -> send(time)
             }
         })
     }
 
-    private fun send() {
+    private fun send(time: Int) {
         val data: List<ServerQuizDataModel> = model.map()
         model.clicks = 0
         val size = data.size
         val progressIncrement = 100 / size
         data.forEach {
-            model.addToFirebase(it).observe(viewLifecycleOwner, { result ->
+            model.addToFirebase(it, time).observe(viewLifecycleOwner, { result ->
                 when (result) {
                     is MyServerDataState.onLoaded -> {
                         model.clicks++
@@ -116,7 +116,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     private fun startMonitoring(){
-        model.dataState.observe(viewLifecycleOwner, Observer {dataState ->
+        model.dataState.observe(viewLifecycleOwner, { dataState ->
             when(dataState){
                 is MyDataState.notLoaded ->{
                     binding.progressBar.visibility = View.GONE
@@ -165,14 +165,31 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private fun showDialog() {
         val alertDialogBuilder =  AlertDialog.Builder(requireContext())
         alertDialogBuilder.setTitle("Notice")
-        alertDialogBuilder.setMessage("You cannot edit any quiz after uploading").setPositiveButton("New Write") { dialog, _ ->
-            sendToFirebase()
-            clearDocsAndSend()
-            dialog?.dismiss()
-        }.setNegativeButton("Add to Existing"){ dialogInterface, _ ->
-            sendToFirebase()
-            send()
-            dialogInterface.dismiss()
+        alertDialogBuilder.setMessage("You cannot edit any quiz after uploading")
+        val input = EditText(requireContext())
+        input.hint = "Quiz timing (minutes)"
+        input.inputType = InputType.TYPE_CLASS_NUMBER
+        alertDialogBuilder.setView(input)
+                .setPositiveButton("New Write") { dialog, _ ->
+                    val text = input.text.toString().trim()
+                    if (text.isNotEmpty()) {
+                        sendToFirebase()
+                        clearDocsAndSend(text.toInt())
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
+                        return@setPositiveButton
+                    }
+                }.setNegativeButton("Add to Existing"){ dialogInterface, _ ->
+                    val text = input.text.toString().trim()
+                    if (text.isNotEmpty()) {
+                        sendToFirebase()
+                        send(text.toInt())
+                        dialogInterface.dismiss()
+                    } else {
+                        Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
+                        return@setNegativeButton
+                    }
         }.show()
     }
 

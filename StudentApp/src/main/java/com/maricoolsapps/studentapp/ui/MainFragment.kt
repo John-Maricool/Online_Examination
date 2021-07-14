@@ -40,7 +40,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
 
         binding.start.setOnClickListener {
-            downloadQuiz()
+            isReadyToDownload()
         }
 
         checkIfPreviouslyRegistered()
@@ -50,8 +50,22 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
     }
 
-    private fun downloadQuiz() {
+    private fun isReadyToDownload() {
         binding.progrgess.visibility = View.VISIBLE
+        model.isTimeReached().observe(viewLifecycleOwner, {
+            when(it){
+                true -> {downloadQuiz()}
+                false -> {Toast.makeText(activity, "You can't access Quiz now", Toast.LENGTH_LONG).show()
+                    binding.progrgess.visibility = View.GONE
+                }
+                null ->{Toast.makeText(activity, "Check your Internet connection and try again", Toast.LENGTH_LONG).show()
+                    binding.progrgess.visibility = View.GONE
+                }
+            }
+        })
+    }
+
+    private fun downloadQuiz() {
         model.insertToLocalDatabase().observe(viewLifecycleOwner, { state ->
             when(state){
                 true -> {binding.progrgess.visibility = View.GONE
@@ -67,15 +81,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         val action  = MainFragmentDirections.actionMainFragmentToMainQuiz()
         findNavController().navigate(action)
     }
-
-    /*private fun checkIfTimeReached() {
-        model.isTimeReached().observe(viewLifecycleOwner, Observer {
-            when(it){
-                true -> {Toast.makeText(activity, "Time Reached", Toast.LENGTH_LONG).show()}
-                false -> {Toast.makeText(activity, "Time never Reach", Toast.LENGTH_LONG).show()}
-            }
-        })
-    }*/
 
     private fun checkIfPreviouslyRegistered() {
         binding.str.isRefreshing = true
@@ -131,7 +136,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 }
 
     private fun registerForQuiz(text: String) {
-    constants.admin_id = text
     model.registerForQuiz(text).observe(viewLifecycleOwner, {
         when (it) {
             MyServerDataState.onLoaded -> {

@@ -25,12 +25,12 @@ class SignUpViewModel
         val state = MutableLiveData<MyServerDataState>()
         viewModelScope.launch(IO) {
             val job = async (IO){serverUser.registerUser(user.email, password, user.name) }
-
-            job.await().let { bool ->
+            val job_completed = job.await()
+           if(job.isCompleted)
+               job_completed.let { bool ->
                 when(bool){
                     true -> {
-                        withContext(Dispatchers.Default) { serverUser.updateProfileName(user.name) }
-                        withContext(Dispatchers.Default) { cloud.CreateFirestoreUser(user, auth) }.let { boolean ->
+                        withContext(IO) { cloud.CreateFirestoreUser(user, auth)}.let { boolean ->
                            when(boolean){
                                true -> {state.postValue(MyServerDataState.onLoaded)}
                                false -> {state.postValue(MyServerDataState.notLoaded(Exception("Error Signing you in")))}
@@ -41,7 +41,6 @@ class SignUpViewModel
                         state.postValue(MyServerDataState.notLoaded(Exception("Check your Entries or connections")))
                     }
                 }
-
             }
         }
         return state

@@ -3,15 +3,21 @@
 
 
     <item
-        android:title="Create Quiz"
-        android:id="@+id/quizArrangement"/>
-
-    <item
+        android:icon="@drawable/ic_profile"
         android:title="Profile"
         android:id="@+id/profileFragment"/>
 
     <item
         android:title="Log out"
         android:id="@+id/log_out"/>
+
+    <item
+        android:icon="@drawable/ic_notice"
+        android:title="Notice"
+        android:id="@+id/notice"/>
+
+    <item
+        android:title="Your Id"
+        android:id="@+id/id"/>
 
 </menu>

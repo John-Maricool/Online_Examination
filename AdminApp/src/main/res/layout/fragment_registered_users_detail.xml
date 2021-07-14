@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.RegisteredUsersDetailFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/user_name"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold|normal"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="Name: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/user_email"
+        android:textStyle="bold|normal"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="Email: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/user_phoneNumber"
+        android:textStyle="bold|normal"
+        android:layout_marginBottom="20dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="Phone number: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/registered"
+        android:layout_marginBottom="20dp"
+        android:textStyle="bold|normal"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="Registration Status: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/activation"
+        android:textStyle="bold|normal"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="Activation Status: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/reg_no"
+        android:textStyle="bold|normal"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="Registration Number: " />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/quiz_score"
+        android:textStyle="bold|normal"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:text="Quiz Score: " />
+
+</LinearLayout>

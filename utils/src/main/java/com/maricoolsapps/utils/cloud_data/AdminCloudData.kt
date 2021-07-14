@@ -4,22 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.maricoolsapps.utils.user.ServerUser
-import com.maricoolsapps.utils.others.constants.collectionName
-import com.maricoolsapps.utils.others.constants.quizDocs
-import com.maricoolsapps.utils.others.constants.registeredStudents
+import com.google.firebase.firestore.Source
+import com.google.firebase.firestore.WriteBatch
+import com.google.firebase.firestore.ktx.toObjects
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.models.AdminUser
 import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
+import com.maricoolsapps.utils.others.constants.collectionName
+import com.maricoolsapps.utils.others.constants.quizDocs
+import com.maricoolsapps.utils.others.constants.quizTime
+import com.maricoolsapps.utils.others.constants.registeredStudents
 import com.maricoolsapps.utils.others.constants.settings
 import com.maricoolsapps.utils.others.constants.studentsCollectionName
+import com.maricoolsapps.utils.user.ServerUser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class AdminCloudData(var cloud: FirebaseFirestore,
                      var serverUser: ServerUser,
@@ -64,11 +67,16 @@ class AdminCloudData(var cloud: FirebaseFirestore,
         return _data
     }
 
-    fun addToFirebase(data: Any): LiveData<MyServerDataState> {
+    fun addToFirebase(data: Any, time: Int): LiveData<MyServerDataState> {
         val _data = MutableLiveData<MyServerDataState>()
         scope.launch {
             try{
-                cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).add(data).await()
+                val setting = QuizSettingModel(time)
+               val job =  cloud.collection(collectionName).document(serverUser.getUserId()).collection(settings).document(quizTime).set(setting)
+               job.await()
+                if (job.isComplete){
+                    cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).add(data).await()
+                }
                 _data.postValue(MyServerDataState.onLoaded)
             }catch (e: Exception) {
                         _data.postValue(MyServerDataState.notLoaded(e))
@@ -88,6 +96,66 @@ class AdminCloudData(var cloud: FirebaseFirestore,
                     }catch (e: Exception) {
                         data.postValue(MyDataState.notLoaded(e))
                     }
+        }
+        return data
+    }
+
+    fun activateQuizForStudents(): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO){
+            try{
+            val users = cloud.collection(collectionName)
+                    .document(serverUser.getUserId()).collection(registeredStudents).get(Source.SERVER).await()
+                val student = users.toObjects<StudentUser>()
+                val ids = mutableListOf<String>()
+                student.forEach {
+                    ids.add(it.id)
+                }
+                if (users != null) {
+                    for (doc in users.documents){
+                        doc.reference.update("activated", true)
+                    }
+                    for (i in 0 until ids.size){
+                        val stu = cloud.collection(studentsCollectionName).document(ids[i]).get().await()
+                        stu.reference.update("activated", true)
+                    }
+                }else{
+                    data.postValue(MyServerDataState.notLoaded(java.lang.Exception("No students registered")))
+                }
+                data.postValue(MyServerDataState.onLoaded)
+        }catch (e: java.lang.Exception){
+                data.postValue(MyServerDataState.notLoaded(java.lang.Exception("Error Activating students")))
+            }
+        }
+        return data
+    }
+
+    fun deactivateQuizForStudents(): LiveData<MyServerDataState>{
+        val data = MutableLiveData<MyServerDataState>()
+        scope.launch(IO){
+            try{
+                val users = cloud.collection(collectionName)
+                        .document(serverUser.getUserId()).collection(registeredStudents).get().await()
+                val student = users.toObjects<StudentUser>()
+                val ids = mutableListOf<String>()
+                student.forEach {
+                    ids.add(it.id)
+                }
+                if (users != null) {
+                    for (doc in users.documents){
+                        doc.reference.update("activated", false)
+                    }
+                    for (i in 0 until ids.size){
+                        val stu = cloud.collection(studentsCollectionName).document(ids[i]).get().await()
+                        stu.reference.update("activated", false)
+                    }
+                }else{
+                    data.postValue(MyServerDataState.notLoaded(java.lang.Exception("No students registered")))
+                }
+                data.postValue(MyServerDataState.onLoaded)
+            }catch (e: java.lang.Exception){
+                data.postValue(MyServerDataState.notLoaded(java.lang.Exception("Error Activating students")))
+            }
         }
         return data
     }
