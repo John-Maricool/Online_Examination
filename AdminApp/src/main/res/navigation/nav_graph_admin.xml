@@ -29,16 +29,20 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profileFragment_to_changeNameDialog"
-            app:destination="@id/changeNameDialog" />
+            app:destination="@id/changeProfileDialog" />
         <action
             android:id="@+id/action_profileFragment_to_changePasswordDialog"
             app:destination="@id/changePasswordDialog" />
     </fragment>
     <dialog
-        android:id="@+id/changeNameDialog"
-        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangeNameDialog"
+        android:id="@+id/changeProfileDialog"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangeProfileDialog"
         android:label="fragment_change_name_dialog"
-        tools:layout="@layout/fragment_change_name_dialog" />
+        tools:layout="@layout/fragment_change_name_dialog" >
+        <argument
+            android:name="type"
+            app:argType="string" />
+    </dialog>
     <dialog
         android:id="@+id/changePasswordDialog"
         android:name="com.maricoolsapps.adminpart.ui.fragments.ChangePasswordDialog"

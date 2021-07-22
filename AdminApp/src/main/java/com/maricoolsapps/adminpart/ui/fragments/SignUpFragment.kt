@@ -79,7 +79,7 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
 
         binding.progressBar.visibility = View.VISIBLE
 
-        val user = AdminUser(username, userEmail)
+        val user = AdminUser(username, userEmail, null)
 
         model.signUser(user, auth, userPassword).observe(viewLifecycleOwner, { result ->
             when (result) {

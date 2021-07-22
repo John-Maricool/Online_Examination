@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.maricoolsapps.studentapp.R
 import com.maricoolsapps.studentapp.databinding.FragmentQuizResultBinding
 import com.maricoolsapps.utils.datastate.MyDataState
@@ -42,6 +44,12 @@ class QuizResultFragment : Fragment(R.layout.fragment_quiz_result) {
             progressBar.visibility = View.GONE
             textCongrats.append(studentUser.name)
             textScore.append("${studentUser.quizScore.toString()} %")
+
+            Glide.with(requireActivity())
+                    .load(studentUser.photoUri?.toUri())
+                    .circleCrop()
+                    .placeholder(R.drawable.profile)
+                    .into(binding.profileImage)
         }
     }
 

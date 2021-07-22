@@ -10,10 +10,11 @@ data class StudentUser(
         var regNo: String?,
         var email: String,
         var number: String,
+        val photoUri: String?,
         var isRegistered: Boolean,
         var isActivated: Boolean,
         val adminId: String?,
         val quizScore: Int?
 ): Parcelable{
-    constructor(): this("", "", null, "", "", false, false, null, null)
+    constructor(): this("", "", null, "", "", null, false, false, null, null)
 }

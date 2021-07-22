@@ -18,10 +18,6 @@ class ServerUser
         return auth.currentUser?.uid!!
     }
 
-    companion object{
-        var profileUri: Uri? = null
-    }
-
     suspend fun registerUser(email: String, password: String, name: String): Boolean{
         return try{
             auth.createUserWithEmailAndPassword(email, password).await()
@@ -73,22 +69,17 @@ class ServerUser
         return data
     }
 
-    fun changeProfilePhoto(uri: Uri): LiveData<MyServerDataState>{
-        val data = MutableLiveData<MyServerDataState>()
-        scope.launch(IO) {
-            try{
+    suspend fun changeProfilePhoto(uri: Uri): Boolean{
+        return try{
             val profile = UserProfileChangeRequest.Builder()
-                .setPhotoUri(uri)
-                .build()
+                    .setPhotoUri(uri)
+                    .build()
             auth.currentUser?.updateProfile(profile)?.await()
-                profileUri = uri
-                data.postValue(MyServerDataState.onLoaded)
-            }catch (e: Exception) {
-                data.postValue(MyServerDataState.notLoaded(e))
-            }
+            true
+        }catch (e: Exception) {
+            false
         }
-        return data
-    }
+        }
 
     fun reAuthenticate(oldPassword: String): LiveData<MyServerDataState>{
             val data = MutableLiveData<MyServerDataState>()
@@ -105,21 +96,26 @@ class ServerUser
             return data
         }
 
-    fun changeUsername(name: String): LiveData<MyServerDataState>{
-        val data = MutableLiveData<MyServerDataState>()
-        scope.launch(IO) {
-            try{
+    suspend fun changeUsername(name: String): Boolean{
+        return try{
             val profile = UserProfileChangeRequest.Builder()
                     .setDisplayName(name)
                     .build()
             auth.currentUser?.updateProfile(profile)?.await()
-                data.postValue(MyServerDataState.onLoaded)
-            }catch (e: Exception) {
-                data.postValue(MyServerDataState.notLoaded(e))
-            }
+            true
+        }catch (e: Exception) {
+            false
         }
-        return data
-    }
+        }
+
+    suspend fun changeEmail(mail: String): Boolean{
+        return try{
+            auth.currentUser?.updateEmail(mail)?.await()
+            true
+        }catch (e: Exception) {
+            false
+        }
+        }
 
     fun changePassword(newPassword: String): LiveData<MyServerDataState>{
         val data = MutableLiveData<MyServerDataState>()

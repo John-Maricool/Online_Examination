@@ -116,6 +116,7 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
                     id = "id",
                     name = name,
                     email = email,
+                    photoUri = null,
                     number = phoneNumber,
                     regNo = regNo,
                     isActivated = false,

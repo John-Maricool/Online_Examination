@@ -72,12 +72,13 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz), MainQuizViewMode
     }
 
     private fun submit() {
-        convertResultToPercentageAndSend(model.score)
+        convertResultToPercentageAndSend()
     }
 
-    private fun convertResultToPercentageAndSend(score: Int) {
+    private fun convertResultToPercentageAndSend() {
         binding.progressBar.visibility = View.VISIBLE
-        val percentage = (score/model.questionsSize)*100
+        val percentage = (model.score * 100).div(model.questionsSize)
+        Log.d("SCORE", model.score.toString())
         model.sendQuizResult(percentage).observe(viewLifecycleOwner, { state->
             when(state){
                 is MyServerDataState.isLoading -> TODO()
@@ -119,6 +120,8 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz), MainQuizViewMode
 
         if (answer == model.currentQuestion?.correctIndex){
             model.score++
+            Log.d("SCORE", model.score.toString())
+
         }
     }
 

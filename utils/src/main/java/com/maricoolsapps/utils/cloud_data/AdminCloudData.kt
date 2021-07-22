@@ -46,7 +46,8 @@ class AdminCloudData(var cloud: FirebaseFirestore,
         val _data = MutableLiveData<Boolean>()
         scope.launch {
             try{
-            val shot = cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).get().await()
+            val shot = cloud.collection(collectionName).document(serverUser.getUserId())
+                    .collection(quizDocs).get().await()
                         val docs = shot.documents
                         if (docs.isNotEmpty()) {
                             try {
@@ -158,6 +159,33 @@ class AdminCloudData(var cloud: FirebaseFirestore,
             }
         }
         return data
+    }
+
+    suspend fun changeAdminName(name: String): Boolean{
+        return try{
+            cloud.collection(collectionName).document(serverUser.getUserId()).update("name", name).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
+    }
+
+    suspend fun changeAdminEmail(mail: String): Boolean{
+        return try{
+            cloud.collection(collectionName).document(serverUser.getUserId()).update("email", mail).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
+    }
+
+    suspend fun changeAdminPhotoUri(uri: String): Boolean{
+        return try{
+            cloud.collection(collectionName).document(serverUser.getUserId()).update("photoUri", uri).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
     }
 
     fun deleteRegisteredStudent(ids: List<String>): LiveData<Boolean> {

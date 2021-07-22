@@ -3,7 +3,9 @@ package com.maricoolsapps.adminpart.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.RegisteredUsersListItemBinding
 import com.maricoolsapps.utils.interfaces.OnItemClickListener
@@ -47,6 +49,11 @@ class RegisteredUsersAdapter
 
     override fun onBindViewHolder(holder: RegisteredUsersViewHolder, position: Int) {
         val currentPos = items[position]
+        Glide.with(context)
+                .load(currentPos.photoUri?.toUri())
+                .circleCrop()
+                .placeholder(R.drawable.profile)
+                .into(holder.binding.profileImage)
         holder.binding.name.text = "Name: ${currentPos.name}"
         holder.binding.email.text = "Email: ${currentPos.email}"
     }

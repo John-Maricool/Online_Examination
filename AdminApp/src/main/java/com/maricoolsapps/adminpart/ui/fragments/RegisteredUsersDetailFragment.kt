@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentRegisteredUsersDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +32,13 @@ class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_user
             activation.append(user?.isActivated.toString())
             regNo.append(user?.regNo)
             quizScore.append("${user?.quizScore}%")
+
+            Glide.with(requireActivity())
+                    .load(user?.photoUri?.toUri())
+                    .circleCrop()
+                    .placeholder(R.drawable.profile)
+                    .into(profileImage)
+
         }
     }
 

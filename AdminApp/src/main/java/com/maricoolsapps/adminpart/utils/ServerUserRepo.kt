@@ -9,17 +9,21 @@ import com.maricoolsapps.utils.datastate.MyServerDataState
 class ServerUserRepo
   constructor(var user: ServerUser) {
 
+  fun getUserEmail() = user.getUserEmail()
+
     fun signInUser(email: String, password: String): LiveData<MyServerDataState> = user.signInUser(email, password)
 
     fun getUserName(): String? = user.getUserName()
 
+    suspend fun changeEmail(mail: String) = user.changeEmail(mail)
+
     fun getProfilePhoto(): LiveData<Uri?> = user.getProfilePhoto()
 
-    fun changeProfilePhoto(uri: Uri): LiveData<MyServerDataState> = user.changeProfilePhoto(uri)
+   suspend fun changeProfilePhoto(uri: Uri) = user.changeProfilePhoto(uri)
 
     fun reAuthenticate(oldPassword: String): LiveData<MyServerDataState> = user.reAuthenticate(oldPassword)
 
-    fun changeUsername(name: String): LiveData<MyServerDataState> = user.changeUsername(name)
+    suspend fun changeUsername(name: String)  = user.changeUsername(name)
 
     fun changePassword(newPassword: String): LiveData<MyServerDataState> = user.changePassword(newPassword)
 }

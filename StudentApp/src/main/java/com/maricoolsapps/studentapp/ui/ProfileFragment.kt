@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.ui.fragments
+package com.maricoolsapps.studentapp.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -8,15 +8,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.maricoolsapps.adminpart.R
-import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
-import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
+import com.maricoolsapps.studentapp.R
+import com.maricoolsapps.studentapp.databinding.FragmentProfileBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.constants
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,12 +40,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     model.changeProfilePhoto(intent_data).observe(viewLifecycleOwner, Observer { res ->
                         when (res) {
                             is MyServerDataState.onLoaded -> {
-                                            Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
-                                            binding.progress.visibility = View.GONE
-                                            Glide.with(requireActivity())
-                                                    .load(intent_data)
-                                                    .circleCrop()
-                                                    .into(binding.profileImage)
+                                Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
+                                binding.progress.visibility = View.GONE
+                                Glide.with(requireActivity())
+                                        .load(intent_data)
+                                        .circleCrop()
+                                        .into(binding.profileImage)
                             }
                             is MyServerDataState.notLoaded -> {
                                 binding.progress.visibility = View.GONE
@@ -78,17 +76,17 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         binding.changeUsername.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToChangeNameDialog(constants.username)
+            val action = ProfileFragmentDirections.actionProfileFragmentToChangeProfileFragment(constants.username)
             findNavController().navigate(action)
         }
 
         binding.changeEmail.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToChangeNameDialog(constants.mail)
+            val action = ProfileFragmentDirections.actionProfileFragmentToChangeProfileFragment(constants.mail)
             findNavController().navigate(action)
         }
 
         binding.changePassword.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToChangePasswordDialog()
+            val action = ProfileFragmentDirections.actionProfileFragmentToChangePasswordFragment()
             findNavController().navigate(action)
         }
     }

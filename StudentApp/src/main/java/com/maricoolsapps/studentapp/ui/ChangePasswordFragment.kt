@@ -1,4 +1,4 @@
-package com.maricoolsapps.adminpart.ui.fragments
+package com.maricoolsapps.studentapp.ui
 
 import android.os.Bundle
 import android.view.View
@@ -6,23 +6,21 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.maricoolsapps.adminpart.ui.viewModels.ChangePasswordViewModel
-import com.maricoolsapps.adminpart.R
-import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
+import com.maricoolsapps.studentapp.R
+import com.maricoolsapps.studentapp.databinding.FragmentChangePasswordBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_dialog) {
+class ChangePasswordFragment : DialogFragment(R.layout.fragment_change_password) {
 
-    private var _binding: FragmentChangePasswordDialogBinding? = null
+    private var _binding: FragmentChangePasswordBinding? = null
     private val binding get() = _binding!!
 
     private val model: ChangePasswordViewModel by viewModels()
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentChangePasswordDialogBinding.bind(view)
+        _binding = FragmentChangePasswordBinding.bind(view)
         binding.reset.setOnClickListener { resetPassword() }
     }
 

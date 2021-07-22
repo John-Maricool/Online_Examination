@@ -19,4 +19,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="Phone_number">Phone Number</string>
     <string name="reg_number">Reg Number (optional)</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New PAssword</string>
+    <string name="reset_password">Reset PAssword</string>
 </resources>

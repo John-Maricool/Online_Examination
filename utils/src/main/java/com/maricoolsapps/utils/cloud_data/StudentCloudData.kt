@@ -45,6 +45,51 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         }
     }
 
+    suspend fun changeStudentName(name: String): Boolean{
+        return try{
+            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("name", name).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
+    }
+
+    suspend fun changeStudentEmail(mail: String): Boolean{
+        return try{
+            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("email", mail).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
+    }
+
+    suspend fun changeStudentPhotoUri(uri: String): Boolean{
+        return try{
+            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("photoUri", uri).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
+    }
+
+    suspend fun changeStudentNumber(number: String): Boolean{
+        return try{
+            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("number", number).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
+    }
+
+    suspend fun changeStudentRegNo(regno: String): Boolean{
+        return try{
+            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("regNo", regno).await()
+            true
+        }catch (e: java.lang.Exception){
+            false
+        }
+    }
+
     fun registerForQuiz(id: String): LiveData<MyServerDataState> {
         val dataLiveData = MutableLiveData<MyServerDataState>()
         scope.launch(IO) {
