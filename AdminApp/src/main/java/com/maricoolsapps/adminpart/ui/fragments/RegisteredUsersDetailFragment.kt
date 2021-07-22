@@ -31,7 +31,11 @@ class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_user
             registered.append(user?.isRegistered.toString())
             activation.append(user?.isActivated.toString())
             regNo.append(user?.regNo)
-            quizScore.append("${user?.quizScore}%")
+            if (user?.quizScore != null) {
+                quizScore.append("${user.quizScore}%")
+            }else{
+                quizScore.append("Not taken Quiz")
+            }
 
             Glide.with(requireActivity())
                     .load(user?.photoUri?.toUri())
