@@ -1,6 +1,7 @@
 package com.maricoolsapps.adminpart.ui.fragments
 
 import android.os.Bundle
+import android.text.Layout
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.ChangeProfileDialogViewModel
+import com.maricoolsapps.resources.databinding.ChangeProfileLayoutBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.constants
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +27,9 @@ class ChangeProfileDialog : BottomSheetDialogFragment() {
 
     private val args: ChangeProfileDialogArgs by navArgs()
 
+    private var _binding: ChangeProfileLayoutBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -33,29 +38,30 @@ class ChangeProfileDialog : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _binding = ChangeProfileLayoutBinding.bind(view)
         if (args.type == constants.username){
-            textView.append("Name")
+            binding.textView.append("Name")
             val displayName = model.name
-            name.setText(displayName)
+            binding.name.setText(displayName)
         }else{
-            textView.append("Email")
+            binding.textView.append("Email")
             val displayMail = model.email
-            name.setText(displayMail)
+            binding.name.setText(displayMail)
         }
 
-        save.setOnClickListener {
-            progress.visibility = View.VISIBLE
-            val new = name.text.toString().trim()
+        binding.save.setOnClickListener {
+            binding.progress.visibility = View.VISIBLE
+            val new = binding.name.text.toString().trim()
             if (new.isNotEmpty() && args.type == constants.username) {
                 model.changeName(new).observe(viewLifecycleOwner, { result ->
                     when (result) {
                         is MyServerDataState.onLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, "Successfully Changed", Toast.LENGTH_LONG).show()
                             dismiss()
                         }
                         is MyServerDataState.notLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
                         }
                         MyServerDataState.isLoading -> TODO()
@@ -66,12 +72,12 @@ class ChangeProfileDialog : BottomSheetDialogFragment() {
                 model.changeMail(new).observe(viewLifecycleOwner, { result ->
                     when (result) {
                         is MyServerDataState.onLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, "Successfully Changed", Toast.LENGTH_LONG).show()
                             dismiss()
                         }
                         is MyServerDataState.notLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
                         }
                         MyServerDataState.isLoading -> TODO()
@@ -83,8 +89,13 @@ class ChangeProfileDialog : BottomSheetDialogFragment() {
             }
         }
 
-        cancel.setOnClickListener {
+        binding.cancel.setOnClickListener {
             dismiss()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

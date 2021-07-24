@@ -9,20 +9,21 @@ import androidx.lifecycle.Observer
 import com.maricoolsapps.adminpart.ui.viewModels.ChangePasswordViewModel
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
+import com.maricoolsapps.resources.databinding.ChangePasswordLayoutBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChangePasswordDialog : DialogFragment(R.layout.fragment_change_password_dialog) {
 
-    private var _binding: FragmentChangePasswordDialogBinding? = null
+    private var _binding: ChangePasswordLayoutBinding? = null
     private val binding get() = _binding!!
 
     private val model: ChangePasswordViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentChangePasswordDialogBinding.bind(view)
+        _binding = ChangePasswordLayoutBinding.bind(view)
         binding.reset.setOnClickListener { resetPassword() }
     }
 

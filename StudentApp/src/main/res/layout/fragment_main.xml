@@ -41,13 +41,6 @@
         android:id="@+id/start"
         android:text="@string/start_quiz_btn"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/profile"
-        android:text="PROFILE"/>
-
-
     <ProgressBar
         android:layout_width="25dp"
         android:visibility="gone"

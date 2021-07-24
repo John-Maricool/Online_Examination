@@ -1,5 +1,6 @@
 package com.maricoolsapps.studentapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -8,7 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.maricoolsapps.resources.databinding.LoginLayoutBinding
 import com.maricoolsapps.studentapp.R
+import com.maricoolsapps.studentapp.application.MainActivity
 import com.maricoolsapps.studentapp.databinding.StudentLogInFragmentBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,7 +22,7 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
 
     private  val viewModel: StudentLogInViewModel by viewModels()
 
-    private var _binding: StudentLogInFragmentBinding? = null
+    private var _binding: LoginLayoutBinding? = null
     private val binding get() = _binding!!
 
     @Inject
@@ -33,7 +36,7 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = StudentLogInFragmentBinding.bind(view)
+        _binding = LoginLayoutBinding.bind(view)
         binding.register.setOnClickListener{
             val action = StudentLogInFragmentDirections.actionStudentLogInFragmentToStudentSignup()
             findNavController().navigate(action)
@@ -78,8 +81,7 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
             when (result) {
                 is MyServerDataState.onLoaded -> {
                     binding.progressBar.visibility = View.GONE
-                     val action = StudentLogInFragmentDirections.actionStudentLogInFragmentToMainFragment()
-                    findNavController().navigate(action)
+                    startActivity(Intent(activity, MainActivity::class.java))
                     activity?.finish()
                 }
                 is MyServerDataState.notLoaded -> {
@@ -93,7 +95,7 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
 
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         if (auth.currentUser != null){
-            findNavController().navigate(R.id.mainFragment)
+            startActivity(Intent(activity, MainActivity::class.java))
         }
     }
 }

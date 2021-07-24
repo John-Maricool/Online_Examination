@@ -3,19 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/studentLogInFragment">
+    app:startDestination="@id/mainFragment">
 
-    <fragment
-        android:id="@+id/studentSignup"
-        android:name="com.maricoolsapps.studentapp.ui.StudentSignUp"
-        android:label="fragment_student_signup"
-        tools:layout="@layout/fragment_student_signup" >
-
-        <action
-            android:id="@+id/action_studentSignup_to_mainFragment"
-            app:destination="@id/mainFragment" />
-
-    </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.maricoolsapps.studentapp.ui.MainFragment"
@@ -38,18 +27,6 @@
             app:destination="@id/quizResultFragment"
             app:popUpTo="@id/mainQuiz"
             app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/studentLogInFragment"
-        android:name="com.maricoolsapps.studentapp.ui.StudentLogInFragment"
-        android:label="student_log_in_fragment"
-        tools:layout="@layout/student_log_in_fragment" >
-        <action
-            android:id="@+id/action_studentLogInFragment_to_studentSignup"
-            app:destination="@id/studentSignup" />
-        <action
-            android:id="@+id/action_studentLogInFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/quizResultFragment"

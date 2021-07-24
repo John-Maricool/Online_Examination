@@ -12,6 +12,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/AdminApp" />
+            <option value="$PROJECT_DIR$/Resources" />
             <option value="$PROJECT_DIR$/StudentApp" />
             <option value="$PROJECT_DIR$/room_library" />
             <option value="$PROJECT_DIR$/utils" />

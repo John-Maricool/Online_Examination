@@ -43,11 +43,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             isReadyToDownload()
         }
 
-        binding.profile.setOnClickListener {
-            val action = MainFragmentDirections.actionMainFragmentToProfileFragment()
-            findNavController().navigate(action)
-        }
-
         checkIfPreviouslyRegistered()
 
             binding.registerButton.setOnClickListener {

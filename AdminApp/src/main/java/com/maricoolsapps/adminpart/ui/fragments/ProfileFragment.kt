@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
+import com.maricoolsapps.resources.databinding.ProfileLayoutBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.constants
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-    private var _binding: FragmentProfileBinding? = null
+    private var _binding: ProfileLayoutBinding? = null
     private val binding get() = _binding!!
 
     private val model: ProfileViewModel by viewModels()
@@ -63,7 +64,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentProfileBinding.bind(view)
+        _binding = ProfileLayoutBinding.bind(view)
 
         model.profilePhoto.observe(viewLifecycleOwner, { uri ->
             Glide.with(requireActivity())

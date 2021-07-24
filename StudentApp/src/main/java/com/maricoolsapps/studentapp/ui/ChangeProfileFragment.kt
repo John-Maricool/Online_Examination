@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.maricoolsapps.resources.databinding.ChangeProfileLayoutBinding
 import com.maricoolsapps.studentapp.R
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.constants
@@ -21,35 +22,38 @@ class ChangeProfileFragment : BottomSheetDialogFragment() {
     private val model: ChangeProfileViewModel by viewModels()
     private val args: ChangeProfileFragmentArgs by navArgs()
 
+    private var _binding: ChangeProfileLayoutBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_change_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        _binding = ChangeProfileLayoutBinding.bind(view)
         if (args.part == constants.username){
-            textView.append("Name")
+            binding.textView.append("Name")
             val displayName = model.name
-            name.setText(displayName)
+            binding.name.setText(displayName)
         }else{
-            textView.append("Email")
+            binding.textView.append("Email")
             val displayMail = model.email
-            name.setText(displayMail)
+            binding.name.setText(displayMail)
         }
 
-        save.setOnClickListener {
-            progress.visibility = View.VISIBLE
-            val new = name.text.toString().trim()
+        binding.save.setOnClickListener {
+            binding.progress.visibility = View.VISIBLE
+            val new = binding.name.text.toString().trim()
             if (new.isNotEmpty() && args.part == constants.username) {
                 model.changeName(new).observe(viewLifecycleOwner, { result ->
                     when (result) {
                         is MyServerDataState.onLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, "Successfully Changed", Toast.LENGTH_LONG).show()
                             dismiss()
                         }
                         is MyServerDataState.notLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
                         }
                         MyServerDataState.isLoading -> TODO()
@@ -60,13 +64,13 @@ class ChangeProfileFragment : BottomSheetDialogFragment() {
                 model.changeMail(new).observe(viewLifecycleOwner, { result ->
                     when (result) {
                         is MyServerDataState.onLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, "Successfully Changed", Toast.LENGTH_LONG).show()
                             dismiss()
                         }
 
                         is MyServerDataState.notLoaded -> {
-                            progress.visibility = View.GONE
+                            binding.progress.visibility = View.GONE
                             Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
                         }
                         MyServerDataState.isLoading -> TODO()
@@ -78,8 +82,13 @@ class ChangeProfileFragment : BottomSheetDialogFragment() {
             }
         }
 
-        cancel.setOnClickListener {
+        binding.cancel.setOnClickListener {
             dismiss()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 }

@@ -1,5 +1,6 @@
 package com.maricoolsapps.studentapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.studentapp.R
+import com.maricoolsapps.studentapp.application.LoginActivity
+import com.maricoolsapps.studentapp.application.MainActivity
 import com.maricoolsapps.studentapp.databinding.FragmentStudentSignupBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.models.StudentUser
@@ -86,8 +89,8 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
                     is MyServerDataState.onLoaded -> {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(activity, "Completed Registration", Toast.LENGTH_LONG).show()
-                        val action = StudentSignUpDirections.actionStudentSignupToMainFragment()
-                        findNavController().navigate(action)
+                       startActivity(Intent(activity, MainActivity::class.java))
+                        activity?.finish()
                     }
                     MyServerDataState.isLoading -> TODO()
                     is MyServerDataState.notLoaded -> {
