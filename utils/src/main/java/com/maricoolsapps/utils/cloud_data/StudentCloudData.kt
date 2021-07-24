@@ -1,11 +1,14 @@
 package com.maricoolsapps.utils.cloud_data
 
+import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.storage.FirebaseStorage
 import com.google.protobuf.ListValue
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.user.ServerUser
@@ -49,7 +52,7 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         return try{
             cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("name", name).await()
             true
-        }catch (e: java.lang.Exception){
+        }catch (e: Exception){
             false
         }
     }
@@ -58,16 +61,23 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         return try{
             cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("email", mail).await()
             true
-        }catch (e: java.lang.Exception){
+        }catch (e: Exception){
             false
         }
     }
 
     suspend fun changeStudentPhotoUri(uri: String): Boolean{
         return try{
-            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("photoUri", uri).await()
+            val imageUri = uri.toUri()
+            val ref = FirebaseStorage.getInstance().getReference("${serverUser.getUserId()}.jpg").putFile(imageUri)
+            ref.await()
+            if(ref.isComplete){
+                val imgUrl = FirebaseStorage.getInstance().getReference("${serverUser.getUserId()}.jpg").downloadUrl.await()
+                Log.d("url", imgUrl.toString())
+                cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("photoUri", imgUrl.toString()).await()
+            }
             true
-        }catch (e: java.lang.Exception){
+        }catch (e: Exception){
             false
         }
     }
@@ -76,7 +86,7 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         return try{
             cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("number", number).await()
             true
-        }catch (e: java.lang.Exception){
+        }catch (e: Exception){
             false
         }
     }
@@ -85,7 +95,7 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         return try{
             cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("regNo", regno).await()
             true
-        }catch (e: java.lang.Exception){
+        }catch (e: Exception){
             false
         }
     }
