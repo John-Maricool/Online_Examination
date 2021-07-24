@@ -91,7 +91,7 @@ class AdminCloudData(var cloud: FirebaseFirestore,
         scope.launch(IO) {
             try{
             val it = cloud.collection(collectionName)
-                    .document(serverUser.getUserId()).collection(registeredStudents).get().await()
+                    .document(serverUser.getUserId()).collection(registeredStudents).get(Source.SERVER).await()
                         val ans = it.toObjects(StudentUser::class.java)
                         data.postValue(MyDataState.onLoaded(ans))
                     }catch (e: Exception) {

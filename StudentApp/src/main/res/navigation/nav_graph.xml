@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.maricoolsapps.studentapp.ui.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        android:label="Welcome"
+        tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_mainQuiz"
             app:destination="@id/mainQuiz" />
@@ -31,13 +31,13 @@
     <fragment
         android:id="@+id/quizResultFragment"
         android:name="com.maricoolsapps.studentapp.ui.QuizResultFragment"
-        android:label="fragment_quiz_result"
+        android:label="Quiz Result"
         tools:layout="@layout/fragment_quiz_result" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.maricoolsapps.studentapp.ui.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_changeProfileFragment"
             app:destination="@id/changeProfileFragment" />
@@ -48,8 +48,8 @@
     <dialog
         android:id="@+id/changeProfileFragment"
         android:name="com.maricoolsapps.studentapp.ui.ChangeProfileFragment"
-        android:label="fragment_change_profile"
-        tools:layout="@layout/fragment_change_profile" >
+        android:label="Change"
+        tools:layout="@layout/fragment_change_profile">
         <argument
             android:name="part"
             app:argType="string" />
@@ -58,6 +58,6 @@
     <dialog
         android:id="@+id/changePasswordFragment"
         android:name="com.maricoolsapps.studentapp.ui.ChangePasswordFragment"
-        android:label="fragment_change_password"
+        android:label="Change Password"
         tools:layout="@layout/fragment_change_password" />
 </navigation>

@@ -49,12 +49,7 @@ class SavedQuizAdapter
 
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
         val currentPos = items[position]
-        holder.binding.question.text = "Question:  ${currentPos.question}"
-        holder.binding.option1.text = "Option 1: ${currentPos.firstOption}"
-        holder.binding.option2.text = "Option 2: ${currentPos.secondOption}"
-        holder.binding.option3.text = "Option 3: ${currentPos.thirdOption}"
-        holder.binding.option4.text = "Option 4: ${currentPos.forthOption}"
-        holder.binding.correctIndex.text = "Correct Option: ${currentPos.correctIndex}"
+        holder.binding.question.append(currentPos.question)
     }
 
     inner class myViewHolder(var binding: QuizListItemBinding) : RecyclerView.ViewHolder(binding.root) {

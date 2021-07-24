@@ -15,17 +15,23 @@ import com.google.firebase.firestore.ktx.toObjects
 import com.maricoolsapps.room_library.room.RoomEntity
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.studentapp.R
+import com.maricoolsapps.studentapp.application.MainActivity
 import com.maricoolsapps.studentapp.databinding.FragmentMainBinding
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.constants
+import com.maricoolsapps.utils.user.ServerUser
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private var _binding: FragmentMainBinding? = null
     val binding: FragmentMainBinding get() = _binding!!
+
+    @Inject
+    lateinit var user: ServerUser
 
     private val model: MainViewModel by viewModels()
 
@@ -152,6 +158,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     })
 }
+
+    override fun onStart() {
+        super.onStart()
+        val name = user.getUserName()
+        (activity as MainActivity).supportActionBar?.title = "Welcome $name"
+    }
 
     override fun onDestroyView() {
     super.onDestroyView()

@@ -40,10 +40,9 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentRegisteredUsersBinding.bind(view)
         actionMode = RegisteredUsersActionMode(activity as AppCompatActivity)
-
+        binding.schimmer.startShimmer()
         binding.recyclerView.setHasFixedSize(false)
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
-
         startMonitoring()
         setHasOptionsMenu(true)
     }
@@ -113,14 +112,16 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
     }
 
     private fun startMonitoring(){
-        binding.progressBar.visibility = View.VISIBLE
+
         model.start().observe(viewLifecycleOwner, { dataState ->
             when(dataState){
                 is MyDataState.notLoaded ->{
-                    binding.progressBar.visibility = View.GONE
-                }
+                        binding.schimmer.stopShimmer()
+                    binding.schimmer.visibility = View.GONE
+                        }
                 is MyDataState.onLoaded ->{
-                    binding.progressBar.visibility = View.GONE
+                    binding.schimmer.stopShimmer()
+                    binding.schimmer.visibility = View.GONE
                     // adapter.getList(dataState.data)
                     adapter.items = (dataState.data as MutableList<StudentUser>)
                     Log.d("view", dataState.data.toString())
