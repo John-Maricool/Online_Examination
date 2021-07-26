@@ -51,11 +51,11 @@ class RegisteredUsersAdapter
         val currentPos = items[position]
         Glide.with(context)
                 .load(currentPos.photoUri?.toUri())
-                .circleCrop()
+                .centerCrop()
                 .placeholder(R.drawable.profile)
                 .into(holder.binding.profileImage)
-        holder.binding.name.text = "Name: ${currentPos.name}"
-        holder.binding.email.text = "Email: ${currentPos.email}"
+        holder.binding.name.text = "${currentPos.name}"
+        holder.binding.email.text = "${currentPos.email}"
     }
 
     inner class RegisteredUsersViewHolder(var binding: RegisteredUsersListItemBinding):
@@ -77,6 +77,7 @@ class RegisteredUsersAdapter
                     }
                 }
             }
+
             binding.cardView.setOnLongClickListener {
                 val position = bindingAdapterPosition
                 val currentItem = items[position]

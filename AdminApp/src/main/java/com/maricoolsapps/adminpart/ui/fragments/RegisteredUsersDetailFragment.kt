@@ -34,12 +34,12 @@ class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_user
             if (user?.quizScore != null) {
                 quizScore.append("${user.quizScore}%")
             }else{
-                quizScore.append("Not taken Quiz")
+                quizScore.append("User has not taken Quiz yet")
             }
 
             Glide.with(requireActivity())
                     .load(user?.photoUri?.toUri())
-                    .circleCrop()
+                    .centerCrop()
                     .placeholder(R.drawable.profile)
                     .into(profileImage)
 

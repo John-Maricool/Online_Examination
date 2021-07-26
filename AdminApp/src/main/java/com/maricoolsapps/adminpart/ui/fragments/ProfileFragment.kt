@@ -47,7 +47,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                                             binding.progress.visibility = View.GONE
                                             Glide.with(requireActivity())
                                                     .load(intent_data)
-                                                    .circleCrop()
+                                                    .centerCrop()
                                                     .into(binding.profileImage)
                             }
                             is MyServerDataState.notLoaded -> {
@@ -69,7 +69,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         model.profilePhoto.observe(viewLifecycleOwner, { uri ->
             Glide.with(requireActivity())
                     .load(uri)
-                    .circleCrop()
+                    .centerCrop()
                     .placeholder(R.drawable.profile)
                     .into(binding.profileImage)
         })

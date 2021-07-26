@@ -158,6 +158,11 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                 showDialog()
                 return true
             }
+            R.id.delete_all -> {
+                model.deleteQuiz()
+                adapter.items.clear()
+                adapter.notifyDataSetChanged()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

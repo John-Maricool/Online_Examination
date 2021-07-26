@@ -86,6 +86,7 @@ class SavedQuizAdapter
         }
     }
 
+
     companion object{
         var isActionModeOpened = false
         val clickedItems = mutableListOf<RoomEntity>()

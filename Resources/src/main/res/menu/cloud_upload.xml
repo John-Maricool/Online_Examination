@@ -7,4 +7,8 @@
         android:id="@+id/cloud_upload"
         app:showAsAction="always"
         android:icon="@drawable/ic_cloud_upload"/>
+    <item
+        android:title="Delete All"
+        android:id="@+id/delete_all"
+        app:showAsAction="never"/>
 </menu>
