@@ -19,6 +19,7 @@
 
     <item
         android:title="Search User"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:id="@+id/search_user"
         app:showAsAction="always"
         android:icon="@drawable/ic_search"/>

@@ -3,6 +3,8 @@ package com.maricoolsapps.adminpart.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -12,13 +14,15 @@ import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.utils.models.StudentUser
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.*
 import javax.inject.Inject
 
 class RegisteredUsersAdapter
 @Inject constructor(@ApplicationContext val context: Context):
-        RecyclerView.Adapter<RegisteredUsersAdapter.RegisteredUsersViewHolder>() {
+        RecyclerView.Adapter<RegisteredUsersAdapter.RegisteredUsersViewHolder>(), Filterable {
 
     var items: MutableList<StudentUser> = mutableListOf()
+    var items_b: MutableList<StudentUser> = items
 
     init {
         SavedQuizAdapter.isActionModeOpened = false
@@ -56,6 +60,36 @@ class RegisteredUsersAdapter
                 .into(holder.binding.profileImage)
         holder.binding.name.text = "${currentPos.name}"
         holder.binding.email.text = "${currentPos.email}"
+    }
+
+    override fun getFilter(): Filter {
+
+        return object : Filter() {
+            override fun performFiltering(sequence: CharSequence?): FilterResults {
+                val charSearch = sequence.toString()
+                items = if (charSearch.isEmpty()) {
+                    items_b
+                } else {
+                    val resultList = mutableListOf<StudentUser>()
+                    for (row in items) {
+                        if (row.name.toLowerCase(Locale.ROOT)
+                                        .contains(charSearch.toLowerCase(Locale.ROOT))
+                        ) {
+                            resultList.add(row)
+                        }
+                    }
+                    resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = items
+                return filterResults
+            }
+
+            override fun publishResults(sequence: CharSequence?, results: FilterResults?) {
+                items = results?.values as MutableList<StudentUser>
+                notifyDataSetChanged()
+            }
+        }
     }
 
     inner class RegisteredUsersViewHolder(var binding: RegisteredUsersListItemBinding):

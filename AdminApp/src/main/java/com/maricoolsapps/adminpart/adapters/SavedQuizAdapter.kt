@@ -3,6 +3,7 @@ package com.maricoolsapps.adminpart.adapters
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.maricoolsapps.adminpart.R
@@ -11,6 +12,7 @@ import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.room_library.room.RoomEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.android.synthetic.main.quiz_list_item.view.*
 import javax.inject.Inject
 
 class SavedQuizAdapter
@@ -63,10 +65,10 @@ class SavedQuizAdapter
                 }else {
                         if (!clickedItems.contains(currentItem)){
                         clickedItems.add(currentItem)
-                        it.setBackgroundColor(context.resources.getColor(R.color.colorPrimary, null))
+                        it.check.visibility = View.VISIBLE
                 }else{
                         clickedItems.remove(currentItem)
-                        it.setBackgroundColor(context.resources.getColor(R.color.white, null))
+                            it.check.visibility = View.GONE
                     }
                 }
             }
@@ -78,7 +80,7 @@ class SavedQuizAdapter
                     clickedItems.clear()
                     listener_long.onItemLongClick(currentItem)
                     isActionModeOpened = true
-                    it.setBackgroundColor(context.resources.getColor(R.color.colorPrimary, null))
+                    it.check.visibility = View.VISIBLE
                     clickedItems.add(currentItem)
                 }
                 return@setOnLongClickListener true

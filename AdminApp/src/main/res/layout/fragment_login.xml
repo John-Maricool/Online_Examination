@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:gravity="center"
-    android:padding="16dp"
+    android:padding="@dimen/margin_16"
     tools:context=".ui.fragments.LoginFragment">
 
     <include

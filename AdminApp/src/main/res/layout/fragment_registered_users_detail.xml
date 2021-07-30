@@ -11,12 +11,12 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="44dp"
-        app:civ_border_width="2dp"
+        android:layout_width="@dimen/big_image_width"
+        android:layout_height="@dimen/big_image_width"
+        android:layout_marginTop="@dimen/margin_32"
+        app:civ_border_width="@dimen/border_width"
         app:civ_border_color="@color/white"
-        android:contentDescription="image"
+        android:contentDescription="@string/image"
         android:src="@drawable/profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -26,79 +26,79 @@
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/user_name"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/margin_20"
         android:textStyle="bold|normal"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_normal_size"
         android:layout_marginBottom="20dp"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Name: " />
+        android:text="@string/name" />
 
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/user_email"
         android:textStyle="bold|normal"
-        android:textSize="20sp"
-        android:layout_marginBottom="20dp"
+        android:textSize="@dimen/text_normal_size"
+        android:layout_marginBottom="@dimen/margin_20"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Email: " />
+        android:text="@string/email" />
 
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/user_phoneNumber"
         android:textStyle="bold|normal"
-        android:layout_marginBottom="20dp"
-        android:textSize="20sp"
+        android:layout_marginBottom="@dimen/margin_20"
+        android:textSize="@dimen/text_normal_size"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Phone number: " />
+        android:text="@string/phone_number" />
 
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/registered"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="@dimen/margin_20"
         android:textStyle="bold|normal"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_normal_size"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Registration Status: " />
+        android:text="@string/registration_status" />
 
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/activation"
         android:textStyle="bold|normal"
-        android:textSize="20sp"
-        android:layout_marginBottom="20dp"
+        android:textSize="@dimen/text_normal_size"
+        android:layout_marginBottom="@dimen/margin_20"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Activation Status: " />
+        android:text="@string/activation_status" />
 
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/reg_no"
         android:textStyle="bold|normal"
-        android:textSize="20sp"
-        android:layout_marginBottom="20dp"
+        android:textSize="@dimen/text_normal_size"
+        android:layout_marginBottom="@dimen/margin_20"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Registration Number: " />
+        android:text="@string/registration_number" />
 
     <TextView
         android:layout_width="wrap_content"
         android:id="@+id/quiz_score"
         android:textStyle="bold|normal"
-        android:textSize="20sp"
-        android:layout_marginBottom="20dp"
+        android:textSize="@dimen/text_normal_size"
+        android:layout_marginBottom="@dimen/margin_20"
         android:textColor="@color/black"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"
-        android:text="Quiz Score: " />
+        android:text="@string/quiz_score" />
 
 </LinearLayout>

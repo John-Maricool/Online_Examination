@@ -6,6 +6,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -25,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), OnItemLongClickListener, OnItemClickListener {
+class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), OnItemLongClickListener, OnItemClickListener, SearchView.OnQueryTextListener {
 
     private val model: RegisteredUsersViewModel by viewModels()
 
@@ -50,6 +51,9 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.activate_users, menu)
+        val searchItem: MenuItem = menu.findItem(R.id.search_user)
+        val searchView: SearchView = searchItem.actionView as SearchView
+        searchView.setOnQueryTextListener(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -187,5 +191,14 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
         val Item = item as StudentUser
         val action = RegisteredUsersFragmentDirections.actionRegisteredUsersFragmentToRegisteredUsersDetailFragment(Item)
         findNavController().navigate(action)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        adapter.filter.filter(newText)
+        return true
     }
 }

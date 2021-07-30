@@ -13,16 +13,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineExaminationProject">
 
-        <activity android:name="com.maricoolsapps.adminpart.appComponents.MainActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        <activity android:name="com.maricoolsapps.adminpart.appComponents.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.maricoolsapps.adminpart.appComponents.AdminActivity"
-            android:theme="@style/Theme.OnlineExaminationProject"/>
+        <activity android:name="com.maricoolsapps.adminpart.appComponents.AdminActivity" />
     </application>
 
 </manifest>

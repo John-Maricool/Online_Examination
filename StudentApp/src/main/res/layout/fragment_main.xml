@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     android:id="@+id/str"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,30 +12,36 @@
     android:layout_width="match_parent"
     android:layout_margin="20dp"
     android:gravity="top|center_horizontal"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:visibility="gone"
         tools:text="dfnjlkanks"
         tools:visibility="visible"
         android:id="@+id/registration_status"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
         android:visibility="gone"
+        android:background="@drawable/round_stylish_background"
         tools:visibility="visible"
+        android:textSize="22sp"
         android:layout_height="wrap_content"
         android:id="@+id/register_button"
         android:text="@string/register_for_quiz_btn"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:visibility="gone"
+        android:textSize="22sp"
+        android:background="@drawable/round_stylish_background"
         tools:visibility="visible"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_height="wrap_content"
         android:id="@+id/start"
         android:text="@string/start_quiz_btn"/>

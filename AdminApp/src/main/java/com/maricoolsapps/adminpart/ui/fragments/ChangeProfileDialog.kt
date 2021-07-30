@@ -1,14 +1,12 @@
 package com.maricoolsapps.adminpart.ui.fragments
 
 import android.os.Bundle
-import android.text.Layout
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.maricoolsapps.adminpart.R
@@ -18,7 +16,6 @@ import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_change_name_dialog.*
-import java.util.regex.Matcher
 
 @AndroidEntryPoint
 class ChangeProfileDialog : BottomSheetDialogFragment() {
@@ -40,11 +37,11 @@ class ChangeProfileDialog : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = ChangeProfileLayoutBinding.bind(view)
         if (args.type == constants.username){
-            binding.textView.append("Name")
+            binding.textView.append(" Name")
             val displayName = model.name
             binding.name.setText(displayName)
         }else{
-            binding.textView.append("Email")
+            binding.textView.append(" Email")
             val displayMail = model.email
             binding.name.setText(displayMail)
         }

@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="44dp"
-        android:contentDescription="image"
+        android:layout_width="@dimen/big_image_width"
+        android:layout_height="@dimen/big_image_width"
+        android:layout_marginTop="@dimen/margin_32"
+        android:contentDescription="@string/image"
         android:src="@drawable/profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:civ_border_width="2dp"
         app:civ_border_color="@color/white"
+        app:civ_border_width="@dimen/border_width"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/progress_bar_width"
+        android:layout_height="@dimen/progress_bar_height"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="@+id/profile_image"
@@ -27,43 +28,49 @@
 
     <ImageView
         android:id="@+id/image_chooser"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="20dp"
+        android:layout_width="@dimen/margin_50"
+        android:layout_height="@dimen/margin_50"
+        android:layout_marginEnd="@dimen/margin_16"
+        android:layout_marginBottom="@dimen/margin_20"
         android:background="@drawable/round_blue_background"
-        android:contentDescription="camera"
-        android:padding="10dp"
+        android:contentDescription="@string/camera"
+        android:padding="@dimen/margin_10"
         android:src="@drawable/ic_camera"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="@+id/profile_image" />
 
     <Button
         android:id="@+id/change_username"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="76dp"
-        android:text="Change Username"
+        android:background="@drawable/round_stylish_background"
+        android:layout_margin="@dimen/margin_20"
+        android:textSize="@dimen/text_normal_size"
+        android:text="@string/change_username"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
     <Button
         android:id="@+id/change_email"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@drawable/round_stylish_background"
         android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="24dp"
-        android:text="Change Email"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/change_email"
+        android:textSize="@dimen/text_normal_size"
+        android:layout_margin="@dimen/margin_20"
+        app:layout_constraintEnd_toEndOf="@+id/change_username"
+        app:layout_constraintStart_toStartOf="@+id/change_username"
         app:layout_constraintTop_toBottomOf="@+id/change_username" />
 
     <Button
         android:id="@+id/change_password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Change Password"
+        android:layout_margin="@dimen/margin_20"
+        android:background="@drawable/round_stylish_background"
+        android:textSize="@dimen/text_normal_size"
+        android:text="@string/change_password"
         app:layout_constraintEnd_toEndOf="@+id/change_email"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/change_email"

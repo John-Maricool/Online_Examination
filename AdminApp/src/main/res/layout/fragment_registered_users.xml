@@ -34,6 +34,30 @@
                 <include layout="@layout/registered_users_shimmer" />
 
                 <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
+
+                <include layout="@layout/registered_users_shimmer" />
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
 

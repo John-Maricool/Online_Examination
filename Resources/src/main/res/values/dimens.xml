@@ -1,5 +1,26 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="fragment_horizontal_margin">16dp</dimen>
-    <dimen name="fragment_vertical_margin">16dp</dimen>
+    <dimen name="text_normal_size">20sp</dimen>
+    <dimen name="text_margins">10dp</dimen>
+    <dimen name="text_big_size">30sp</dimen>
+    <dimen name="no_width">0dp</dimen>
+    <dimen name="margin_top_24">24dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="border_width">2dp</dimen>
+    <dimen name="margin_15">15dp</dimen>
+    <dimen name="big_image_width">220dp</dimen>
+    <dimen name="margin_350">350dp</dimen>
+    <dimen name="margin_50">50dp</dimen>
+    <dimen name="margin_neg_50">-50dp</dimen>
+    <dimen name="margin_100">100dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
+    <dimen name="margin_64">64dp</dimen>
+    <dimen name="margin_5">5dp</dimen>
+    <dimen name="corner_radius">5dp</dimen>
+    <dimen name="margin_56">56dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="no_height">0dp</dimen>
+    <dimen name="progress_bar_width">15dp</dimen>
+    <dimen name="progress_bar_height">15dp</dimen>
+    <dimen name="margin_16">16dp</dimen>
 </resources>

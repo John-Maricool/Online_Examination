@@ -12,39 +12,39 @@
 
     <Button
         android:id="@+id/saved_quiz"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:textSize="30sp"
-        android:text="Saved Quiz"
+        android:background="@drawable/round_stylish_background"
+        android:layout_margin="@dimen/margin_top_24"
+        android:text="@string/saved_quiz"
+        android:textSize="@dimen/text_big_size"
         app:layout_constraintEnd_toEndOf="@+id/registered_users"
         app:layout_constraintStart_toStartOf="@+id/registered_users"
         app:layout_constraintTop_toBottomOf="@+id/registered_users" />
 
     <Button
         android:id="@+id/registered_users"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@drawable/round_stylish_background"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
-        android:text="Registered Users"
-        android:textSize="30sp"
+        android:layout_margin="@dimen/margin_top_24"
+        android:text="@string/registered_users"
+        android:textSize="@dimen/text_big_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/create_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="72dp"
-        android:padding="20dp"
-        android:text="Create Test"
+        android:layout_margin="@dimen/margin_20"
+        android:padding="@dimen/margin_16"
+        android:text="@string/create_test"
         android:textColor="@color/white"
-        android:textSize="19sp"
+        android:textSize="@dimen/text_normal_size"
         android:textStyle="bold|normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
