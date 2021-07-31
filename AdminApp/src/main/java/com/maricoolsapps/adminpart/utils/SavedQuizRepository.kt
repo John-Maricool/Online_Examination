@@ -29,7 +29,7 @@ class SavedQuizRepository
         daoImpl.deleteQuiz(quiz)
     }
 
-    fun addToFirebase(data: Any, time: Int): LiveData<MyServerDataState> = adminCloudData.addToFirebase(data, time)
+    fun addToFirebase(data: List<Any>, time: Int): LiveData<MyServerDataState> = adminCloudData.addToFirebase(data, time)
 
     suspend fun deleteQuiz(){
         daoImpl.deleteQuiz(daoImpl.getAllQuiz())

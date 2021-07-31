@@ -134,12 +134,15 @@
                     android:text="@string/sign_up"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_normal_size"/>
-                <ProgressBar
+                <com.github.ybq.android.spinkit.SpinKitView
+                    android:id="@+id/progress_bar"
+                    style="@style/SpinKitView.Large.FadingCircle"
                     android:layout_width="@dimen/progress_bar_width"
                     android:layout_height="@dimen/progress_bar_height"
-                    android:layout_gravity="center"
                     android:visibility="gone"
-                    android:id="@+id/progress_bar"/>
+                    tools:visibility="visible"
+                    android:layout_gravity="center"
+                    app:SpinKit_Color="@color/colorPrimary" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </RelativeLayout>

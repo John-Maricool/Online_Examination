@@ -101,13 +101,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/options_group" />
 
-    <ProgressBar
-        android:visibility="gone"
+
+    <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/SpinKitView.Large.RotatingCircle"
+        android:layout_width="@dimen/margin_100"
+        android:layout_height="@dimen/margin_100"
+        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:SpinKit_Color="@color/colorPrimary" />
 </androidx.constraintlayout.widget.ConstraintLayout>

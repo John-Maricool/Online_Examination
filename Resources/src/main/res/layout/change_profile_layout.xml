@@ -56,14 +56,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
-    <ProgressBar
+    <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/progress"
+        style="@style/SpinKitView.Large.FadingCircle"
         android:layout_width="@dimen/progress_bar_width"
         android:layout_height="@dimen/progress_bar_height"
         android:visibility="gone"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="@+id/textView"/>
 
 </merge>

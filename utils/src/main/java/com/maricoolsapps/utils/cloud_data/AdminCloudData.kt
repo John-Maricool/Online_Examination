@@ -69,15 +69,17 @@ class AdminCloudData(var cloud: FirebaseFirestore,
         return _data
     }
 
-    fun addToFirebase(data: Any, time: Int): LiveData<MyServerDataState> {
+    fun addToFirebase(data: List<Any>, time: Int): LiveData<MyServerDataState> {
         val _data = MutableLiveData<MyServerDataState>()
         scope.launch {
             try{
                 val setting = QuizSettingModel(time)
                val job =  cloud.collection(collectionName).document(serverUser.getUserId()).collection(settings).document(quizTime).set(setting)
                job.await()
-                if (job.isComplete){
-                    cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).add(data).await()
+                if (job.isComplete) {
+                    data.forEach {
+                        cloud.collection(collectionName).document(serverUser.getUserId()).collection(quizDocs).add(it).await()
+                    }
                 }
                 _data.postValue(MyServerDataState.onLoaded)
             }catch (e: Exception) {

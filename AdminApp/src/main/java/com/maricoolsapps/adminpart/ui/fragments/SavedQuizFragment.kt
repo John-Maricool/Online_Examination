@@ -62,7 +62,6 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private fun sendToFirebase() {
         if (binding.recyclerView.isNotEmpty()){
             binding.progressUpload.visibility = View.VISIBLE
-            binding.progressText.visibility = View.VISIBLE
         }
     }
 
@@ -72,7 +71,6 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
                 true -> send(time)
                 false -> {
                     binding.progressUpload.visibility = View.GONE
-                    binding.progressText.visibility = View.GONE
                     Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()}
                 null -> send(time)
             }
@@ -84,35 +82,25 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         model.clicks = 0
         val size = data.size
         val progressIncrement = 100 / size
-        data.forEach {
-            model.addToFirebase(it, time).observe(viewLifecycleOwner, { result ->
+            model.addToFirebase(data, time).observe(viewLifecycleOwner, { result ->
                 when (result) {
                     is MyServerDataState.onLoaded -> {
-                        model.clicks++
-                        if (model.clicks == size) {
                             binding.progressBar.visibility = View.GONE
                             binding.progressUpload.visibility = View.GONE
-                            binding.progressText.visibility = View.GONE
                             Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
                             model.deleteQuiz()
                             adapter.items.clear()
                             adapter.notifyDataSetChanged()
-                        } else {
-                            binding.progressUpload.progress += progressIncrement
-                            binding.progressText.text = "${model.clicks}/$size"
-                        }
                     }
 
                     is MyServerDataState.notLoaded -> {
                         binding.progressBar.visibility = View.GONE
                         binding.progressUpload.visibility = View.GONE
-                        binding.progressText.visibility = View.GONE
                         Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
                     }
                     MyServerDataState.isLoading -> TODO()
                 }
             })
-        }
     }
 
     private fun startMonitoring(){

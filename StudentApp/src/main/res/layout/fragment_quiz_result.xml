@@ -46,15 +46,18 @@
         app:layout_constraintStart_toStartOf="@+id/text_congrats"
         app:layout_constraintTop_toBottomOf="@+id/text_congrats" />
 
-    <ProgressBar
+
+    <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/progress_bar"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:visibility="visible"
+        style="@style/SpinKitView.Large.FadingCircle"
+        android:layout_width="@dimen/progress_bar_width"
+        android:layout_height="@dimen/progress_bar_height"
+        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.763" />
+        app:layout_constraintVertical_bias="0.763"
+        app:SpinKit_Color="@color/colorPrimary" />
 </androidx.constraintlayout.widget.ConstraintLayout>

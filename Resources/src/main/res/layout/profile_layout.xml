@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
@@ -16,15 +17,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
+
+    <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/progress"
-        android:layout_width="@dimen/progress_bar_width"
-        android:layout_height="@dimen/progress_bar_height"
+        style="@style/SpinKitView.Large.RotatingCircle"
+        android:layout_width="@dimen/margin_20"
+        android:layout_height="@dimen/margin_20"
         android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintEnd_toEndOf="@+id/profile_image"
         app:layout_constraintStart_toStartOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="@+id/profile_image" />
+        app:layout_constraintTop_toTopOf="@+id/profile_image"
+        app:SpinKit_Color="@color/colorPrimary" />
+
 
     <ImageView
         android:id="@+id/image_chooser"

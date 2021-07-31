@@ -74,13 +74,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
-    <ProgressBar
+
+    <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/progress_bar"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="@dimen/margin_20"
+        android:layout_height="@dimen/margin_20"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recycler_view" />
+        app:layout_constraintTop_toTopOf="@+id/recycler_view"
+        tools:visibility="visible"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorPrimary" />
 </androidx.constraintlayout.widget.ConstraintLayout>

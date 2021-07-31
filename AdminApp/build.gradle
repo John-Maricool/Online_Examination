@@ -80,6 +80,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     // ViewModel
 
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData
