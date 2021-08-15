@@ -13,6 +13,12 @@ class RoomDaoImpl(val dao: RoomDao, val mapper: CloudMapper
 
     suspend fun getAllQuiz(): List<RoomEntity> = dao.getAllQuiz()
 
+    suspend fun deleteResult(quiz: List<QuizResultEntity>) = dao.deleteResult(quiz)
+
+    suspend fun getAllResult(): List<QuizResultEntity> = dao.getAllResult()
+
+    suspend fun insertResult(quiz: QuizResultEntity) = dao.insertResult(quiz)
+
     fun isQuizEmpty(): Boolean{
         return dao.getAllQuiz().isEmpty()
     }

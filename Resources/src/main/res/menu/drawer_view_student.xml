@@ -13,6 +13,10 @@
     <item
         android:icon="@drawable/ic_notice"
         android:title="Notice"
-        android:id="@+id/notice"/>
+        android:id="@+id/noticeFragmentStudent"/>
+
+    <item
+        android:id="@+id/savedResultFragment"
+        android:title="Saved Result"/>
 
 </menu>

@@ -17,7 +17,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
+        android:textSize="@dimen/text_normal_size"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:visibility="gone"
         tools:text="dfnjlkanks"
         tools:visibility="visible"
@@ -47,8 +49,9 @@
         android:text="@string/start_quiz_btn"/>
 
     <com.github.ybq.android.spinkit.SpinKitView
-        android:id="@+id/progress"
+        android:id="@+id/progrgess"
         style="@style/SpinKitView.Large.Circle"
+        android:visibility="gone"
         android:layout_margin="@dimen/margin_20"
         android:layout_width="@dimen/margin_20"
         android:layout_height="@dimen/margin_20"

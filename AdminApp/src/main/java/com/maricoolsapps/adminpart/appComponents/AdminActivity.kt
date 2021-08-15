@@ -50,11 +50,26 @@ class AdminActivity : AppCompatActivity() {
 
     private fun showAdminIdAndCopy(): Boolean {
         val id = auth.currentUser.uid
-        Toast.makeText(this, "Your id is $id", Toast.LENGTH_SHORT).show()
-        val manager: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData = ClipData.newPlainText("id", id)
-        manager.setPrimaryClip(clipData)
-        Toast.makeText(this, "Your Id is copied", Toast.LENGTH_SHORT).show()
+        val dialog = AlertDialog.Builder(this)
+        dialog.setTitle("Your ID")
+        dialog.setCancelable(false)
+        dialog.setMessage("Your id is $id")
+        dialog.setPositiveButton("Copy"){ the_dialog, _ ->
+            val manager: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            val clipData = ClipData.newPlainText("id", id)
+            manager.setPrimaryClip(clipData)
+            Toast.makeText(this, "Your Id is copied", Toast.LENGTH_SHORT).show()
+            the_dialog.dismiss()
+        }
+        dialog.setNegativeButton("Share"){ theDialog, _ ->
+            val waIntent = Intent(Intent.ACTION_SEND)
+            waIntent.type = "text/plain"
+            waIntent.putExtra(Intent.EXTRA_TEXT, id)
+            startActivity(waIntent)
+            theDialog.dismiss()
+        }
+        val alert = dialog.create()
+        alert.show()
         return true
     }
 

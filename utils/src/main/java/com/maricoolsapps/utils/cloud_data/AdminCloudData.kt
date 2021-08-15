@@ -156,6 +156,7 @@ class AdminCloudData(var cloud: FirebaseFirestore,
                 }else{
                     data.postValue(MyServerDataState.notLoaded(java.lang.Exception("No students registered")))
                 }
+
                 data.postValue(MyServerDataState.onLoaded)
             }catch (e: java.lang.Exception){
                 data.postValue(MyServerDataState.notLoaded(java.lang.Exception("Error Activating students")))
@@ -206,7 +207,9 @@ class AdminCloudData(var cloud: FirebaseFirestore,
                             .document(serverUser.getUserId()).collection(registeredStudents).document(id).delete().await()
                     cloud.collection(studentsCollectionName).document(id).update("registered", false).await()
                 }
+
                 data.postValue(true)
+
             } catch (E: Exception) {
                 data.postValue(false)
             }

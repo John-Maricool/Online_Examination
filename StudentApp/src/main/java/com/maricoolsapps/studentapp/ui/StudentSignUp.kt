@@ -89,7 +89,9 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
                     is MyServerDataState.onLoaded -> {
                         binding.progressBar.visibility = View.GONE
                         Toast.makeText(activity, "Completed Registration", Toast.LENGTH_LONG).show()
-                       startActivity(Intent(activity, MainActivity::class.java))
+                        val intent = Intent(activity, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
                         activity?.finish()
                     }
                     MyServerDataState.isLoading -> TODO()

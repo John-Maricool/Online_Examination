@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.maricoolsapps.adminpart.ui.viewModels.ChangePasswordViewModel
 import com.maricoolsapps.adminpart.R
-import com.maricoolsapps.adminpart.databinding.FragmentChangePasswordDialogBinding
 import com.maricoolsapps.resources.databinding.ChangePasswordLayoutBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import dagger.hilt.android.AndroidEntryPoint

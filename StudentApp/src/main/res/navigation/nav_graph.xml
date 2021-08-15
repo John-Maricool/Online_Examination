@@ -60,4 +60,14 @@
         android:name="com.maricoolsapps.studentapp.ui.ChangePasswordFragment"
         android:label="Change Password"
         tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/savedResultFragment"
+        android:name="com.maricoolsapps.studentapp.ui.SavedResultFragment"
+        android:label="Saved Result"
+        tools:layout="@layout/fragment_saved_result" />
+    <fragment
+        android:id="@+id/noticeFragmentStudent"
+        android:name="com.maricoolsapps.studentapp.ui.NoticeFragment"
+        android:label="Notice"
+        tools:layout="@layout/fragment_notice" />
 </navigation>

@@ -110,9 +110,10 @@ class StudentCloudData(var cloud: FirebaseFirestore,
                 when(it){
                     true -> {
                         try{
-                            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("adminId", id)
                             cloud.collection(studentsCollectionName)
-                                    .document(serverUser.getUserId()).update("registered", true, "quizScore", null).await()
+                                    .document(serverUser.getUserId())
+                                    .update("adminId", id,"registered", true, "quizScore", null, "activated", false)
+                                    .await()
                             val snapshot = cloud.collection(studentsCollectionName)
                                     .document(serverUser.getUserId()).get().await()
                             cloud.collection(collectionName).document(id)

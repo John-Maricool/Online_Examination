@@ -94,8 +94,11 @@ class LoginFragment : Fragment(R.layout.fragment_login), FirebaseAuth.AuthStateL
 
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         if (auth.currentUser != null){
-            startActivity(Intent(activity, AdminActivity::class.java))
+            val intent = Intent(activity, AdminActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
             activity?.finish()
+
         }
     }
 }

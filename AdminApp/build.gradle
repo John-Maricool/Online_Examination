@@ -18,7 +18,8 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+     //   renderscriptTargetApi 22
+       // renderscriptSupportModeEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions{
@@ -59,9 +60,7 @@ kapt {
     generateStubs = true
 }
 
-
 dependencies {
-
     implementation project(":room_library")
     implementation project(":utils")
     implementation project(":Resources")
@@ -73,6 +72,9 @@ dependencies {
     def nav_version = "2.3.5"
     def lifecycle_version = "2.3.1"
 
+    //implementation 'fr.tvbarthel.blurdialogfragment:lib:2.2.0'
+ //   implementation 'jp.wasabeef:blurry:4.0.0'
+  //  implementation 'com.xgc1986.android:ripplebutton:0.5.0'
 
     def room_version = "2.2.5"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"

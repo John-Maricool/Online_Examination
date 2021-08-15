@@ -85,8 +85,11 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             when (result) {
                 is MyServerDataState.onLoaded -> {
                     binding.progressBar.visibility = View.GONE
-                    startActivity(Intent(activity, AdminActivity::class.java))
-                    activity?.finish()}
+                    val intent = Intent(activity, AdminActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    activity?.finish()
+                }
 
                 is MyServerDataState.notLoaded -> {
                     binding.progressBar.visibility = View.GONE

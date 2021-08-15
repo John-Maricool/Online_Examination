@@ -95,7 +95,10 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
 
     override fun onAuthStateChanged(p0: FirebaseAuth) {
         if (auth.currentUser != null){
-            startActivity(Intent(activity, MainActivity::class.java))
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            activity?.finish()
         }
     }
 }

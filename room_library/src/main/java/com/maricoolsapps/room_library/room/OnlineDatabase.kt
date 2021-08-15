@@ -5,10 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [RoomEntity::class], version = 1, exportSchema = false)
+@Database(entities = [RoomEntity::class, QuizResultEntity::class], version = 1, exportSchema = false)
 abstract class OnlineDatabase: RoomDatabase() {
     abstract fun dao(): RoomDao
-
 
     companion object{
         @Volatile
@@ -24,6 +23,7 @@ abstract class OnlineDatabase: RoomDatabase() {
                                 OnlineDatabase::class.java,
                                 "my_database"
                         )
+                                .fallbackToDestructiveMigration()
                                 .allowMainThreadQueries()
                                 .build()
                         INSTANCE = instance

@@ -13,7 +13,7 @@
     <item
         android:icon="@drawable/ic_notice"
         android:title="Notice"
-        android:id="@+id/notice"/>
+        android:id="@+id/noticeFragment"/>
 
     <item
         android:title="Your Id"

@@ -20,4 +20,13 @@ interface RoomDao {
     @Query("select * from question_table order by id")
     fun getAllQuiz(): List<RoomEntity>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertResult(result: QuizResultEntity)
+
+    @Delete
+    suspend fun deleteResult(result: List<QuizResultEntity>)
+
+    @Query("select * from student_result_entity order by name")
+   suspend fun getAllResult(): List<QuizResultEntity>
+
     }

@@ -48,7 +48,7 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz), MainQuizViewMode
         }
         model.currentQuestion = model.questions?.get(model.questionIndex)
         binding.apply {
-            questionNumberText.text = "Question ${model.questionCount} out of ${model.questionsSize}"
+            questionNumberText.text = "Question ${model.questionCount} over ${model.questionsSize}"
             question.text = model.currentQuestion?.question
             firstOption.text = model.currentQuestion?.firstOption
             secondOption.text = model.currentQuestion?.secondOption

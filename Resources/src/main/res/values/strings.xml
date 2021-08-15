@@ -70,4 +70,35 @@
         <item>3</item>
         <item>4</item>
     </string-array>
+
+    <string name="notice_for_admin">
+        Online examination app is designed separately for the admin (teacher) and the student.
+        This app is for the admin and here, the admin can: \n
+        View Register Students\n
+        Create Test and upload saved quiz questions to server\n
+        Unregister students \n
+        Activate Students so as to take the quiz \n\n
+
+        A students needs the Admin Id before he or she can register for an online examination.
+        The Admin Id can be found in the navigation drawer, shared or copied to the students for them to register for an online examination.
+        \n\n
+        Note: \nPlease, do not use your login details in the online Examination students application.
+    </string>
+
+
+    <string name="notice">Notice</string>
+    <string name="notice_for_student">
+        Online examination app is designed separately for the admin (teacher) and the student.
+        This app is for the student and here, you can: \n
+        Check Registration Status\n
+        Access Quiz if activated by the Admin\n
+        View your Quiz Results immediately after taking quiz\n
+        Save Multiple of your quiz scores to access them locally later \n\n
+
+        You need an Admin Id before you can register for an online examination.
+        So, you are meant to get the Admin ID from the admin so as to register for an online examination\n\n
+        Note: \nPlease, do not use your login details in the online Examination students application.\n\n
+        You can access quiz once and after which, you are deactivated (you cannot access quiz questions again) until the admin activates you again.\n\n
+        You can only register for an online examination once at a time.
+    </string>
 </resources>
