@@ -1,5 +1,5 @@
 # Online_Examination
-Answer Examinations Online
+Take Examinations Online
 
 This project is developed for teachers and students.
 It solves the problem of Examination stress, thereby making examinations to be conducted via the application.
