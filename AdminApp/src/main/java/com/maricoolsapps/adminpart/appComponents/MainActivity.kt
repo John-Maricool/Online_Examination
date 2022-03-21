@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.loginFragment -> {
                     toolbar.visibility = View.GONE
                     bottomBar.visibility = View.GONE
-
                 }
                 R.id.signUpFragment -> {
                     toolbar.visibility = View.GONE

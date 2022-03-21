@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_gravity="center"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:layout_height="match_parent"
     tools:context=".ui.fragments.RegisteredUsersDetailFragment">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -14,112 +14,129 @@
         android:layout_width="@dimen/big_image_width"
         android:layout_height="@dimen/big_image_width"
         android:layout_marginTop="@dimen/margin_32"
-        app:civ_border_width="@dimen/border_width"
-        app:civ_border_color="@color/white"
         android:contentDescription="@string/image"
         android:src="@drawable/profile"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="@dimen/border_width"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/call"
         android:layout_width="wrap_content"
-        android:id="@+id/user_name"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:textStyle="bold|normal"
-        android:textSize="@dimen/text_normal_size"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:layout_gravity="start"
         android:layout_height="wrap_content"
-        android:text="@string/name" />
+        android:layout_marginStart="@dimen/margin_50"
+        android:background="@color/blue"
+        android:drawableStart="@drawable/ic_call"
+        android:text="Call"
+        android:elevation="@dimen/margin_5"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/profile_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/margin_5"
+        android:layout_marginEnd="@dimen/margin_50"
+        android:background="@color/blue"
+        android:drawableStart="@drawable/ic_message"
+        android:textAllCaps="false"
+        android:text="Message"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
 
     <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/user_email"
-        android:textStyle="bold|normal"
-        android:textSize="@dimen/text_normal_size"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:layout_gravity="start"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/email" />
+        android:layout_gravity="start"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:gravity="start"
+        android:text="@string/email"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_normal_size"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/call" />
 
     <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/user_phoneNumber"
-        android:textStyle="bold|normal"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:textSize="@dimen/text_normal_size"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:layout_gravity="start"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/phone_number" />
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:text="@string/phone_number"
+        android:layout_marginTop="@dimen/margin_10"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_normal_size"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="@+id/user_email"
+        app:layout_constraintTop_toBottomOf="@+id/user_email" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/registered"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:textStyle="bold|normal"
-        android:textSize="@dimen/text_normal_size"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:layout_gravity="start"
-        android:layout_height="wrap_content"
-        android:text="@string/registration_status" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/activation"
-        android:textStyle="bold|normal"
-        android:textSize="@dimen/text_normal_size"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:layout_gravity="start"
-        android:layout_height="wrap_content"
-        android:text="@string/activation_status" />
-
-    <TextView
-        android:layout_width="wrap_content"
         android:id="@+id/reg_no"
-        android:textStyle="bold|normal"
-        android:textSize="@dimen/text_normal_size"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:layout_gravity="start"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/registration_number" />
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:layout_marginTop="@dimen/margin_10"
+        android:text="@string/registration_number"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_normal_size"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="@+id/user_phoneNumber"
+        app:layout_constraintTop_toBottomOf="@+id/user_phoneNumber" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:id="@+id/quiz_score"
-        android:textStyle="bold|normal"
-        android:textSize="@dimen/text_normal_size"
-        android:layout_marginStart="@dimen/margin_32"
-        android:layout_marginBottom="@dimen/margin_20"
-        android:textColor="@color/black"
-        android:gravity="start"
-        android:layout_gravity="start"
+        android:id="@+id/activation"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/quiz_score" />
+        android:maxLines="2"
+        android:layout_marginEnd="@dimen/margin_5"
+        android:layout_gravity="start"
+        android:layout_marginTop="@dimen/margin_10"
+        android:gravity="start"
+        android:text="@string/activation_status"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_normal_size"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/reg_no"
+        app:layout_constraintTop_toBottomOf="@+id/reg_no" />
+
+    <TextView
+        android:id="@+id/quiz_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:layout_marginTop="@dimen/margin_10"
+        android:text="@string/quiz_score"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_normal_size"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="@+id/activation"
+        app:layout_constraintTop_toBottomOf="@+id/activation" />
 
     <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/progress_bar"
+        style="@style/SpinKitView.Large.RotatingCircle"
         android:layout_width="@dimen/progress_bar_width"
         android:layout_height="@dimen/progress_bar_height"
         android:layout_gravity="center"
-        android:visibility="gone"
-        style="@style/SpinKitView.Large.RotatingCircle"
-        android:id="@+id/progress_bar"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,8 +16,8 @@ import kotlinx.android.synthetic.main.quiz_list_item.view.*
 import javax.inject.Inject
 
 class SavedQuizAdapter
-@Inject constructor( @ApplicationContext val context: Context) :
-        RecyclerView.Adapter<SavedQuizAdapter.myViewHolder>() {
+@Inject constructor(@ApplicationContext val context: Context) :
+    RecyclerView.Adapter<SavedQuizAdapter.myViewHolder>() {
 
     var items: MutableList<RoomEntity> = mutableListOf()
     lateinit var listener: OnItemClickListener
@@ -30,9 +30,9 @@ class SavedQuizAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): myViewHolder {
         val binding = QuizListItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
         return myViewHolder(binding)
     }
@@ -49,21 +49,22 @@ class SavedQuizAdapter
         listener_long = mlistener
     }
 
-    fun clearAllData(){
+    fun clearAllData() {
         items.clear()
         notifyDataSetChanged()
     }
 
-    fun removeItems(){
+    fun removeItems() {
         items.removeAll(clickedItems)
         notifyDataSetChanged()
     }
-    fun clearClickedItems(){
+
+    fun clearClickedItems() {
         isActionModeOpened = false
         clickedItems.clear()
     }
 
-    fun setList(newItem: MutableList<RoomEntity>){
+    fun setList(newItem: MutableList<RoomEntity>) {
         items = newItem
         notifyDataSetChanged()
     }
@@ -73,29 +74,32 @@ class SavedQuizAdapter
         holder.binding.question.append(currentPos.question)
     }
 
-    inner class myViewHolder(var binding: QuizListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class myViewHolder(var binding: QuizListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.cardView.setOnClickListener {
                 val position = bindingAdapterPosition
-                    val currentItem = items[position]
+                Log.d("kjbbka", position.toString())
+                val currentItem = items[position]
                 if (!isActionModeOpened && position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(currentItem)
-                }else {
-                        if (!clickedItems.contains(currentItem)){
+                    listener.onItemClick(currentItem)
+                } else {
+                    if (!clickedItems.contains(currentItem)) {
                         clickedItems.add(currentItem)
                         it.check.visibility = View.VISIBLE
-                }else{
+                    } else {
                         clickedItems.remove(currentItem)
-                            it.check.visibility = View.GONE
+                        it.check.visibility = View.GONE
                     }
                 }
+                Log.d("kjbbka", clickedItems.toString())
             }
 
             binding.cardView.setOnLongClickListener {
                 val position = bindingAdapterPosition
                 val currentItem = items[position]
-                if (!isActionModeOpened && position != RecyclerView.NO_POSITION){
+                if (!isActionModeOpened && position != RecyclerView.NO_POSITION) {
                     clickedItems.clear()
                     listener_long.onItemLongClick(currentItem)
                     isActionModeOpened = true
@@ -108,7 +112,7 @@ class SavedQuizAdapter
     }
 
 
-    companion object{
+    companion object {
         var isActionModeOpened = false
         val clickedItems = mutableListOf<RoomEntity>()
     }

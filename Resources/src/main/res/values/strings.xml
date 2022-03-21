@@ -107,5 +107,6 @@
     <string name="activate_users">Activate Users</string>
     <string name="old_email">Old Email</string>
     <string name="password">password</string>
-    <string name="new_email">NEw Email</string>
+    <string name="new_email">New Email</string>
+    <string name="settings">Settings</string>
 </resources>

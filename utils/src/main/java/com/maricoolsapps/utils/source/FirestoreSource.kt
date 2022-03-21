@@ -21,7 +21,6 @@ import javax.inject.Inject
 class FirestoreSource
 @Inject constructor(var cloud: FirebaseFirestore) {
 
-
     suspend fun setFirestoreAdmin(user: AdminUser): Void? {
         return cloud.collection(collectionName).document(user.userID).set(user).await()
     }

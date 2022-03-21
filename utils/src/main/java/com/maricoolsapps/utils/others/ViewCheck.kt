@@ -1,15 +1,15 @@
 package com.maricoolsapps.utils.others
 
 import android.app.Activity
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Base64
+import android.net.Uri
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Toast
-import androidx.core.net.toUri
 import com.google.android.material.snackbar.Snackbar
 import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
 
 fun isTextValid(text: String): Boolean{
     return !(text.isEmpty() && text.length <= 6)
@@ -29,14 +29,22 @@ fun View.showSnack(msg: String){
         .show()
 }
 
-fun Activity.encodeImage(img: String): String {
+fun Activity.encodeImage(uri: Uri): String {
+    val iStream: InputStream? = contentResolver.openInputStream(uri)
+    val inputData = getBytes(iStream!!)
+    return String(inputData!!)
+}
 
-    val bm = BitmapFactory.decodeStream(this.contentResolver.openInputStream(img.toUri()))
-
-    val baos = ByteArrayOutputStream()
-    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-    val b = baos.toByteArray()
-    return Base64.encodeToString(b, Base64.DEFAULT)
+@Throws(IOException::class)
+fun getBytes(inputStream: InputStream): ByteArray? {
+    val byteBuffer = ByteArrayOutputStream()
+    val bufferSize = 1024
+    val buffer = ByteArray(bufferSize)
+    var len = 0
+    while (inputStream.read(buffer).also { len = it } != -1) {
+        byteBuffer.write(buffer, 0, len)
+    }
+    return byteBuffer.toByteArray()
 }
 
 /*

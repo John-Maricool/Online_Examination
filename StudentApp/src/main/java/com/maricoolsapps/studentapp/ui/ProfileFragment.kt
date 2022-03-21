@@ -44,10 +44,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     val intent_data = result.data?.data
-                    binding.progress.visibility = View.VISIBLE
                     if (intent_data != null) {
                         model.changeProfilePhoto(intent_data.toString())
-
+                        Glide.with(requireActivity())
+                            .load(intent_data)
+                            .centerCrop()
+                            .into(binding.profileImage)
                     }
                 }
             }
@@ -66,10 +68,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 Status.SUCCESS -> {
                     requireActivity().showToast(res.data!!)
                     binding.progress.visibility = View.GONE
-                    Glide.with(requireActivity())
-                        .load(res.data)
-                        .centerCrop()
-                        .into(binding.profileImage)
                 }
                 Status.ERROR -> {
                     binding.progress.visibility = View.GONE
@@ -84,7 +82,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     admin = res.data!!
                     binding.progress.visibility = View.GONE
                     Glide.with(requireActivity())
-                        .load(res.data)
+                        .load(admin.photoUri)
                         .centerCrop()
                         .into(binding.profileImage)
                 }

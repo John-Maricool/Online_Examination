@@ -1,13 +1,16 @@
 package com.maricoolsapps.utils.cloud_data
 
+import androidx.core.net.toUri
 import com.maricoolsapps.utils.source.FirestoreSource
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.models.AdminUser
 import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
+import com.maricoolsapps.utils.source.StorageSource
 
 class AdminCloudData(
-    var cloud: FirestoreSource
+    var cloud: FirestoreSource,
+    val storage: StorageSource
 ) {
 
     suspend fun CreateFirestoreUser(user: AdminUser, b: (MyDataState<String>) -> Unit) {
@@ -172,6 +175,7 @@ class AdminCloudData(
             b.invoke(MyDataState.error("Check Internet connection and try again", null))
         }
     }
+
     suspend fun deactivateStudent(
         id: String, b: (MyDataState<String>) -> Unit
     ) {
@@ -187,7 +191,10 @@ class AdminCloudData(
     suspend fun changeProfilePhoto(userId: String, photo: String, b: (MyDataState<String>) -> Unit){
         b.invoke(MyDataState.loading())
         try{
-            cloud.changeProfilePhoto(userId, photo)
+            storage.putFileInStorage(photo.toUri(), userId)
+            val uri = storage.getDownloadUri(userId)
+            val pic = uri.toString()
+            cloud.changeProfilePhoto(userId, pic)
             b.invoke(MyDataState.success("Successful"))
         }catch (e: Exception){
             b.invoke(MyDataState.error(e.toString(), null))

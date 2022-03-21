@@ -15,6 +15,7 @@ import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.RegisteredUsersViewModel
 import com.maricoolsapps.adminpart.adapters.RegisteredUsersAdapter
 import com.maricoolsapps.adminpart.adapters.SavedQuizAdapter
+import com.maricoolsapps.adminpart.appComponents.MainActivity
 import com.maricoolsapps.adminpart.databinding.FragmentRegisteredUsersBinding
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
@@ -44,6 +45,7 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentRegisteredUsersBinding.bind(view)
+        (activity as MainActivity).toolbar.title = "Registered Students "
         actionMode = RegisteredUsersActionMode(activity as AppCompatActivity)
         binding.recyclerView.setHasFixedSize(false)
         binding.recyclerView.adapter = adapter

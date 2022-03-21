@@ -1,5 +1,7 @@
 package com.maricoolsapps.adminpart.ui.viewModels
 
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -45,6 +47,12 @@ class RegisteredUsersDetailViewModel
                 _done.postValue(it)
             }
         }
+    }
+
+    fun callStudent(no: String): Intent {
+        val callIntent = Intent(Intent.ACTION_DIAL)
+        callIntent.data = Uri.parse("tel:$no")
+        return callIntent
     }
 
 }

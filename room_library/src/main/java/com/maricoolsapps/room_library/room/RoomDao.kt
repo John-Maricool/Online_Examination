@@ -15,7 +15,7 @@ interface RoomDao {
     fun updateQuiz(quiz: RoomEntity)
 
     @Delete
-    suspend fun deleteQuiz(quiz: List<RoomEntity>)
+    suspend fun deleteQuiz(quiz: List<RoomEntity>): Int
 
     @Query("select * from question_table order by id")
     fun getAllQuiz(): List<RoomEntity>
@@ -27,6 +27,6 @@ interface RoomDao {
     suspend fun deleteResult(result: List<QuizResultEntity>)
 
     @Query("select * from student_result_entity order by name")
-   suspend fun getAllResult(): List<QuizResultEntity>
+    suspend fun getAllResult(): List<QuizResultEntity>
 
-    }
+}

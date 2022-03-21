@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.maricoolsapps.adminpart.ui.viewModels.ChangeEmailViewModel
 import com.maricoolsapps.adminpart.R
@@ -20,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChangeEmailDialog : DialogFragment(R.layout.fragment_change_password_dialog) {
-
 
     private var _binding: ChangePasswordLayoutBinding? = null
     private val binding get() = _binding!!
@@ -42,10 +42,13 @@ class ChangeEmailDialog : DialogFragment(R.layout.fragment_change_password_dialo
                 Status.SUCCESS -> {
                     binding.progressBar.visibility = View.GONE
                     requireActivity().showToast(it.data!!)
+                    dismiss()
+                    findNavController().navigate(R.id.profileFragment)
                 }
                 Status.ERROR -> {
                     binding.progressBar.visibility = View.GONE
                     binding.progressBar.showSnack(it.message!!)
+                    dismiss()
                 }
                 Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
             }

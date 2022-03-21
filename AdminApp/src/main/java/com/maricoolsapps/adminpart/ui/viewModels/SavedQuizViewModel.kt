@@ -9,6 +9,7 @@ import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -43,7 +44,7 @@ class SavedQuizViewModel
     }
 
     fun delete(quiz: List<RoomEntity>) {
-        viewModelScope.launch {
+        viewModelScope.launch(Main) {
             repository.deleteSavedQuiz(quiz)
         }
     }

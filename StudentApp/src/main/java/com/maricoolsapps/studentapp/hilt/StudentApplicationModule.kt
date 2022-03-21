@@ -4,9 +4,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.maricoolsapps.utils.source.ServerUser
 import com.maricoolsapps.utils.cloud_data.StudentCloudData
 import com.maricoolsapps.utils.source.FirestoreSource
+import com.maricoolsapps.utils.source.StorageSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,7 +46,13 @@ object StudentApplicationModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideServerCloudData(cloud: FirestoreSource): StudentCloudData {
-        return StudentCloudData(cloud)
+    fun provideFirebaseStorage(): FirebaseStorage{
+        return FirebaseStorage.getInstance()
+    }
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideServerCloudData(cloud: FirestoreSource, storage: StorageSource): StudentCloudData {
+        return StudentCloudData(cloud, storage)
     }
 }

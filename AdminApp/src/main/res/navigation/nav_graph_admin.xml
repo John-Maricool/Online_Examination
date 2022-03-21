@@ -116,4 +116,9 @@
         android:name="com.maricoolsapps.adminpart.ui.fragments.NoticeFragment"
         android:label="Notice"
         tools:layout="@layout/fragment_notice" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

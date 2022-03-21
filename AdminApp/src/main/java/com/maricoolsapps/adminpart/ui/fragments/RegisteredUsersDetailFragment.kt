@@ -10,22 +10,25 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.maricoolsapps.adminpart.R
+import com.maricoolsapps.adminpart.appComponents.MainActivity
 import com.maricoolsapps.adminpart.databinding.FragmentRegisteredUsersDetailBinding
 import com.maricoolsapps.adminpart.ui.viewModels.RegisteredUsersDetailViewModel
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.models.StudentUser
 import com.maricoolsapps.utils.others.Status
 import com.maricoolsapps.utils.others.showSnack
 import com.maricoolsapps.utils.others.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_users_detail){
+class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_users_detail) {
 
     private var _binding: FragmentRegisteredUsersDetailBinding? = null
     private val binding get() = _binding!!
 
     private val model: RegisteredUsersDetailViewModel by viewModels()
     private val args: RegisteredUsersDetailFragmentArgs by navArgs()
+    lateinit var user: StudentUser
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,26 +36,37 @@ class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_user
         setHasOptionsMenu(true)
         model.getStudent(args.user)
         observeLiveData()
+        clickViews()
+    }
+
+    private fun clickViews() {
+        binding.call.setOnClickListener {
+            if (::user.isInitialized)
+            startActivity(model.callStudent(user.number!!))
+        }
+        binding.message.setOnClickListener {
+            //message user
+        }
     }
 
     private fun observeLiveData() {
-        model.result.observe(viewLifecycleOwner){
-            if (it != null){
-                val user = it
+        model.result.observe(viewLifecycleOwner) {
+            if (it != null) {
+                 user = it
                 binding.apply {
-                    userName.append(user.name)
-                    userEmail.append(user.email)
-                    userPhoneNumber.append(user.number)
-                    registered.append(user.isRegistered.toString())
-                    activation.append(user.isActivated.toString())
+                    (activity as MainActivity).toolbar.title = user.name
+                    userEmail.append( "\n ${user.email}")
+                    userPhoneNumber.append("\n ${user.number}")
+                    if (!user.isActivated) {
+                        activation.append(" \n ${user.name} cannot take quiz no")
+                    } else {
+                        activation.append(" \n ${user.name} is eligible to take quiz")
+                    }
                     regNo.append(user.regNo)
                     if (user.quizScore != null) {
-                        quizScore.append("${ user.quizScore}%")
-                    }else{
-                        quizScore.append("User has not taken Quiz yet")
+                        quizScore.append(" \n ${user.quizScore}%")
                     }
-
-                    Glide.with(requireActivity())
+                    Glide.with (requireActivity())
                         .load(user.photoUri?.toUri())
                         .centerCrop()
                         .placeholder(R.drawable.profile)
@@ -60,8 +74,8 @@ class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_user
                 }
             }
         }
-        model.done.observe(viewLifecycleOwner){
-            when(it?.status){
+        model.done.observe(viewLifecycleOwner) {
+            when (it?.status) {
                 Status.SUCCESS -> {
                     requireActivity().showToast(it.data!!)
                     binding.progressBar.visibility = View.GONE
@@ -81,7 +95,7 @@ class RegisteredUsersDetailFragment : Fragment(R.layout.fragment_registered_user
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.activate -> {
                 model.activateUser(args.user)
             }

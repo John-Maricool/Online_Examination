@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.SavedQuizViewModel
 import com.maricoolsapps.adminpart.adapters.SavedQuizAdapter
+import com.maricoolsapps.adminpart.appComponents.MainActivity
 import com.maricoolsapps.adminpart.databinding.FragmentSavedQuizBinding
 import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
@@ -37,7 +38,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     private val model: SavedQuizViewModel by viewModels()
     private var _binding: FragmentSavedQuizBinding? = null
     private val binding get() = _binding!!
-    private lateinit var clickedItem: RoomEntity
+   // private lateinit var clickedItem: RoomEntity
     private lateinit var actionMode: SavedQuizActionMode
 
     @Inject
@@ -46,6 +47,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSavedQuizBinding.bind(view)
+        (activity as MainActivity).toolbar.title = "Saved Quiz"
         actionMode = SavedQuizActionMode(activity as AppCompatActivity)
         binding.recyclerView.setHasFixedSize(false)
         binding.recyclerView.adapter = adapter
@@ -108,7 +110,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     override fun onItemLongClick(item: Any) {
-        clickedItem = item as RoomEntity
+      //  clickedItem = item as RoomEntity
         actionMode.start()
     }
 

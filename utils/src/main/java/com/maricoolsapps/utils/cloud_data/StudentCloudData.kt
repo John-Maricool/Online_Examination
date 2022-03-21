@@ -1,13 +1,15 @@
 package com.maricoolsapps.utils.cloud_data
 
+import androidx.core.net.toUri
 import com.google.firebase.firestore.DocumentSnapshot
 import com.maricoolsapps.utils.source.FirestoreSource
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
+import com.maricoolsapps.utils.source.StorageSource
 import java.lang.Exception
 
-class StudentCloudData(var cloud: FirestoreSource) {
+class StudentCloudData(var cloud: FirestoreSource, val storage: StorageSource) {
 
     suspend fun CreateFirestoreUser(user: StudentUser, b: (MyDataState<String>) -> Unit) {
         b.invoke(MyDataState.loading())
@@ -163,7 +165,10 @@ class StudentCloudData(var cloud: FirestoreSource) {
     ) {
         b.invoke(MyDataState.loading())
         try {
-            cloud.changeStudentProfilePhoto(userId, photo)
+            storage.putFileInStorage(photo.toUri(), userId)
+            val uri = storage.getDownloadUri(userId)
+            val pic = uri.toString()
+            cloud.changeStudentProfilePhoto(userId, pic)
             b.invoke(MyDataState.success("Successful"))
         } catch (e: Exception) {
             b.invoke(MyDataState.error(e.toString(), null))

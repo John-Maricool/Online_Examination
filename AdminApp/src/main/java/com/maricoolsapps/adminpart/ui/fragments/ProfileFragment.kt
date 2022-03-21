@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -15,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.maricoolsapps.adminpart.R
+import com.maricoolsapps.adminpart.appComponents.MainActivity
 import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
 import com.maricoolsapps.resources.databinding.ProfileLayoutBinding
@@ -47,7 +49,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     binding.progress.visibility = View.VISIBLE
                     if (intent_data != null) {
                         model.changeProfilePhoto(intent_data.toString())
-
+                        Glide.with(requireActivity())
+                            .load(intent_data)
+                            .centerCrop()
+                            .into(binding.profileImage)
                     }
                 }
             }
@@ -56,6 +61,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = ProfileLayoutBinding.bind(view)
+        (activity as MainActivity).toolbar.title = "Profile"
         clickViews()
         observeLiveData()
     }
@@ -66,10 +72,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 Status.SUCCESS -> {
                     requireActivity().showToast(res.data!!)
                     binding.progress.visibility = View.GONE
-                    Glide.with(requireActivity())
-                        .load(res.data)
-                        .centerCrop()
-                        .into(binding.profileImage)
                 }
                 Status.ERROR -> {
                     binding.progress.visibility = View.GONE
@@ -82,9 +84,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             when (res.status) {
                 Status.SUCCESS -> {
                     admin = res.data!!
+                    Log.d("ssjs", admin.toString())
                     binding.progress.visibility = View.GONE
                     Glide.with(requireActivity())
-                        .load(res.data)
+                        .load(admin.photoUri)
                         .centerCrop()
                         .into(binding.profileImage)
                 }
