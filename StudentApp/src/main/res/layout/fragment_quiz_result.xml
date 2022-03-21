@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/profile_image"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="44dp"
         android:contentDescription="image"
         android:src="@drawable/profile"
@@ -36,7 +36,7 @@
         android:id="@+id/text_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="112dp"
+        android:layout_marginTop="20dp"
         android:text="Your Percentage is: "
         android:textColor="@color/black"
         android:textSize="20sp"

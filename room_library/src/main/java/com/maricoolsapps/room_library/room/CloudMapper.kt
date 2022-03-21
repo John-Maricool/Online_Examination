@@ -6,6 +6,7 @@ class CloudMapper : Mapper<RoomEntity, ServerQuizDataModel>{
         return RoomEntity(
                 question = model.question,
                 firstOption = model.firstOption,
+                image = model.image,
                 secondOption = model.secondOption,
                 thirdOption = model.thirdOption,
                 forthOption = model.forthOption,
@@ -17,6 +18,7 @@ class CloudMapper : Mapper<RoomEntity, ServerQuizDataModel>{
         return ServerQuizDataModel(
                 question = model.question,
                 firstOption = model.firstOption,
+                image = model.image,
                 secondOption = model.secondOption,
                 thirdOption = model.thirdOption,
                 forthOption = model.forthOption,

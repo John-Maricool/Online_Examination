@@ -1,11 +1,21 @@
 package com.maricoolsapps.utils.datastate
 
+import com.maricoolsapps.utils.others.Status
 import java.lang.Exception
 
-sealed class MyDataState {
+data class MyDataState<out T>(val status: Status, val data: T?, val message: String?) {
 
-   data class onLoaded(val data: Any): MyDataState()
-    data class notLoaded(val e: Exception): MyDataState()
+    companion object {
+        fun <T> success(data: T?): MyDataState<T> {
+            return MyDataState(Status.SUCCESS, data, null)
+        }
 
-    object isLoading : MyDataState()
+        fun <T> error(msg: String, data: T?): MyDataState<T> {
+            return MyDataState(Status.ERROR, data, msg)
+        }
+
+        fun <T> loading(): MyDataState<T> {
+            return MyDataState(Status.LOADING, null, null)
+        }
+    }
 }

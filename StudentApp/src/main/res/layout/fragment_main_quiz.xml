@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/group"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/group"
     tools:context=".ui.MainQuizFragment">
 
-    <TextView
-        android:id="@+id/question_number_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:textSize="@dimen/text_normal_size"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Question x" />
 
-
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/image"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/timer_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
     <TextView
         android:id="@+id/textView2"
         android:layout_width="52dp"
         android:layout_height="39dp"
-        android:textColor="@color/colorPrimary"
         android:layout_marginStart="8dp"
         android:text="Time:"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_normal_size"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +50,7 @@
         android:textSize="@dimen/text_normal_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timer_text" />
+        app:layout_constraintTop_toBottomOf="@+id/image" />
 
     <RadioGroup
         android:id="@+id/options_group"
@@ -123,12 +117,32 @@
         style="@style/SpinKitView.Large.FoldingCube"
         android:layout_width="@dimen/margin_100"
         android:layout_height="@dimen/margin_100"
-        tools:visibility="visible"
         android:layout_gravity="center"
         android:visibility="gone"
         app:SpinKit_Color="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/question_number_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_normal_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Question x" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="question_number_text,textView2, timer_text, question, question_number_text, options_group, next" >
+    </androidx.constraintlayout.widget.Group>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ data class RoomEntity(
         @PrimaryKey(autoGenerate = true) var id: Int? = null,
         val question: String,
         val firstOption: String,
+        val image: String? = null,
         val secondOption: String,
         val thirdOption: String,
         val forthOption: String,

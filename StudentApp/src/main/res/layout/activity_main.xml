@@ -30,7 +30,7 @@
             android:layout_below="@+id/toolbar"
             app:navGraph="@navigation/nav_graph" />
 
-    </RelativeLayout>'
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_drawer"

@@ -22,11 +22,15 @@ import com.maricoolsapps.utils.interfaces.OnItemClickListener
 import com.maricoolsapps.utils.interfaces.OnItemLongClickListener
 import com.maricoolsapps.utils.models.StudentUser
 import com.maricoolsapps.utils.others.ActionModeImpl
+import com.maricoolsapps.utils.others.Status
+import com.maricoolsapps.utils.others.showSnack
+import com.maricoolsapps.utils.others.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), OnItemLongClickListener, OnItemClickListener, SearchView.OnQueryTextListener {
+class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users),
+    OnItemLongClickListener, OnItemClickListener, SearchView.OnQueryTextListener {
 
     private val model: RegisteredUsersViewModel by viewModels()
 
@@ -41,10 +45,9 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentRegisteredUsersBinding.bind(view)
         actionMode = RegisteredUsersActionMode(activity as AppCompatActivity)
-        binding.schimmer.startShimmer()
         binding.recyclerView.setHasFixedSize(false)
-        binding.recyclerView.layoutManager = LinearLayoutManager(activity)
-        startMonitoring()
+        binding.recyclerView.adapter = adapter
+        observeLiveData()
         setHasOptionsMenu(true)
     }
 
@@ -57,9 +60,9 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.activate -> activateUsers()
-            R.id.deactivate -> deactivateUsers()
+        when (item.itemId) {
+            R.id.activate -> model.activateStudents()
+            R.id.deactivate -> model.deactivateStudents()
             R.id.unregister_all -> unregisterAll()
         }
         return super.onOptionsItemSelected(item)
@@ -72,41 +75,7 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
             id.add(it.id)
         }
         RegisteredUsersAdapter.clickedItems = users
-        deleteUsers(id)
-    }
-
-    private fun activateUsers() {
-        binding.progressBar.visibility = View.VISIBLE
-        model.activateStudents().observe(viewLifecycleOwner, {state->
-            when(state){
-                is MyServerDataState.isLoading -> TODO()
-                is MyServerDataState.notLoaded -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    Toast.makeText(activity, state.e.toString(), Toast.LENGTH_LONG).show()
-                }
-                is MyServerDataState.onLoaded -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    Toast.makeText(activity, "Successfully activated", Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-    }
-
-    private fun deactivateUsers() {
-        binding.progressBar.visibility = View.VISIBLE
-        model.deactivateStudents().observe(viewLifecycleOwner, {state->
-            when(state){
-                is MyServerDataState.isLoading -> TODO()
-                is MyServerDataState.notLoaded -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    Toast.makeText(activity, state.e.toString(), Toast.LENGTH_LONG).show()
-                }
-                is MyServerDataState.onLoaded -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    Toast.makeText(activity, "Successfully deactivated", Toast.LENGTH_LONG).show()
-                }
-            }
-        })
+        model.deleteStudents(id)
     }
 
     override fun onStart() {
@@ -115,28 +84,34 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
         adapter.setOnClickListener(this)
     }
 
-    private fun startMonitoring(){
-
-        model.start().observe(viewLifecycleOwner, { dataState ->
-            when(dataState){
-                is MyDataState.notLoaded ->{
-                        binding.schimmer.stopShimmer()
-                    binding.schimmer.visibility = View.GONE
-                        }
-                is MyDataState.onLoaded ->{
+    private fun observeLiveData() {
+        model.loading.observe(viewLifecycleOwner){
+            if (it){
+                binding.progressBar.visibility = View.VISIBLE
+            }else{
+                binding.progressBar.visibility = View.GONE
+            }
+        }
+        model.students.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS -> {
                     binding.schimmer.stopShimmer()
                     binding.schimmer.visibility = View.GONE
-                    // adapter.getList(dataState.data)
-                    adapter.items = (dataState.data as MutableList<StudentUser>)
-                    Log.d("view", dataState.data.toString())
-
-                    binding.recyclerView.adapter = adapter
+                    adapter.getUsers(it.data as MutableList<StudentUser>)
                 }
-                is MyDataState.isLoading -> {
-                    binding.progressBar.visibility = View.VISIBLE
+                Status.ERROR -> {
+                    binding.schimmer.stopShimmer()
+                    binding.schimmer.visibility = View.GONE
+                    binding.schimmer.showSnack(it.message!!)
                 }
+                Status.LOADING -> binding.schimmer.startShimmer()
             }
-        })
+        }
+        model.result.observe(viewLifecycleOwner){
+            if (it != null){
+                requireActivity().showToast(it)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -148,28 +123,16 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
         actionMode.start()
     }
 
-    private fun deleteUsers(ids: List<String>){
-        model.deleteStudents(ids).observe(viewLifecycleOwner, {
-            when(it){
-                true -> {
-                    adapter.items.removeAll(RegisteredUsersAdapter.clickedItems)
-                    adapter.notifyDataSetChanged()
-                    Toast.makeText(activity, "Successfully Unregistered Students", Toast.LENGTH_SHORT).show()
-                }
-                false -> Toast.makeText(activity, "Error deleting students", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
 
     inner class RegisteredUsersActionMode
-    constructor(activity: AppCompatActivity): ActionModeImpl(activity){
+    constructor(activity: AppCompatActivity) : ActionModeImpl(activity) {
         override fun performAction(mode: ActionMode?, item: MenuItem?) {
-            when(item?.itemId){
+            when (item?.itemId) {
                 R.id.unregister -> {
                     val ids = RegisteredUsersAdapter.clickedItems.map {
                         it.id
                     }
-                    deleteUsers(ids)
+                    model.deleteStudents(ids)
                     mode?.finish()
                 }
             }
@@ -189,7 +152,10 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users), On
 
     override fun onItemClick(item: Any) {
         val Item = item as StudentUser
-        val action = RegisteredUsersFragmentDirections.actionRegisteredUsersFragmentToRegisteredUsersDetailFragment(Item)
+        val action =
+            RegisteredUsersFragmentDirections.actionRegisteredUsersFragmentToRegisteredUsersDetailFragment(
+                Item.id
+            )
         findNavController().navigate(action)
     }
 

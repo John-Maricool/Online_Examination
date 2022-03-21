@@ -4,8 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph.xml"
     android:label="Login"
-    app:startDestination="@id/adminPortalFragment">
+    app:startDestination="@id/loginFragment">
 
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment2"
+            app:destination="@id/signUpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
     <fragment
         android:id="@+id/adminPortalFragment"
         android:name="com.maricoolsapps.adminpart.ui.fragments.AdminPortalFragment"
@@ -28,11 +42,11 @@
         android:label="Profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profileFragment_to_changeNameDialog"
+            android:id="@+id/action_profileFragment_to_changeProfileDialog"
             app:destination="@id/changeProfileDialog" />
         <action
-            android:id="@+id/action_profileFragment_to_changePasswordDialog"
-            app:destination="@id/changePasswordDialog" />
+            android:id="@+id/action_profileFragment_to_ChangeEmail"
+            app:destination="@id/ChangeEmail" />
     </fragment>
     <dialog
         android:id="@+id/changeProfileDialog"
@@ -40,14 +54,18 @@
         android:label="Change Name"
         tools:layout="@layout/fragment_change_name_dialog">
         <argument
-            android:name="type"
+            android:name="name"
             app:argType="string" />
     </dialog>
     <dialog
-        android:id="@+id/changePasswordDialog"
-        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangePasswordDialog"
-        android:label="Change Password"
-        tools:layout="@layout/fragment_change_password_dialog" />
+        android:id="@+id/ChangeEmail"
+        android:name="com.maricoolsapps.adminpart.ui.fragments.ChangeEmailDialog"
+        android:label="Change Email"
+        tools:layout="@layout/fragment_change_password_dialog" >
+        <argument
+            android:name="email"
+            app:argType="string" />
+    </dialog>
     <fragment
         android:id="@+id/quizArrangement"
         android:name="com.maricoolsapps.adminpart.ui.fragments.QuizArrangement"
@@ -91,9 +109,7 @@
         tools:layout="@layout/fragment_registered_users_detail">
         <argument
             android:name="user"
-            android:defaultValue="@null"
-            app:argType="com.maricoolsapps.utils.models.StudentUser"
-            app:nullable="true" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/noticeFragment"

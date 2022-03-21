@@ -4,8 +4,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.maricoolsapps.utils.user.ServerUser
+import com.maricoolsapps.utils.source.ServerUser
 import com.maricoolsapps.utils.cloud_data.StudentCloudData
+import com.maricoolsapps.utils.source.FirestoreSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +28,7 @@ object StudentApplicationModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideServerUser(auth: FirebaseAuth, scope: CoroutineScope) = ServerUser(auth, scope)
+    fun provideServerUser(auth: FirebaseAuth) = ServerUser(auth)
 
     @ActivityRetainedScoped
     @Provides
@@ -43,7 +44,7 @@ object StudentApplicationModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideServerCloudData(cloud: FirebaseFirestore, scope: CoroutineScope, user: ServerUser): StudentCloudData {
-        return StudentCloudData(cloud, user, scope)
+    fun provideServerCloudData(cloud: FirestoreSource): StudentCloudData {
+        return StudentCloudData(cloud)
     }
 }

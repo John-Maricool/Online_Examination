@@ -1,53 +1,25 @@
 package com.maricoolsapps.utils.cloud_data
 
-import android.util.Log
-import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Source
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.storage.FirebaseStorage
-import com.google.protobuf.ListValue
+import com.google.firebase.firestore.DocumentSnapshot
+import com.maricoolsapps.utils.source.FirestoreSource
 import com.maricoolsapps.utils.datastate.MyDataState
-import com.maricoolsapps.utils.user.ServerUser
-import com.maricoolsapps.utils.others.constants.collectionName
-import com.maricoolsapps.utils.others.constants.studentsCollectionName
-import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.models.QuizSettingModel
 import com.maricoolsapps.utils.models.StudentUser
-import com.maricoolsapps.utils.others.constants.quizDocs
-import com.maricoolsapps.utils.others.constants.quizTime
-import com.maricoolsapps.utils.others.constants.registeredStudents
-import com.maricoolsapps.utils.others.constants.settings
-import com.maricoolsapps.utils.others.constants.time
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
-class StudentCloudData(var cloud: FirebaseFirestore,
-                       var serverUser: ServerUser,
-                       var scope: CoroutineScope) {
+class StudentCloudData(var cloud: FirestoreSource) {
 
-    suspend fun CreateFirestoreUser(user: StudentUser, Auth: FirebaseAuth): Boolean {
-        return try {
-            if (Auth.currentUser != null) {
-                cloud.collection(studentsCollectionName)
-                        .document(Auth.currentUser.uid).set(user).await()
-                true
-            } else {
-                false
-            }
+    suspend fun CreateFirestoreUser(user: StudentUser, b: (MyDataState<String>) -> Unit) {
+        b.invoke(MyDataState.loading())
+        try {
+            cloud.setFirestoreStudent(user)
+            b.invoke(MyDataState.success("Successfull"))
         } catch (e: Exception) {
-            false
+            b.invoke(MyDataState.error(e.toString(), null))
         }
     }
 
+    /*
     suspend fun changeStudentName(name: String): Boolean{
         return try{
             cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("name", name).await()
@@ -98,148 +70,171 @@ class StudentCloudData(var cloud: FirebaseFirestore,
         }catch (e: Exception){
             false
         }
-    }
+    }*/
 
-    fun registerForQuiz(id: String): LiveData<MyServerDataState> {
-        val dataLiveData = MutableLiveData<MyServerDataState>()
-        scope.launch(IO) {
-          val job = async(IO) {
-                checkIfAdminDocExist(id)
+    suspend fun registerForQuiz(
+        adminId: String,
+        userId: String,
+        b: (MyDataState<String>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            val res = cloud.checkIfAdminDocExist(adminId)
+            if (!res) {
+                cloud.registerStudentForQuiz(adminId, userId)
+                cloud.addStudentToAdminList(adminId, userId)
+                b.invoke(MyDataState.success("Successful"))
+            } else {
+                b.invoke(MyDataState.error("You're already registered", null))
             }
-            job.await().let {
-                when(it){
-                    true -> {
-                        try{
-                            cloud.collection(studentsCollectionName)
-                                    .document(serverUser.getUserId())
-                                    .update("adminId", id,"registered", true, "quizScore", null, "activated", false)
-                                    .await()
-                            val snapshot = cloud.collection(studentsCollectionName)
-                                    .document(serverUser.getUserId()).get().await()
-                            cloud.collection(collectionName).document(id)
-                                    .collection(registeredStudents).document(serverUser.getUserId())
-                                    .set(snapshot.toObject<StudentUser>()!!).await()
-                            dataLiveData.postValue(MyServerDataState.onLoaded)
-                        }
-                        catch (e: Exception){
-                            dataLiveData.postValue(MyServerDataState.notLoaded(Exception("Check Internet")))
-                        }
-                    }
-                    false -> {
-                        dataLiveData.postValue(MyServerDataState.notLoaded(Exception("Wrong ID")))
-                    }
-                }
-            }
-        }
-        return dataLiveData
-    }
-
-    fun checkIfPreviouslyRegistered(): LiveData<Boolean> {
-    val dataLiveData = MutableLiveData<Boolean>()
-    scope.launch(IO) {
-        try{
-        val snapshot = cloud.collection(studentsCollectionName)
-                .document(serverUser.getUserId()).get().await()
-                val data = snapshot.toObject<StudentUser>()
-            if (data!!.isRegistered) {
-                        dataLiveData.postValue(true)
-                    } else {
-                        dataLiveData.postValue(false)
-                    }
-            } catch (e: Exception) {
-                dataLiveData.postValue(null)
-            }
-        }
-    return dataLiveData
-}
-
-    private suspend fun checkIfAdminDocExist(id: String): Boolean {
-        return try {
-            val res = cloud.collection(collectionName).document(id).get(Source.SERVER).await()
-            res.exists()
         } catch (e: Exception) {
-            false
+            b.invoke(MyDataState.error(e.toString(), null))
         }
     }
 
-    fun checkIfItsTimeToAccessQuiz(): LiveData<Boolean>{
-        val bool = MutableLiveData<Boolean>()
-        scope.launch {
-             try {
-                val snapshot = cloud.collection(studentsCollectionName).document(serverUser.getUserId()).get().await()
-                val user = snapshot.toObject<StudentUser>()
-                if (user!!.isActivated) {
-                   bool.postValue(true)
-                } else {
-                    bool.postValue(false)
-                }
-            } catch (e: Exception) {
-                bool.postValue(null)
+    suspend fun checkIfPreviouslyRegistered(
+        userId: String, b: (MyDataState<Boolean>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            val data = cloud.getStudent(userId)?.toObject(StudentUser::class.java)
+            if (data!!.isRegistered) {
+                b.invoke(MyDataState.success(true))
+            } else {
+                b.invoke(MyDataState.success(false))
             }
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
         }
-        return bool
     }
 
-     suspend fun downloadQuiz(): MyDataState {
-         return try {
-             val id = cloud.collection(studentsCollectionName).document(serverUser.getUserId()).get().await()
-             val ids = id.toObject<StudentUser>()?.adminId
-             val job =  cloud.collection(collectionName).document(ids!!).collection(settings).document(quizTime).get(Source.SERVER).await()
-                 time = job.toObject<QuizSettingModel>()?.time
-             val ans = cloud.collection(collectionName).document(ids).collection(quizDocs).get(Source.SERVER).await()
-             MyDataState.onLoaded(ans)
-         }catch (e: Exception){
-             MyDataState.notLoaded(e)
-         }
-    }
 
-    fun deactivateStudent(): LiveData<MyServerDataState>{
-        val data = MutableLiveData<MyServerDataState>()
-        scope.launch {
-            try{
-                cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("activated", false).await()
-                val user = cloud.collection(studentsCollectionName).document(serverUser.getUserId()).get().await()
-                val id = user.toObject<StudentUser>()?.adminId
-                cloud.collection(collectionName).document(id!!).collection(registeredStudents)
-                        .document(serverUser.getUserId()).update("activated", false).await()
-                data.postValue(MyServerDataState.onLoaded)
-            }catch (e: Exception){
-                data.postValue(MyServerDataState.notLoaded(e))
+    suspend fun checkIfItsTimeToAccessQuiz(
+        userId: String, b: (MyDataState<Boolean>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            val data = cloud.getStudent(userId)?.toObject(StudentUser::class.java)
+            if (data!!.isActivated) {
+                b.invoke(MyDataState.success(true))
+            } else {
+                b.invoke(MyDataState.success(false))
             }
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
         }
-        return data
     }
 
-    fun sendQuizResult(score: Int): LiveData<MyServerDataState>{
-        val data = MutableLiveData<MyServerDataState>()
-        val userDoc =  cloud.collection(studentsCollectionName).document(serverUser.getUserId())
-        scope.launch {
-            try{
-               userDoc.update("quizScore", score).await()
-                       val user = userDoc.get().await()
-                val id = user.toObject<StudentUser>()?.adminId
-                cloud.collection(collectionName).document(id!!).collection(registeredStudents)
-                        .document(serverUser.getUserId()).update("quizScore", score).await()
-                data.postValue(MyServerDataState.onLoaded)
-            }catch (e: Exception){
-                data.postValue(MyServerDataState.notLoaded(e))
-            }
+    suspend fun deactivateStudent(studentId: String, b: (MyDataState<String>) -> Unit) {
+        b.invoke(MyDataState.loading())
+        try {
+            cloud.deactivateStudent(studentId)
+            b.invoke(MyDataState.success("Successful"))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
         }
-        return data
     }
 
-    fun getStudent(): LiveData<MyDataState>{
-        val data = MutableLiveData<MyDataState>()
-        val userDoc =  cloud.collection(studentsCollectionName).document(serverUser.getUserId())
-        scope.launch {
-            try{
-                val user = userDoc.get().await()
-                val user_obj = user.toObject<StudentUser>()
-                data.postValue(MyDataState.onLoaded(user_obj as StudentUser))
-            }catch (e: Exception){
-                data.postValue(MyDataState.notLoaded(e))
-            }
+    suspend fun sendQuizResult(score: Int, userId: String, b: (MyDataState<String>) -> Unit) {
+        b.invoke(MyDataState.loading())
+        try {
+            cloud.updateQuizResult(score, userId)
+            cloud.deactivateStudent(userId)
+            b.invoke(MyDataState.success("successful"))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
         }
-        return data
+    }
+
+    suspend fun getStudent(userId: String, b: (MyDataState<StudentUser>) -> Unit) {
+        b.invoke(MyDataState.loading())
+        try {
+            val user_obj = cloud.getStudent(userId)?.toObject(StudentUser::class.java)
+            b.invoke(MyDataState.success(user_obj))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
+        }
+    }
+
+    suspend fun changeProfilePhoto(
+        userId: String,
+        photo: String,
+        b: (MyDataState<String>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            cloud.changeStudentProfilePhoto(userId, photo)
+            b.invoke(MyDataState.success("Successful"))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
+        }
+    }
+
+    suspend fun changeProfileName(
+        userId: String,
+        name: String,
+        b: (MyDataState<String>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            cloud.changeStudentProfileName(userId, name)
+            b.invoke(MyDataState.success("Successful"))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
+        }
+    }
+
+    suspend fun changeProfileEmail(
+        userId: String,
+        email: String,
+        b: (MyDataState<String>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            cloud.changeStudentProfileEmail(userId, email)
+            b.invoke(MyDataState.success("Successful"))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
+        }
+    }
+
+    suspend fun getAllQuizDocId(studentId: String, b: (MyDataState<List<String>>) -> Unit) {
+        b.invoke(MyDataState.loading())
+        try {
+            val quizzes = mutableListOf<String>()
+            cloud.getAllQuizDocId(studentId).forEach {
+                quizzes.add(it.reference.id)
+            }
+            b.invoke(MyDataState.success(quizzes))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
+        }
+    }
+
+    suspend fun getQuiz(
+        userId: String,
+        docId: String,
+        b: (MyDataState<DocumentSnapshot>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            val result = cloud.getQuizQuestion(userId, docId)
+            b.invoke(MyDataState.success(result))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
+        }
+    }
+
+    suspend fun getQuizTime(
+        userId: String,
+        b: (MyDataState<QuizSettingModel>) -> Unit
+    ) {
+        b.invoke(MyDataState.loading())
+        try {
+            val result = cloud.getQuizTime(userId)?.toObject(QuizSettingModel::class.java)
+            b.invoke(MyDataState.success(result))
+        } catch (e: Exception) {
+            b.invoke(MyDataState.error(e.toString(), null))
+        }
     }
 }

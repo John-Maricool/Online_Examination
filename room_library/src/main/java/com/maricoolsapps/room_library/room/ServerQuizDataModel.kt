@@ -6,9 +6,10 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ServerQuizDataModel(var question: String,
                                var firstOption: String,
+                               val image: String? = null,
                                var secondOption: String,
                                var thirdOption: String,
                                var forthOption: String,
                                var correctIndex: Int) : Parcelable {
-    constructor(): this("", "", "", "", "", 0)
+    constructor(): this("", "", null, "", "", "", 0)
 }

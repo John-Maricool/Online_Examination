@@ -59,7 +59,7 @@
     <string name="reg_number">Reg Number (optional)</string>
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
-    <string name="reset_password">Reset Password</string>
+    <string name="reset_email">Reset Email</string>
     <string name="enter_your_profile_text">Enter your </string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -101,4 +101,11 @@
         You can access quiz once and after which, you are deactivated (you cannot access quiz questions again) until the admin activates you again.\n\n
         You can only register for an online examination once at a time.
     </string>
+    <string name="unregister_all_users">Unregister all Users</string>
+    <string name="search_user">Search User</string>
+    <string name="deactivate_users">Deactivate Users</string>
+    <string name="activate_users">Activate Users</string>
+    <string name="old_email">Old Email</string>
+    <string name="password">password</string>
+    <string name="new_email">NEw Email</string>
 </resources>

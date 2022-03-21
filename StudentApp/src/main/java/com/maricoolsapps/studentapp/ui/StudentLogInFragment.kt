@@ -1,26 +1,21 @@
 package com.maricoolsapps.studentapp.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.resources.databinding.LoginLayoutBinding
 import com.maricoolsapps.studentapp.R
-import com.maricoolsapps.studentapp.application.MainActivity
-import com.maricoolsapps.studentapp.databinding.StudentLogInFragmentBinding
-import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.others.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), FirebaseAuth.AuthStateListener {
+class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment) {
 
-    private  val viewModel: StudentLogInViewModel by viewModels()
+    private val model: StudentLogInViewModel by viewModels()
 
     private var _binding: LoginLayoutBinding? = null
     private val binding get() = _binding!!
@@ -28,77 +23,60 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment), Firebas
     @Inject
     lateinit var auth: FirebaseAuth
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        auth.addAuthStateListener (this)
-
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = LoginLayoutBinding.bind(view)
-        binding.register.setOnClickListener{
-            val action = StudentLogInFragmentDirections.actionStudentLogInFragmentToStudentSignup()
-            findNavController().navigate(action)
+        binding.register.setOnClickListener {
+            findNavController().navigate(R.id.studentSignup)
         }
         binding.login.setOnClickListener { userLogin() }
+
+        model.result.observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.SUCCESS -> {
+                    binding.progressBar.visibility = View.GONE
+                    requireActivity().showToast(result.data.toString())
+                    findNavController().navigate(R.id.mainFragment)
+                }
+                Status.ERROR -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.showSnack(result.message.toString())
+                }
+                Status.LOADING -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-        auth.removeAuthStateListener(this)
     }
 
-    private fun userLogin(){
+    private fun userLogin() {
         val userEmail: String = binding.email.text.toString().trim()
         val userPassword: String = binding.password.text.toString().trim()
 
-        if (userEmail.isEmpty()) {
+        if (!isEmailValid(userEmail)) {
             binding.email.error = "Email is required"
             binding.email.requestFocus()
             return
         }
 
-        if (userPassword.isEmpty()) {
+        if (!isTextValid(userPassword)) {
             binding.password.error = "Password is required"
             binding.password.requestFocus()
             return
         }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            binding.email.error = "Please enter a correct email"
-            return
-        }
-
-        if (userPassword.length < 6) {
-            binding.password.error = "Please enter a correct password"
-            return
-        }
-
         binding.progressBar.visibility = View.VISIBLE
-        viewModel.logInUser(userEmail, userPassword).observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is MyServerDataState.onLoaded -> {
-                    binding.progressBar.visibility = View.GONE
-                    startActivity(Intent(activity, MainActivity::class.java))
-                    activity?.finish()
-                }
-                is MyServerDataState.notLoaded -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(activity, result.e.toString(), Toast.LENGTH_SHORT).show()
-                }
-                MyServerDataState.isLoading -> TODO()
-            }
-        }
+        model.logInUser(userEmail, userPassword)
     }
 
-    override fun onAuthStateChanged(p0: FirebaseAuth) {
-        if (auth.currentUser != null){
-            val intent = Intent(activity, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            activity?.finish()
+    override fun onStart() {
+        super.onStart()
+        if (auth.currentUser != null) {
+            findNavController().navigate(R.id.mainFragment)
         }
     }
 }

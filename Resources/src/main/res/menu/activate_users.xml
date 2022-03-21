@@ -3,24 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:title="Activate Users"
+        android:title="@string/activate_users"
         android:id="@+id/activate"
         app:showAsAction="never"/>
 
     <item
-        android:title="Deactivate Users"
+        android:title="@string/deactivate_users"
         android:id="@+id/deactivate"
         app:showAsAction="never"/>
 
     <item
-        android:title="Unregister all Users"
+        android:title="@string/unregister_all_users"
         android:id="@+id/unregister_all"
         app:showAsAction="never"/>
 
     <item
-        android:title="Search User"
+        android:title="@string/search_user"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         android:id="@+id/search_user"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_search"/>
 </menu>

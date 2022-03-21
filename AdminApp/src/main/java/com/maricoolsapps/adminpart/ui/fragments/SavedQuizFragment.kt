@@ -24,14 +24,17 @@ import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.ActionModeImpl
+import com.maricoolsapps.utils.others.Status
+import com.maricoolsapps.utils.others.showSnack
+import com.maricoolsapps.utils.others.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickListener, OnItemLongClickListener {
+class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickListener,
+    OnItemLongClickListener {
 
     private val model: SavedQuizViewModel by viewModels()
-
     private var _binding: FragmentSavedQuizBinding? = null
     private val binding get() = _binding!!
     private lateinit var clickedItem: RoomEntity
@@ -42,91 +45,65 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         _binding = FragmentSavedQuizBinding.bind(view)
-        binding.recyclerView.setHasFixedSize(false)
         actionMode = SavedQuizActionMode(activity as AppCompatActivity)
-        binding.recyclerView.layoutManager = LinearLayoutManager(activity)
-        model.start()
-        startMonitoring()
+        binding.recyclerView.setHasFixedSize(false)
+        binding.recyclerView.adapter = adapter
+        observeLiveData()
         setHasOptionsMenu(true)
-
-    }
-
-    override fun onStart() {
-        super.onStart()
         adapter.setOnClickListener(this)
         adapter.setOnLongClickListener(this)
     }
 
-    private fun sendToFirebase() {
-        if (binding.recyclerView.isNotEmpty()){
-            binding.progressUpload.visibility = View.VISIBLE
-        }
-    }
-
-    private fun clearDocsAndSend(time: Int) {
-        model.clearQuizDocs().observe(viewLifecycleOwner, {
-            when(it){
-                true -> send(time)
-                false -> {
-                    binding.progressUpload.visibility = View.GONE
-                    Toast.makeText(activity, "Error", Toast.LENGTH_SHORT).show()}
-                null -> send(time)
-            }
-        })
+    private fun addOverriteToDb(time: Int) {
+        val data: MutableList<RoomEntity> = adapter.items
+        model.addOverriteToDb(data, time)
     }
 
     private fun send(time: Int) {
-        val data: List<ServerQuizDataModel> = model.map()
-        model.clicks = 0
-        val size = data.size
-        val progressIncrement = 100 / size
-            model.addToFirebase(data, time).observe(viewLifecycleOwner, { result ->
-                when (result) {
-                    is MyServerDataState.onLoaded -> {
-                            binding.progressBar.visibility = View.GONE
-                            binding.progressUpload.visibility = View.GONE
-                            Toast.makeText(activity, "Upload Successful", Toast.LENGTH_LONG).show()
-                            model.deleteQuiz()
-                            adapter.items.clear()
-                            adapter.notifyDataSetChanged()
-                    }
-
-                    is MyServerDataState.notLoaded -> {
-                        binding.progressBar.visibility = View.GONE
-                        binding.progressUpload.visibility = View.GONE
-                        Toast.makeText(activity, "Upload Failed", Toast.LENGTH_LONG).show()
-                    }
-                    MyServerDataState.isLoading -> TODO()
-                }
-            })
+        val data: MutableList<RoomEntity> = adapter.items
+        model.addToFirebase(data, time)
     }
 
-    private fun startMonitoring(){
-        model.dataState.observe(viewLifecycleOwner, { dataState ->
-            when(dataState){
-                is MyDataState.notLoaded ->{
+    private fun observeLiveData() {
+        model.dataState.observe(viewLifecycleOwner) { dataState ->
+            when (dataState.status) {
+                Status.ERROR -> {
                     binding.progressBar.visibility = View.GONE
+                    binding.progressBar.showSnack("Error")
                 }
-
-                is MyDataState.onLoaded ->{
+                Status.SUCCESS -> {
                     binding.progressBar.visibility = View.GONE
-                   val list = dataState.data as MutableList<RoomEntity>
-                    adapter.items = list
+                    val list = dataState.data as MutableList<RoomEntity>
+                    adapter.setList(list)
                     Log.d("view", dataState.data.toString())
-                    binding.recyclerView.adapter = adapter
                 }
 
-                is MyDataState.isLoading -> {
+                Status.LOADING -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
             }
-        })
+        }
+
+        model.add.observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                requireActivity().showToast(result)
+            }
+        }
+        model.loading.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.progressUpload.visibility = View.VISIBLE
+            } else {
+                binding.progressUpload.visibility = View.GONE
+            }
+        }
+
+
     }
 
     override fun onItemClick(item: Any) {
-        val action = SavedQuizFragmentDirections.actionSavedQuizFragmentToQuizArrangement(item as RoomEntity)
+        val action =
+            SavedQuizFragmentDirections.actionSavedQuizFragmentToQuizArrangement(item as RoomEntity)
         findNavController().navigate(action)
     }
 
@@ -136,54 +113,53 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-       super.onCreateOptionsMenu(menu, inflater)
+        super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.cloud_upload, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.cloud_upload -> {
                 showDialog()
                 return true
             }
             R.id.delete_all -> {
                 model.deleteQuiz()
-                adapter.items.clear()
-                adapter.notifyDataSetChanged()
+                adapter.clearAllData()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun showDialog() {
-        val alertDialogBuilder =  AlertDialog.Builder(requireContext())
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
         alertDialogBuilder.setTitle("Notice")
         alertDialogBuilder.setMessage("You cannot edit any quiz after uploading")
         val input = EditText(requireContext())
-        input.hint = "Quiz timing (minutes)"
+        input.hint = "Quiz timing for each question (seconds)"
         input.inputType = InputType.TYPE_CLASS_NUMBER
         alertDialogBuilder.setView(input)
-                .setPositiveButton("New Write") { dialog, _ ->
-                    val text = input.text.toString().trim()
-                    if (text.isNotEmpty()) {
-                        sendToFirebase()
-                        clearDocsAndSend(text.toInt())
-                        dialog.dismiss()
-                    } else {
-                        Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
-                        return@setPositiveButton
-                    }
-                }.setNegativeButton("Add to Existing"){ dialogInterface, _ ->
-                    val text = input.text.toString().trim()
-                    if (text.isNotEmpty()) {
-                        sendToFirebase()
-                        send(text.toInt())
-                        dialogInterface.dismiss()
-                    } else {
-                        Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
-                        return@setNegativeButton
-                    }
-        }.show()
+            .setPositiveButton("New Write") { dialog, _ ->
+                val text = input.text.toString().trim()
+                if (text.isNotEmpty()) {
+                   // sendToFirebase()
+                    addOverriteToDb(text.toInt())
+                    dialog.dismiss()
+                } else {
+                    requireActivity().showToast("Empty Input")
+                    return@setPositiveButton
+                }
+            }.setNegativeButton("Add to Existing") { dialogInterface, _ ->
+                val text = input.text.toString().trim()
+                if (text.isNotEmpty()) {
+                    //sendToFirebase()
+                    send(text.toInt())
+                    dialogInterface.dismiss()
+                } else {
+                    requireActivity().showToast("Empty Input")
+                    return@setNegativeButton
+                }
+            }.show()
     }
 
     override fun onDestroy() {
@@ -192,14 +168,13 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     inner class SavedQuizActionMode
-     constructor(activity: AppCompatActivity): ActionModeImpl(activity){
+    constructor(activity: AppCompatActivity) : ActionModeImpl(activity) {
         override fun performAction(mode: ActionMode?, item: MenuItem?) {
-            when(item?.itemId){
+            when (item?.itemId) {
                 R.id.delete -> {
-                    adapter.items.removeAll(SavedQuizAdapter.clickedItems)
                     model.delete(SavedQuizAdapter.clickedItems)
+                    adapter.removeItems()
                     mode?.finish()
-                    adapter.notifyDataSetChanged()
                 }
             }
         }
@@ -211,8 +186,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
 
         override fun DestroyActionMode(mode: ActionMode?) {
             mode?.finish()
-            SavedQuizAdapter.isActionModeOpened = false
-            SavedQuizAdapter.clickedItems.clear()
+            adapter.clearClickedItems()
         }
     }
 }

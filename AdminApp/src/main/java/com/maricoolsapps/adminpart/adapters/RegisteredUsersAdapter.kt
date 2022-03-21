@@ -92,6 +92,16 @@ class RegisteredUsersAdapter
         }
     }
 
+    fun getUsers(users: MutableList<StudentUser>){
+        items = users
+        notifyDataSetChanged()
+    }
+
+    fun deleteUsers(){
+        items.clear()
+        notifyDataSetChanged()
+    }
+
     inner class RegisteredUsersViewHolder(var binding: RegisteredUsersListItemBinding):
             RecyclerView.ViewHolder(binding.root){
 

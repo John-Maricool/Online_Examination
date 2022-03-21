@@ -13,7 +13,10 @@ import com.maricoolsapps.adminpart.R
 import com.maricoolsapps.adminpart.ui.viewModels.ChangeProfileDialogViewModel
 import com.maricoolsapps.resources.databinding.ChangeProfileLayoutBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.others.Status
 import com.maricoolsapps.utils.others.constants
+import com.maricoolsapps.utils.others.showSnack
+import com.maricoolsapps.utils.others.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_change_name_dialog.*
 
@@ -21,73 +24,52 @@ import kotlinx.android.synthetic.main.fragment_change_name_dialog.*
 class ChangeProfileDialog : BottomSheetDialogFragment() {
 
     private val model: ChangeProfileDialogViewModel by viewModels()
-
     private val args: ChangeProfileDialogArgs by navArgs()
-
     private var _binding: ChangeProfileLayoutBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_change_name_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = ChangeProfileLayoutBinding.bind(view)
-        if (args.type == constants.username){
-            binding.textView.append(" Name")
-            val displayName = model.name
-            binding.name.setText(displayName)
-        }else{
-            binding.textView.append(" Email")
-            val displayMail = model.email
-            binding.name.setText(displayMail)
-        }
+        binding.textView.append(" Name")
+        binding.name.setText(args.name)
+        buttonClicks()
+        observeLiveData()
+    }
 
-        binding.save.setOnClickListener {
-            binding.progress.visibility = View.VISIBLE
-            val new = binding.name.text.toString().trim()
-            if (new.isNotEmpty() && args.type == constants.username) {
-                model.changeName(new).observe(viewLifecycleOwner, { result ->
-                    when (result) {
-                        is MyServerDataState.onLoaded -> {
-                            binding.progress.visibility = View.GONE
-                            Toast.makeText(activity, "Successfully Changed", Toast.LENGTH_LONG).show()
-                            dismiss()
-                        }
-                        is MyServerDataState.notLoaded -> {
-                            binding.progress.visibility = View.GONE
-                            Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-                        }
-                        MyServerDataState.isLoading -> TODO()
-                    }
-                })
-            }
-            else if (new.isNotEmpty() && args.type == constants.mail && Patterns.EMAIL_ADDRESS.matcher(new).matches()){
-                model.changeMail(new).observe(viewLifecycleOwner, { result ->
-                    when (result) {
-                        is MyServerDataState.onLoaded -> {
-                            binding.progress.visibility = View.GONE
-                            Toast.makeText(activity, "Successfully Changed", Toast.LENGTH_LONG).show()
-                            dismiss()
-                        }
-                        is MyServerDataState.notLoaded -> {
-                            binding.progress.visibility = View.GONE
-                            Toast.makeText(activity, it.toString(), Toast.LENGTH_LONG).show()
-                        }
-                        MyServerDataState.isLoading -> TODO()
-                    }
-                })
-            }else{
-                Toast.makeText(activity, "Error with your entries", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
+    private fun observeLiveData() {
+        model.state.observe(viewLifecycleOwner) { result ->
+            when (result.status) {
+                Status.SUCCESS -> {
+                    binding.progress.visibility = View.GONE
+                    requireActivity().showToast(result.data!!)
+                    dismiss()
+                }
+                Status.ERROR -> {
+                    binding.progress.visibility = View.GONE
+                    binding.progress.showSnack(result.message!!)
+                }
+                Status.LOADING -> binding.progress.visibility = View.GONE
             }
         }
+    }
 
+    private fun buttonClicks() {
         binding.cancel.setOnClickListener {
             dismiss()
+        }
+        binding.save.setOnClickListener {
+            val new = binding.name.text.toString().trim()
+            if (new.isNotEmpty()) {
+                model.changeName(new)
+            }
         }
     }
 
@@ -95,4 +77,5 @@ class ChangeProfileDialog : BottomSheetDialogFragment() {
         super.onDestroy()
         _binding = null
     }
+
 }

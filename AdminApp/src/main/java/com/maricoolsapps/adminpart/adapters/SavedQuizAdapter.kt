@@ -49,6 +49,25 @@ class SavedQuizAdapter
         listener_long = mlistener
     }
 
+    fun clearAllData(){
+        items.clear()
+        notifyDataSetChanged()
+    }
+
+    fun removeItems(){
+        items.removeAll(clickedItems)
+        notifyDataSetChanged()
+    }
+    fun clearClickedItems(){
+        isActionModeOpened = false
+        clickedItems.clear()
+    }
+
+    fun setList(newItem: MutableList<RoomEntity>){
+        items = newItem
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: myViewHolder, position: Int) {
         val currentPos = items[position]
         holder.binding.question.append(currentPos.question)

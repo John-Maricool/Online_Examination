@@ -19,7 +19,11 @@ import com.maricoolsapps.adminpart.databinding.FragmentProfileBinding
 import com.maricoolsapps.adminpart.ui.viewModels.ProfileViewModel
 import com.maricoolsapps.resources.databinding.ProfileLayoutBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.models.AdminUser
+import com.maricoolsapps.utils.others.Status
 import com.maricoolsapps.utils.others.constants
+import com.maricoolsapps.utils.others.showSnack
+import com.maricoolsapps.utils.others.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +31,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private var _binding: ProfileLayoutBinding? = null
     private val binding get() = _binding!!
+    lateinit var admin: AdminUser
 
     private val model: ProfileViewModel by viewModels()
 
@@ -35,69 +40,87 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val intent_data = result.data?.data
-                binding.progress.visibility = View.VISIBLE
-                if (intent_data != null) {
-                    model.changeProfilePhoto(intent_data).observe(viewLifecycleOwner, Observer { res ->
-                        when (res) {
-                            is MyServerDataState.onLoaded -> {
-                                            Toast.makeText(activity, "Image Uploaded successfully", Toast.LENGTH_LONG).show()
-                                            binding.progress.visibility = View.GONE
-                                            Glide.with(requireActivity())
-                                                    .load(intent_data)
-                                                    .centerCrop()
-                                                    .into(binding.profileImage)
-                            }
-                            is MyServerDataState.notLoaded -> {
-                                binding.progress.visibility = View.GONE
-                                Toast.makeText(activity, res.e.toString(), Toast.LENGTH_LONG).show()
-                            }
-                            MyServerDataState.isLoading -> TODO()
-                        }
-                    })
+        resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val intent_data = result.data?.data
+                    binding.progress.visibility = View.VISIBLE
+                    if (intent_data != null) {
+                        model.changeProfilePhoto(intent_data.toString())
+
+                    }
                 }
             }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = ProfileLayoutBinding.bind(view)
+        clickViews()
+        observeLiveData()
+    }
 
-        model.profilePhoto.observe(viewLifecycleOwner, { uri ->
-            Glide.with(requireActivity())
-                    .load(uri)
-                    .centerCrop()
-                    .placeholder(R.drawable.profile)
-                    .into(binding.profileImage)
-        })
+    private fun observeLiveData() {
+        model.profilePhoto.observe(viewLifecycleOwner) { res ->
+            when (res.status) {
+                Status.SUCCESS -> {
+                    requireActivity().showToast(res.data!!)
+                    binding.progress.visibility = View.GONE
+                    Glide.with(requireActivity())
+                        .load(res.data)
+                        .centerCrop()
+                        .into(binding.profileImage)
+                }
+                Status.ERROR -> {
+                    binding.progress.visibility = View.GONE
+                    binding.progress.showSnack(res.message!!)
+                }
+                Status.LOADING -> binding.progress.visibility = View.VISIBLE
+            }
+        }
+        model.admin.observe(viewLifecycleOwner) { res ->
+            when (res.status) {
+                Status.SUCCESS -> {
+                    admin = res.data!!
+                    binding.progress.visibility = View.GONE
+                    Glide.with(requireActivity())
+                        .load(res.data)
+                        .centerCrop()
+                        .into(binding.profileImage)
+                }
+                Status.ERROR -> {
+                    binding.progress.visibility = View.GONE
+                    binding.progress.showSnack(res.message!!)
+                }
+                Status.LOADING -> binding.progress.visibility = View.VISIBLE
+            }
+        }
+    }
 
+    private fun clickViews() {
         binding.imageChooser.setOnClickListener {
             chooseImage()
         }
 
         binding.changeUsername.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToChangeNameDialog(constants.username)
-            findNavController().navigate(action)
+            if (this::admin.isInitialized) {
+                val action =
+                    ProfileFragmentDirections.actionProfileFragmentToChangeProfileDialog(admin.name)
+                findNavController().navigate(action)
+            }
         }
 
         binding.changeEmail.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToChangeNameDialog(constants.mail)
-            findNavController().navigate(action)
-        }
-
-        binding.changePassword.setOnClickListener {
-            val action = ProfileFragmentDirections.actionProfileFragmentToChangePasswordDialog()
-            findNavController().navigate(action)
+            if (this::admin.isInitialized) {
+                val action =
+                    ProfileFragmentDirections.actionProfileFragmentToChangeEmail(admin.email)
+                findNavController().navigate(action)
+            }
         }
     }
 
     private fun chooseImage() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        intent.type = "image/*"
-        resultLauncher.launch(intent)
+        resultLauncher.launch(model.chooseImage())
     }
 
     override fun onDestroyView() {

@@ -7,13 +7,16 @@ import javax.inject.Inject
 
 class MainQuizRepository
 @Inject constructor(val roomDaoImpl: RoomDaoImpl, val cloud: StudentCloudData){
-    suspend fun allQuiz(): List<RoomEntity> {
+
+    /*suspend fun allQuiz(): List<RoomEntity> {
          return roomDaoImpl.getAllQuiz()
     }
+
     suspend fun deleteAllQuiz(quiz: List<RoomEntity>) {
          roomDaoImpl.deleteQuiz(quiz)
     }
+*/
+    /*fun sendQuizResult(score: Int) = cloud.sendQuizResult(score)
 
-    fun sendQuizResult(score: Int) = cloud.sendQuizResult(score)
-    fun deactivateStudent() = cloud.deactivateStudent()
+    fun deactivateStudent() = cloud.deactivateStudent()*/
 }

@@ -1,0 +1,14 @@
+<vector android:height="30dp" android:viewportHeight="490"
+    android:viewportWidth="490" android:width="30dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FFFFFF" android:pathData="M357.071,87.929l-85,-85c-1.912,-1.912 -4.47,-2.904 -7.071,-2.905V0H10C4.477,0 0,4.477 0,10v470c0,5.523 4.477,10 10,10h340c5.523,0 10,-4.477 10,-10V95h-0.024C359.975,92.399 358.983,89.841 357.071,87.929zM275,34.142L325.858,85H275V34.142zM340,470H20V20h235v75c0,5.523 4.477,10 10,10h75V470z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M470,235v155h-15V120h-0.012c0,-1.302 -0.242,-2.609 -0.757,-3.846l-25,-60C427.678,52.427 424.037,50 420,50s-7.678,2.427 -9.231,6.154l-25,60c-0.515,1.237 -0.757,2.544 -0.757,3.846H385v360c0,5.523 4.477,10 10,10h50c5.523,0 10,-4.477 10,-10v-70h25c5.523,0 10,-4.477 10,-10V235H470zM420,86l10,24h-20L420,86zM435,470h-30v-60h30V470zM435,390h-30V130h30V390z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M125,135H75c-5.523,0 -10,4.477 -10,10v50c0,5.523 4.477,10 10,10h50c5.523,0 10,-4.477 10,-10v-50C135,139.477 130.523,135 125,135zM115,185H85v-30h30V185z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M125,245H75c-5.523,0 -10,4.477 -10,10v50c0,5.523 4.477,10 10,10h50c5.523,0 10,-4.477 10,-10v-50C135,249.477 130.523,245 125,245zM115,295H85v-30h30V295z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M125,355H75c-5.523,0 -10,4.477 -10,10v50c0,5.523 4.477,10 10,10h50c5.523,0 10,-4.477 10,-10v-50C135,359.477 130.523,355 125,355zM115,405H85v-30h30V405z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M150,140h50v20h-50z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M150,180h135v20h-135z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M150,250h50v20h-50z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M150,290h135v20h-135z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M150,360h50v20h-50z"/>
+    <path android:fillColor="#FFFFFF" android:pathData="M150,400h135v20h-135z"/>
+</vector>

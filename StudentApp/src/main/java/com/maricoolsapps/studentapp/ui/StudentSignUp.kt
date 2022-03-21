@@ -1,28 +1,23 @@
 package com.maricoolsapps.studentapp.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.studentapp.R
-import com.maricoolsapps.studentapp.application.LoginActivity
-import com.maricoolsapps.studentapp.application.MainActivity
 import com.maricoolsapps.studentapp.databinding.FragmentStudentSignupBinding
-import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.models.StudentUser
+import com.maricoolsapps.utils.others.isEmailValid
+import com.maricoolsapps.utils.others.isTextValid
+import com.maricoolsapps.utils.others.showSnack
+import com.maricoolsapps.utils.others.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
-
-    @Inject
-    lateinit var auth: FirebaseAuth
 
     private val model: SignUpViewModel by viewModels()
 
@@ -32,8 +27,27 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentStudentSignupBinding.bind(view)
+        observeLiveData()
         binding.login.setOnClickListener {
             userLogin()
+        }
+    }
+
+    private fun observeLiveData() {
+        model.logginIn.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+                binding.progressBar.showSnack("Error")
+            }
+        }
+
+        model.success.observe(viewLifecycleOwner) {
+            if (it != null) {
+                requireActivity().showToast(it)
+                findNavController().navigate(R.id.mainFragment)
+            }
         }
     }
 
@@ -44,96 +58,37 @@ class StudentSignUp : Fragment(R.layout.fragment_student_signup) {
         val confirmPassword: String = binding.confirmPassword.text.toString().trim()
         val phoneNumber: String = binding.telNumber.text.toString().trim()
 
-        if (username.isEmpty()) {
-            binding.name.error = "Name is required"
-            binding.name.requestFocus()
+        if (!isTextValid(username) || !isTextValid(userEmail) || !isTextValid(userPassword) || !isTextValid(
+                confirmPassword
+            ) || !isTextValid(phoneNumber) || !isEmailValid(userEmail)
+        ) {
+            binding.progressBar.showSnack("Error with your entries")
             return
         }
 
-        if (userEmail.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-            binding.email.error = "Email Error"
-            binding.email.requestFocus()
+        if (userPassword != confirmPassword) {
+            binding.progressBar.showSnack("Error with your entries")
             return
         }
 
-
-        if (userPassword.isEmpty() || userPassword.length < 6) {
-            binding.password.error = "Password Error"
-            binding.password.requestFocus()
-            return
-        }
-
-        if (confirmPassword.isEmpty()) {
-            binding.confirmPassword.error = "Password is required"
-            binding.confirmPassword.requestFocus()
-            return
-        }
-
-        if (phoneNumber.isEmpty()) {
-            binding.confirmPassword.error = "Phone Number is required"
-            binding.confirmPassword.requestFocus()
-            return
-        }
-
-        if (confirmPassword != userPassword) {
-            binding.confirmPassword.error = "Passwords dosen't match"
-            binding.confirmPassword.requestFocus()
-            return
-        }
-
-        binding.progressBar.visibility = View.VISIBLE
-       val user =  giveCorrectInputs()
-        if (user != null) {
-            model.signUser(user, userPassword, auth).observe(viewLifecycleOwner, {
-                when(it){
-                    is MyServerDataState.onLoaded -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(activity, "Completed Registration", Toast.LENGTH_LONG).show()
-                        val intent = Intent(activity, MainActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        activity?.finish()
-                    }
-                    MyServerDataState.isLoading -> TODO()
-                    is MyServerDataState.notLoaded -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(activity, it.e.toString(), Toast.LENGTH_LONG).show()
-
-                    }
-                }
-            })
-        }
-        else{
-            return
-        }
+        val user = StudentUser(
+            id = "id",
+            name = username,
+            email = userEmail,
+            photoUri = null,
+            number = phoneNumber,
+            regNo = binding.regNumber.text.toString().trim(),
+            isActivated = false,
+            isRegistered = false,
+            adminId = null,
+            quizScore = null
+        )
+        model.signUser(user, userPassword)
     }
 
-    private fun giveCorrectInputs(): StudentUser? {
-        val name = binding.name.text.toString().trim()
-        val email = binding.email.text.toString().trim()
-        val phoneNumber = binding.telNumber.text.toString().trim()
-        val regNo = binding.regNumber.text.toString().trim()
-
-        return if(name.isEmpty() || email.isEmpty() || phoneNumber.isEmpty()){
-            null
-        }else{
-            StudentUser(
-                    id = "id",
-                    name = name,
-                    email = email,
-                    photoUri = null,
-                    number = phoneNumber,
-                    regNo = regNo,
-                    isActivated = false,
-                    isRegistered = false,
-                    adminId = null,
-                    quizScore = null
-            )
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
+        model.serverUser.getAuthState().removeObservers(this)
         _binding = null
     }
 }

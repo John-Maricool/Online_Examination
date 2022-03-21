@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/registeredUsersFragment"
+        android:title="@string/registered_users"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_users_svgrepo_com" />
+
+    <item android:id="@+id/quizArrangement"
+        android:title="@string/create_test"
+        android:iconTint="@color/white"
+        android:icon="@drawable/ic_test"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/savedQuizFragment"
+        android:title="@string/saved_quiz"
+        android:iconTint="@color/white"
+        android:icon="@drawable/ic_exam"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/profileFragment"
+        app:showAsAction="ifRoom"
+        android:iconTint="@color/white"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/admin_profile"/>
+</menu>

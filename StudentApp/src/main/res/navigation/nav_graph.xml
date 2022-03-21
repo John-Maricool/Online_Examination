@@ -3,8 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/studentLogInFragment">
 
+    <fragment
+        android:id="@+id/studentSignup"
+        android:name="com.maricoolsapps.studentapp.ui.StudentSignUp"
+        android:label="fragment_student_signup"
+        tools:layout="@layout/fragment_student_signup" />
+    <fragment
+        android:id="@+id/studentLogInFragment"
+        android:name="com.maricoolsapps.studentapp.ui.StudentLogInFragment"
+        android:label="student_log_in_fragment"
+        tools:layout="@layout/student_log_in_fragment">
+        <action
+            android:id="@+id/action_studentLogInFragment_to_studentSignup"
+            app:destination="@id/studentSignup" />
+    </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.maricoolsapps.studentapp.ui.MainFragment"
@@ -43,7 +57,7 @@
             app:destination="@id/changeProfileFragment" />
         <action
             android:id="@+id/action_profileFragment_to_changePasswordFragment"
-            app:destination="@id/changePasswordFragment" />
+            app:destination="@id/changeEmailFragment" />
     </fragment>
     <dialog
         android:id="@+id/changeProfileFragment"
@@ -51,15 +65,19 @@
         android:label="Change"
         tools:layout="@layout/fragment_change_profile">
         <argument
-            android:name="part"
+            android:name="name"
             app:argType="string" />
     </dialog>
 
     <dialog
-        android:id="@+id/changePasswordFragment"
-        android:name="com.maricoolsapps.studentapp.ui.ChangePasswordFragment"
+        android:id="@+id/changeEmailFragment"
+        android:name="com.maricoolsapps.studentapp.ui.ChangeEmailFragment"
         android:label="Change Password"
-        tools:layout="@layout/fragment_change_password" />
+        tools:layout="@layout/fragment_change_password" >
+        <argument
+            android:name="email"
+            app:argType="string" />
+    </dialog>
     <fragment
         android:id="@+id/savedResultFragment"
         android:name="com.maricoolsapps.studentapp.ui.SavedResultFragment"

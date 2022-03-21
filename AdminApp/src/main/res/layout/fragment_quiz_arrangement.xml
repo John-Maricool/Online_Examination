@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:Card_View="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_50"
     tools:context=".ui.fragments.QuizArrangement">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,14 +30,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_16"
-                android:scrollbars="none"
-                android:lines="3"
-                android:minLines="1"
                 android:layout_marginEnd="@dimen/margin_16"
                 android:layout_weight="2"
                 android:hint="@string/question"
                 android:inputType="textMultiLine|textCapSentences"
+                android:lines="3"
                 android:maxLines="4"
+                android:minLines="1"
+                android:scrollbars="none"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_normal_size" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -163,38 +165,55 @@
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
+            android:layout_marginTop="@dimen/margin_20"
             android:layout_height="@dimen/margin_50"
             android:entries="@array/options"
-            android:layout_margin="@dimen/margin_20"
-            Card_View:layout_constraintEnd_toEndOf="@+id/cO"
             Card_View:layout_constraintStart_toStartOf="@+id/cO"
-            Card_View:layout_constraintTop_toBottomOf="@+id/cO"/>
+            Card_View:layout_constraintTop_toBottomOf="@+id/cO" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/add_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_add_circle"
+            Card_View:layout_constraintStart_toEndOf="@+id/cO"
+            Card_View:layout_constraintTop_toTopOf="@+id/spinner" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:visibility="gone"
+            tools:src="@drawable/ic_add_circle"
+            Card_View:layout_constraintStart_toStartOf="parent"
+            Card_View:layout_constraintEnd_toEndOf="parent"
+            Card_View:layout_constraintTop_toBottomOf="@id/spinner" />
 
         <Button
             android:id="@+id/add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_16"
+            android:background="@drawable/button_gradient"
             android:text="@string/add"
             android:textSize="@dimen/text_big_size"
-            android:background="@drawable/button_gradient"
-            Card_View:layout_constraintEnd_toEndOf="@+id/spinner"
-            Card_View:layout_constraintHorizontal_bias="0.703"
-            Card_View:layout_constraintStart_toStartOf="@+id/spinner"
-            Card_View:layout_constraintTop_toBottomOf="@+id/spinner" />
+            Card_View:layout_constraintEnd_toEndOf="parent"
+            Card_View:layout_constraintStart_toStartOf="parent"
+            Card_View:layout_constraintTop_toBottomOf="@+id/image" />
 
         <Button
             android:id="@+id/update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_50"
             android:layout_margin="@dimen/margin_16"
-            android:text="@string/update"
-            android:textSize="@dimen/text_big_size"
             android:background="@drawable/button_gradient"
-            Card_View:layout_constraintEnd_toEndOf="@+id/spinner"
-            Card_View:layout_constraintHorizontal_bias="0.73"
-            Card_View:layout_constraintStart_toStartOf="@+id/spinner"
-            Card_View:layout_constraintTop_toBottomOf="@+id/spinner" />
+            android:text="@string/update"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_big_size"
+            Card_View:layout_constraintEnd_toEndOf="parent"
+            Card_View:layout_constraintStart_toStartOf="parent"
+            Card_View:layout_constraintTop_toBottomOf="@+id/image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

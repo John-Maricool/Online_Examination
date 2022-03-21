@@ -32,10 +32,10 @@ class SavedResultFragment : Fragment(R.layout.fragment_saved_result) {
         }
         model.getAllResults()
 
-        model.state.observe(viewLifecycleOwner, {
+        model.state.observe(viewLifecycleOwner) {
             adapter.items = it
             binding.recycler.adapter = adapter
-        })
+        }
     }
 
     override fun onStart() {

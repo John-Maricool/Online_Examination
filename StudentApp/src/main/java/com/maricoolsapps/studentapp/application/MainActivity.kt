@@ -3,6 +3,7 @@ package com.maricoolsapps.studentapp.application
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -28,17 +29,33 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setSupportActionBar(toolbar)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
-
         setSupportActionBar(toolbar)
-
         NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         navigation_drawer.setupWithNavController(navController)
 
         val menu = navigation_drawer.menu
         menu.findItem(R.id.log_out).setOnMenuItemClickListener {
             logOut()
+        }
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            when(destination.id){
+                R.id.studentLogInFragment -> {
+                    toolbar.visibility = View.GONE
+                    navigation_drawer.visibility = View.GONE
+                }
+                R.id.studentSignup -> {
+                    toolbar.visibility = View.GONE
+                    navigation_drawer.visibility = View.GONE
+                }
+                R.id.mainFragment -> {
+                    toolbar.visibility = View.VISIBLE
+                    navigation_drawer.visibility = View.VISIBLE
+                }
+            }
         }
     }
 
@@ -52,12 +69,12 @@ class MainActivity : AppCompatActivity() {
         dialog.setTitle("Log Out")
         dialog.setCancelable(false)
         dialog.setMessage("Are you sure you want to log out?")
-        dialog.setPositiveButton("Yes"){ _, _ ->
+        dialog.setPositiveButton("Yes") { _, _ ->
             auth.signOut()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-        dialog.setNegativeButton("No"){ theDialog, _ ->
+        dialog.setNegativeButton("No") { theDialog, _ ->
             theDialog.cancel()
         }
         val alert = dialog.create()

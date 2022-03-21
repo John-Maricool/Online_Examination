@@ -48,11 +48,4 @@ object ApplicationModuleSecond {
         return QuizArrangementRepository(dao)
     }
 
-  /*  @Singleton
-    @Provides
-    fun provideSavedQuizRepo(dao: RoomDaoImpl, cloud: AdminCloudData): SavedQuizRepository{
-        return SavedQuizRepository(dao, cloud)
-    }
-*/
-
 }

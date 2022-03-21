@@ -18,6 +18,8 @@ import com.maricoolsapps.studentapp.R
 import com.maricoolsapps.studentapp.databinding.FragmentQuizResultBinding
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.models.StudentUser
+import com.maricoolsapps.utils.others.Status
+import com.maricoolsapps.utils.others.showSnack
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,50 +29,56 @@ class QuizResultFragment : Fragment(R.layout.fragment_quiz_result) {
     private val binding get() = _binding!!
 
     private val model: QuizResultViewModel by viewModels()
-
     var score: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentQuizResultBinding.bind(view)
-
         binding.save.setOnClickListener {
             saveResult()
         }
-        model.getStudent().observe(viewLifecycleOwner, { state->
-            when(state){
-                MyDataState.isLoading -> TODO()
-                is MyDataState.notLoaded ->
-                {binding.progressBar.visibility = View.GONE
-                Toast.makeText(activity, "Check your Internet connection", Toast.LENGTH_SHORT).show()}
-                is MyDataState.onLoaded -> updateView(state.data as StudentUser)
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
+        model.result.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
+                Status.ERROR -> {
+                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.showSnack(it.message!!)
+                }
+                Status.SUCCESS -> {
+                    binding.progressBar.visibility = View.GONE
+                    updateView(it.data as StudentUser)
+                }
             }
-        })
+        }
     }
 
     private fun saveResult() {
-         val alertDialogBuilder =  AlertDialog.Builder(requireContext())
-            alertDialogBuilder.setTitle("Save")
-            alertDialogBuilder.setMessage("Save result")
-            val input = EditText(requireContext())
-            input.hint = "Enter the name to save quiz with"
-            alertDialogBuilder.setView(input)
-                    .setPositiveButton("Save") { dialog, _ ->
-                        val text = input.text.toString().trim()
-                        if (text.isNotEmpty()) {
-                            val result = QuizResultEntity(text, score)
-                            val job = model.addResult(result)
-                            if (job.isCompleted){
-                                Toast.makeText(activity, "Saved", Toast.LENGTH_SHORT).show()
-                                dialog.dismiss()
-                            }
-                        } else {
-                            Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
-                            return@setPositiveButton
-                        }
-                    }.setNegativeButton("Exit"){dialogInterface, _ ->
-                      dialogInterface.dismiss()
-                    }.show()
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Save")
+        alertDialogBuilder.setMessage("Save result")
+        val input = EditText(requireContext())
+        input.hint = "Enter the name to save quiz with"
+        alertDialogBuilder.setView(input)
+            .setPositiveButton("Save") { dialog, _ ->
+                val text = input.text.toString().trim()
+                if (text.isNotEmpty()) {
+                    val result = QuizResultEntity(text, score)
+                    val job = model.addResult(result)
+                    if (job.isCompleted) {
+                        Toast.makeText(activity, "Saved", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    }
+                } else {
+                    Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+            }.setNegativeButton("Exit") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }.show()
     }
 
     private fun updateView(studentUser: StudentUser) {
@@ -81,10 +89,10 @@ class QuizResultFragment : Fragment(R.layout.fragment_quiz_result) {
             textScore.append("${studentUser.quizScore.toString()} %")
 
             Glide.with(requireActivity())
-                    .load(studentUser.photoUri?.toUri())
-                    .circleCrop()
-                    .placeholder(R.drawable.profile)
-                    .into(binding.profileImage)
+                .load(studentUser.photoUri?.toUri())
+                .circleCrop()
+                .placeholder(R.drawable.profile)
+                .into(binding.profileImage)
         }
     }
 

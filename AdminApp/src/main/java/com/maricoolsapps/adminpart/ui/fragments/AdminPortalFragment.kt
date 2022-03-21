@@ -6,9 +6,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.maricoolsapps.adminpart.R
-import com.maricoolsapps.adminpart.appComponents.AdminActivity
+import com.maricoolsapps.adminpart.appComponents.MainActivity
 import com.maricoolsapps.adminpart.databinding.FragmentAdminProtalBinding
-import com.maricoolsapps.utils.user.ServerUser
+import com.maricoolsapps.utils.source.ServerUser
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -50,9 +50,9 @@ class AdminPortalFragment : Fragment(R.layout.fragment_admin_protal) {
     }
 
     override fun onStart() {
-        super.onStart()
+        super.onStart()/*
         val name = user.getUserName()
-        (activity as AdminActivity).supportActionBar?.title = "Welcome $name"
+        (activity as MainActivity).supportActionBar?.title = "Welcome $name"*/
     }
 
     override fun onDestroyView() {
