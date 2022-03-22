@@ -1,5 +1,6 @@
 package com.maricoolsapps.studentapp.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -14,21 +15,18 @@ import com.maricoolsapps.studentapp.R
 import com.maricoolsapps.studentapp.application.MainActivity
 import com.maricoolsapps.studentapp.databinding.FragmentMainBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
-import com.maricoolsapps.utils.others.Status
-import com.maricoolsapps.utils.others.constants
-import com.maricoolsapps.utils.others.showSnack
-import com.maricoolsapps.utils.others.showToast
+import com.maricoolsapps.utils.interfaces.AlertDialogListener
+import com.maricoolsapps.utils.others.*
 import com.maricoolsapps.utils.source.ServerUser
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainFragment : Fragment(R.layout.fragment_main) {
+class MainFragment : Fragment(R.layout.fragment_main), AlertDialogListener {
 
     private var _binding: FragmentMainBinding? = null
     val binding: FragmentMainBinding get() = _binding!!
     private val model: MainViewModel by viewModels()
-    lateinit var builder: AlertDialog.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,27 +58,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private fun showDialog() {
-        builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Register")
-
         val input = EditText(requireContext())
         input.hint = "Admin uid"
         input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
-
-        builder.setPositiveButton("OK") { dialog, _ ->
-            val text = input.text.toString().trim()
-            if (text.isNotEmpty()) {
-                binding.progrgess.visibility = View.VISIBLE
-                model.registerForQuiz(text)
-                dialog.dismiss()
-            } else {
-                Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
-                return@setPositiveButton
-            }
-        }
-        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
-        builder.show()
+        requireActivity().startAlertDialog(
+            title = "Register",
+            view = input,
+            positiveListener = "OK",
+            listener = this
+        )
     }
 
     private fun observeLiveData() {
@@ -156,14 +142,23 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
-    /* override fun onStart() {
-         super.onStart()
-         *//* val name = user.getUserName()
-         (activity as MainActivity).supportActionBar?.title = "Welcome $name"*//*
-    }*/
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onPositiveListener(dialog: DialogInterface, text: String) {
+        if (text.isNotEmpty()) {
+            binding.progrgess.visibility = View.VISIBLE
+            model.registerForQuiz(text)
+            dialog.dismiss()
+        } else {
+            Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
+            return
+        }
+    }
+
+    override fun onNegativeListener(dialog: DialogInterface, text: String) {
+        dialog.cancel()
     }
 }

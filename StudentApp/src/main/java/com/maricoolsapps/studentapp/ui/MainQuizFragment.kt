@@ -1,5 +1,6 @@
 package com.maricoolsapps.studentapp.ui
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -18,15 +19,17 @@ import com.maricoolsapps.studentapp.R
 import com.maricoolsapps.studentapp.databinding.FragmentMainQuizBinding
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
+import com.maricoolsapps.utils.interfaces.AlertDialogListener
 import com.maricoolsapps.utils.others.Status
 import com.maricoolsapps.utils.others.constants
 import com.maricoolsapps.utils.others.showSnack
+import com.maricoolsapps.utils.others.startAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 @AndroidEntryPoint
 class MainQuizFragment : Fragment(R.layout.fragment_main_quiz),
-    MainQuizViewModel.onTimeClick {
+    MainQuizViewModel.onTimeClick, AlertDialogListener {
 
     private var _binding: FragmentMainQuizBinding? = null
     val binding get() = _binding!!
@@ -51,7 +54,8 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz),
     }
 
     private fun showDialog() {
-        val builder = AlertDialog.Builder(requireContext())
+        requireActivity().startAlertDialog(title = "Exit Quiz", listener = this)
+        /*val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Exit Quiz")
 
         builder.setPositiveButton("Yes") { dialog, _ ->
@@ -61,7 +65,7 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz),
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
-        builder.show()
+        builder.show()*/
     }
 
     private fun loadQuestions() {
@@ -209,5 +213,15 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz),
 
             }
         }
+    }
+
+    override fun onPositiveListener(dialog: DialogInterface, text: String) {
+        binding.all.isEnabled = false
+        dialog.dismiss()
+        findNavController().popBackStack(R.id.mainFragment, true)
+    }
+
+    override fun onNegativeListener(dialog: DialogInterface, text: String) {
+        dialog.cancel()
     }
 }

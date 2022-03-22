@@ -1,5 +1,6 @@
 package com.maricoolsapps.adminpart.ui.fragments
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -24,21 +25,22 @@ import com.maricoolsapps.room_library.room.RoomEntity
 import com.maricoolsapps.room_library.room.ServerQuizDataModel
 import com.maricoolsapps.utils.datastate.MyDataState
 import com.maricoolsapps.utils.datastate.MyServerDataState
-import com.maricoolsapps.utils.others.ActionModeImpl
-import com.maricoolsapps.utils.others.Status
-import com.maricoolsapps.utils.others.showSnack
-import com.maricoolsapps.utils.others.showToast
+import com.maricoolsapps.utils.interfaces.AlertDialogListener
+import com.maricoolsapps.utils.others.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_registered_users_detail.*
+import kotlinx.android.synthetic.main.fragment_sign_up.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickListener,
-    OnItemLongClickListener {
+    OnItemLongClickListener, AlertDialogListener {
 
     private val model: SavedQuizViewModel by viewModels()
     private var _binding: FragmentSavedQuizBinding? = null
     private val binding get() = _binding!!
-   // private lateinit var clickedItem: RoomEntity
+
+    // private lateinit var clickedItem: RoomEntity
     private lateinit var actionMode: SavedQuizActionMode
 
     @Inject
@@ -110,7 +112,7 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     override fun onItemLongClick(item: Any) {
-      //  clickedItem = item as RoomEntity
+        //  clickedItem = item as RoomEntity
         actionMode.start()
     }
 
@@ -134,34 +136,17 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
     }
 
     private fun showDialog() {
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-        alertDialogBuilder.setTitle("Notice")
-        alertDialogBuilder.setMessage("You cannot edit any quiz after uploading")
         val input = EditText(requireContext())
-        input.hint = "Quiz timing for each question (seconds)"
-        input.inputType = InputType.TYPE_CLASS_NUMBER
-        alertDialogBuilder.setView(input)
-            .setPositiveButton("New Write") { dialog, _ ->
-                val text = input.text.toString().trim()
-                if (text.isNotEmpty()) {
-                   // sendToFirebase()
-                    addOverriteToDb(text.toInt())
-                    dialog.dismiss()
-                } else {
-                    requireActivity().showToast("Empty Input")
-                    return@setPositiveButton
-                }
-            }.setNegativeButton("Add to Existing") { dialogInterface, _ ->
-                val text = input.text.toString().trim()
-                if (text.isNotEmpty()) {
-                    //sendToFirebase()
-                    send(text.toInt())
-                    dialogInterface.dismiss()
-                } else {
-                    requireActivity().showToast("Empty Input")
-                    return@setNegativeButton
-                }
-            }.show()
+        input.hint = "Admin uid"
+        input.inputType = InputType.TYPE_CLASS_TEXT
+        requireActivity().startAlertDialog(
+            title = "Notice",
+            message = "You cannot edit any quiz after uploading",
+            view = input,
+            positiveListener = "New Write",
+            negativeText = "Add to Existing",
+            listener = this
+        )
     }
 
     override fun onDestroy() {
@@ -189,6 +174,28 @@ class SavedQuizFragment : Fragment(R.layout.fragment_saved_quiz), OnItemClickLis
         override fun DestroyActionMode(mode: ActionMode?) {
             mode?.finish()
             adapter.clearClickedItems()
+        }
+    }
+
+    override fun onPositiveListener(dialog: DialogInterface, text: String) {
+        if (text.isNotEmpty()) {
+            // sendToFirebase()
+            addOverriteToDb(text.toInt())
+            dialog.dismiss()
+        } else {
+            requireActivity().showToast("Empty Input")
+            return
+        }
+    }
+
+    override fun onNegativeListener(dialog: DialogInterface, text: String) {
+        if (text.isNotEmpty()) {
+            //sendToFirebase()
+            send(text.toInt())
+            dialog.dismiss()
+        } else {
+            requireActivity().showToast("Empty Input")
+            return
         }
     }
 }
