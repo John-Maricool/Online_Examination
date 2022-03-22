@@ -17,7 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class QuizResultViewModel
-    @Inject constructor(private val cloud: StudentCloudData, val dao: RoomDaoImpl, val user: ServerUserRepo): ViewModel() {
+@Inject constructor(
+    private val cloud: StudentCloudData,
+    val dao: RoomDaoImpl,
+    val user: ServerUserRepo
+) : ViewModel() {
 
     private val _result = MutableLiveData<MyDataState<StudentUser>>()
     val result: LiveData<MyDataState<StudentUser>> get() = _result
@@ -25,15 +29,16 @@ class QuizResultViewModel
     init {
         getStudent()
     }
-        fun getStudent() {
-            viewModelScope.launch {
-                cloud.getStudent(user.getUserUid()){
-                    _result.postValue(it)
-                }
+
+    fun getStudent() {
+        viewModelScope.launch {
+            cloud.getStudent(user.getUserUid()) {
+                _result.postValue(it)
             }
         }
+    }
 
-    fun addResult(result: QuizResultEntity): Job =  viewModelScope.launch {
+    fun addResult(result: QuizResultEntity): Job = viewModelScope.launch {
         dao.insertResult(result)
     }
- }
+}

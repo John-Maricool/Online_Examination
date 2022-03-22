@@ -23,11 +23,13 @@ class AdminCloudData(
         }
     }
 
-    suspend fun addOverriteToDb(userId: String, data: List<Any>,
-                                  time: QuizSettingModel, b: (MyDataState<String>) -> Unit) {
+    suspend fun addOverriteToDb(
+        userId: String, data: List<Any>,
+        time: QuizSettingModel, b: (MyDataState<String>) -> Unit
+    ) {
         b.invoke(MyDataState.loading())
         try {
-            cloud.getAllQuizDocs(userId)?.forEach{
+            cloud.getAllQuizDocs(userId)?.forEach {
                 it.reference.delete()
             }
             cloud.addQuizQuestionsToDb(userId, data)
@@ -101,9 +103,16 @@ class AdminCloudData(
         b: (MyDataState<List<StudentUser>>) -> Unit
     ) {
         b.invoke(MyDataState.loading())
+        val students = mutableListOf<StudentUser>()
         try {
-            val result = cloud.getRegisteredStudents(userId)?.toObjects(StudentUser::class.java)
-            b.invoke(MyDataState.success(result))
+            val result = cloud.getRegisteredStudents(userId)?.documents
+            result?.forEach {
+                val student = cloud.getStudent(it.reference.id)?.toObject(StudentUser::class.java)
+                if (student != null) {
+                    students.add(student)
+                }
+            }
+            b.invoke(MyDataState.success(students))
         } catch (e: Exception) {
             b.invoke(MyDataState.error(e.toString(), null))
         }
@@ -147,6 +156,7 @@ class AdminCloudData(
             ids.forEach { id ->
                 cloud.deleteRegisteredStudent(userId, id)
                 cloud.unregisterStudent(id)
+                cloud.deactivateStudent(id)
             }
             b.invoke(MyDataState.success("Succecssful"))
         } catch (e: Exception) {
@@ -166,12 +176,12 @@ class AdminCloudData(
         }
     }
 
-    suspend fun getStudentDetails(id: String, b: (MyDataState<StudentUser>) -> Unit){
+    suspend fun getStudentDetails(id: String, b: (MyDataState<StudentUser>) -> Unit) {
         b.invoke(MyDataState.loading())
-        try{
+        try {
             val student = cloud.getStudent(id)?.toObject(StudentUser::class.java)
             b.invoke(MyDataState.success(student))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             b.invoke(MyDataState.error("Check Internet connection and try again", null))
         }
     }
@@ -188,45 +198,53 @@ class AdminCloudData(
         }
     }
 
-    suspend fun changeProfilePhoto(userId: String, photo: String, b: (MyDataState<String>) -> Unit){
+    suspend fun changeProfilePhoto(
+        userId: String,
+        photo: String,
+        b: (MyDataState<String>) -> Unit
+    ) {
         b.invoke(MyDataState.loading())
-        try{
+        try {
             storage.putFileInStorage(photo.toUri(), userId)
             val uri = storage.getDownloadUri(userId)
             val pic = uri.toString()
             cloud.changeProfilePhoto(userId, pic)
             b.invoke(MyDataState.success("Successful"))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             b.invoke(MyDataState.error(e.toString(), null))
         }
     }
 
-    suspend fun changeProfileName(userId: String, name: String, b: (MyDataState<String>) -> Unit){
+    suspend fun changeProfileName(userId: String, name: String, b: (MyDataState<String>) -> Unit) {
         b.invoke(MyDataState.loading())
-        try{
+        try {
             cloud.changeProfileName(userId, name)
             b.invoke(MyDataState.success("Successful"))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             b.invoke(MyDataState.error(e.toString(), null))
         }
     }
 
-    suspend fun changeProfileEmail(userId: String, email: String, b: (MyDataState<String>) -> Unit){
+    suspend fun changeProfileEmail(
+        userId: String,
+        email: String,
+        b: (MyDataState<String>) -> Unit
+    ) {
         b.invoke(MyDataState.loading())
-        try{
+        try {
             cloud.changeProfileEmail(userId, email)
             b.invoke(MyDataState.success("Successful"))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             b.invoke(MyDataState.error(e.toString(), null))
         }
     }
 
-    suspend fun getAdmin(userId: String, b: (MyDataState<AdminUser>) -> Unit){
+    suspend fun getAdmin(userId: String, b: (MyDataState<AdminUser>) -> Unit) {
         b.invoke(MyDataState.loading())
-        try{
+        try {
             val result = cloud.getAdmin(userId)?.toObject(AdminUser::class.java)
             b.invoke(MyDataState.success(result))
-        }catch (e: Exception){
+        } catch (e: Exception) {
             b.invoke(MyDataState.error(e.toString(), null))
         }
     }

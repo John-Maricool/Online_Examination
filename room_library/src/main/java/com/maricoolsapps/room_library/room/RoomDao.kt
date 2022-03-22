@@ -15,7 +15,7 @@ interface RoomDao {
     fun updateQuiz(quiz: RoomEntity)
 
     @Delete
-    suspend fun deleteQuiz(quiz: List<RoomEntity>): Int
+    suspend fun deleteQuiz(quiz: RoomEntity): Int
 
     @Query("select * from question_table order by id")
     fun getAllQuiz(): List<RoomEntity>

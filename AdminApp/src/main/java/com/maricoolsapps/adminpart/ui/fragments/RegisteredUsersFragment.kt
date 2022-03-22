@@ -64,6 +64,7 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.activate -> model.activateStudents()
+            R.id.refresh -> model.getRegisteredUsers()
             R.id.deactivate -> model.deactivateStudents()
             R.id.unregister_all -> unregisterAll()
         }

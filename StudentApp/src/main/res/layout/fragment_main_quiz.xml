@@ -46,6 +46,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:text="Question"
+        android:textStyle="normal"
         android:textColor="@color/black"
         android:textSize="@dimen/text_normal_size"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,9 +115,9 @@
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/progress_bar"
-        style="@style/SpinKitView.Large.FoldingCube"
-        android:layout_width="@dimen/margin_100"
-        android:layout_height="@dimen/margin_100"
+        style="@style/SpinKitView.Small.MultiplePulseRing"
+        android:layout_width="@dimen/margin_50"
+        android:layout_height="@dimen/margin_50"
         android:layout_gravity="center"
         android:visibility="gone"
         app:SpinKit_Color="@color/colorPrimary"

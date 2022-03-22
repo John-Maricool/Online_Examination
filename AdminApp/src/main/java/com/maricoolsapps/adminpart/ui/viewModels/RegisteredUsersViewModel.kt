@@ -36,7 +36,7 @@ class RegisteredUsersViewModel
         getRegisteredUsers()
     }
 
-    private fun getRegisteredUsers() {
+     fun getRegisteredUsers() {
         viewModelScope.launch(IO) {
             cloud.getRegisteredStudents(auth.getUserId()) {
                 _students.postValue(it)

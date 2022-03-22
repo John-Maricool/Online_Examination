@@ -56,7 +56,7 @@ class FirestoreSource
     suspend fun checkIfAdminDocExist(id: String): Boolean {
         return try {
             val res = cloud.collection(collectionName).document(id).get(Source.SERVER).await()
-            res.exists()
+            res != null
         } catch (e: Exception) {
             false
         }

@@ -7,55 +7,72 @@
     tools:context=".ui.MainFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_margin="20dp"
-    android:gravity="top|center_horizontal"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_normal_size"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:visibility="gone"
-        tools:text="dfnjlkanks"
-        tools:visibility="visible"
-        android:id="@+id/registration_status"/>
-
-    <Button
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="20dp"
-        android:visibility="gone"
-        android:background="@drawable/round_stylish_background"
-        tools:visibility="visible"
-        android:textSize="22sp"
-        android:layout_height="wrap_content"
-        android:id="@+id/register_button"
-        android:text="@string/register_for_quiz_btn"/>
+        android:gravity="top|center_horizontal"
+        android:orientation="vertical">
 
-    <Button
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:textSize="22sp"
-        android:background="@drawable/round_stylish_background"
-        tools:visibility="visible"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/start"
-        android:text="@string/start_quiz_btn"/>
+        <TextView
+            android:id="@+id/registration_status"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_20"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/text_normal_size"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="dfnjlkanks"
+            tools:visibility="visible" />
 
-    <com.github.ybq.android.spinkit.SpinKitView
-        android:id="@+id/progrgess"
-        style="@style/SpinKitView.Large.Circle"
-        android:visibility="gone"
-        android:layout_margin="@dimen/margin_20"
-        android:layout_width="@dimen/margin_20"
-        android:layout_height="@dimen/margin_20"
-        android:layout_gravity="center"
-        app:SpinKit_Color="@color/colorPrimary" />
-</LinearLayout>
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_stylish_background"
+            android:text="@string/register_for_quiz_btn"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/start"
+            app:layout_constraintTop_toTopOf="@+id/start"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_32"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_stylish_background"
+            android:text="@string/start_quiz_btn"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toStartOf="@+id/register_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/registration_status"
+            tools:visibility="visible" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/progrgess"
+            style="@style/SpinKitView.Large.Circle"
+            android:layout_width="@dimen/margin_20"
+            android:layout_height="@dimen/margin_20"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/margin_20"
+            android:visibility="gone"
+            app:SpinKit_Color="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

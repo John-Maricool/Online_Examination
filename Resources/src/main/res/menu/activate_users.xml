@@ -13,6 +13,11 @@
         app:showAsAction="never"/>
 
     <item
+        android:title="@string/refresh"
+        android:id="@+id/refresh"
+        app:showAsAction="never"/>
+
+    <item
         android:title="@string/unregister_all_users"
         android:id="@+id/unregister_all"
         app:showAsAction="never"/>

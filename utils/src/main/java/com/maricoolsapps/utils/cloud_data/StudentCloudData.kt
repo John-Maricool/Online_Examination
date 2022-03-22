@@ -21,59 +21,6 @@ class StudentCloudData(var cloud: FirestoreSource, val storage: StorageSource) {
         }
     }
 
-    /*
-    suspend fun changeStudentName(name: String): Boolean{
-        return try{
-            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("name", name).await()
-            true
-        }catch (e: Exception){
-            false
-        }
-    }
-
-    suspend fun changeStudentEmail(mail: String): Boolean{
-        return try{
-            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("email", mail).await()
-            true
-        }catch (e: Exception){
-            false
-        }
-    }
-
-    suspend fun changeStudentPhotoUri(uri: String): Boolean{
-        return try{
-            val imageUri = uri.toUri()
-            val ref = FirebaseStorage.getInstance().getReference("${serverUser.getUserId()}.jpg").putFile(imageUri)
-            ref.await()
-            if(ref.isComplete){
-                val imgUrl = FirebaseStorage.getInstance().getReference("${serverUser.getUserId()}.jpg").downloadUrl.await()
-                Log.d("url", imgUrl.toString())
-                cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("photoUri", imgUrl.toString()).await()
-            }
-            true
-        }catch (e: Exception){
-            false
-        }
-    }
-
-    suspend fun changeStudentNumber(number: String): Boolean{
-        return try{
-            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("number", number).await()
-            true
-        }catch (e: Exception){
-            false
-        }
-    }
-
-    suspend fun changeStudentRegNo(regno: String): Boolean{
-        return try{
-            cloud.collection(studentsCollectionName).document(serverUser.getUserId()).update("regNo", regno).await()
-            true
-        }catch (e: Exception){
-            false
-        }
-    }*/
-
     suspend fun registerForQuiz(
         adminId: String,
         userId: String,
@@ -82,7 +29,7 @@ class StudentCloudData(var cloud: FirestoreSource, val storage: StorageSource) {
         b.invoke(MyDataState.loading())
         try {
             val res = cloud.checkIfAdminDocExist(adminId)
-            if (!res) {
+            if (res) {
                 cloud.registerStudentForQuiz(adminId, userId)
                 cloud.addStudentToAdminList(adminId, userId)
                 b.invoke(MyDataState.success("Successful"))

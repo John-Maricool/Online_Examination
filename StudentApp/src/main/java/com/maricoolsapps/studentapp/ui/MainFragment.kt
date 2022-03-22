@@ -15,6 +15,7 @@ import com.maricoolsapps.studentapp.application.MainActivity
 import com.maricoolsapps.studentapp.databinding.FragmentMainBinding
 import com.maricoolsapps.utils.datastate.MyServerDataState
 import com.maricoolsapps.utils.others.Status
+import com.maricoolsapps.utils.others.constants
 import com.maricoolsapps.utils.others.showSnack
 import com.maricoolsapps.utils.others.showToast
 import com.maricoolsapps.utils.source.ServerUser
@@ -46,14 +47,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.str.setOnRefreshListener {
             model.checkIfPreviouslyRegistered()
         }
+
         observeLiveData()
 
         binding.start.setOnClickListener {
-            findNavController().navigate(R.id.mainQuiz)
+            model.checkIfUserIsActivated()
         }
-
         model.checkIfPreviouslyRegistered()
-
         binding.registerButton.setOnClickListener {
             showDialog()
         }
@@ -73,7 +73,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             if (text.isNotEmpty()) {
                 binding.progrgess.visibility = View.VISIBLE
                 model.registerForQuiz(text)
-
                 dialog.dismiss()
             } else {
                 Toast.makeText(activity, "Empty input", Toast.LENGTH_SHORT).show()
@@ -101,12 +100,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 }
             }
         }
+
         model.check.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.ERROR -> {
                     binding.str.isRefreshing = false
-                    binding.start.visibility = View.GONE
-                    binding.registerButton.visibility = View.VISIBLE
                     binding.registrationStatus.visibility = View.VISIBLE
                     binding.registrationStatus.text =
                         getString(R.string.registration_status_notRegistered)
@@ -114,11 +112,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
                 Status.SUCCESS -> {
                     binding.str.isRefreshing = false
-                    binding.registerButton.visibility = View.GONE
-                    binding.start.visibility = View.VISIBLE
+                    if (it.data == true) {
+                        binding.registrationStatus.text =
+                            getString(R.string.registration_status_registered)
+                    } else {
+                        binding.registrationStatus.text =
+                            getString(R.string.registration_status_notRegistered)
+                    }
                     binding.registrationStatus.visibility = View.VISIBLE
-                    binding.registrationStatus.text =
-                        getString(R.string.registration_status_registered)
+
                 }
                 Status.LOADING -> {
                     binding.str.isRefreshing = true
@@ -127,13 +129,38 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 }
             }
         }
+
+        model.ready.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.ERROR -> {
+                    binding.str.isRefreshing = false
+                    binding.registrationStatus.visibility = View.VISIBLE
+                    binding.progrgess.showSnack(it.message!!)
+                }
+
+                Status.SUCCESS -> {
+                    binding.str.isRefreshing = false
+                    if (it.data == true) {
+                        findNavController().navigate(R.id.mainQuiz)
+                    } else {
+                        binding.registrationStatus.text =
+                            getString(R.string.not_ready)
+                    }
+                    binding.registrationStatus.visibility = View.VISIBLE
+                }
+                Status.LOADING -> {
+                    binding.str.isRefreshing = true
+                    binding.registrationStatus.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
-        /* val name = user.getUserName()
-         (activity as MainActivity).supportActionBar?.title = "Welcome $name"*/
-    }
+    /* override fun onStart() {
+         super.onStart()
+         *//* val name = user.getUserName()
+         (activity as MainActivity).supportActionBar?.title = "Welcome $name"*//*
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

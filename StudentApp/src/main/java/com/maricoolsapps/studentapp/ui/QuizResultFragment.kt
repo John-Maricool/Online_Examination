@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.maricoolsapps.room_library.room.QuizResultEntity
 import com.maricoolsapps.studentapp.R
@@ -31,6 +33,15 @@ class QuizResultFragment : Fragment(R.layout.fragment_quiz_result) {
     private val model: QuizResultViewModel by viewModels()
     var score: Int = 0
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigate(R.id.mainFragment)
+            }
+        })
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentQuizResultBinding.bind(view)
@@ -38,6 +49,7 @@ class QuizResultFragment : Fragment(R.layout.fragment_quiz_result) {
             saveResult()
         }
         observeLiveData()
+
     }
 
     private fun observeLiveData() {
@@ -84,7 +96,8 @@ class QuizResultFragment : Fragment(R.layout.fragment_quiz_result) {
     private fun updateView(studentUser: StudentUser) {
         binding.apply {
             progressBar.visibility = View.GONE
-            textCongrats.append(studentUser.name)
+            textCongrats.append("\n ${studentUser.name}")
+
             score = studentUser.quizScore!!
             textScore.append("${studentUser.quizScore.toString()} %")
 

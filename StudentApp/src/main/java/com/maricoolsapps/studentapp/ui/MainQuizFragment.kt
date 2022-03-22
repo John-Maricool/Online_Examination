@@ -88,7 +88,8 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz),
     }
 
     private fun checkIfCorrect() {
-        if (binding.firstOption.isChecked || binding.secondOption.isChecked || binding.thirdOption.isChecked || binding.forthOption.isChecked) {
+        if (binding.firstOption.isChecked || binding.secondOption.isChecked || binding.thirdOption.isChecked
+            || binding.forthOption.isChecked) {
             checkAnswer()
         } else {
             Toast.makeText(activity, "You Checked Nothing", Toast.LENGTH_SHORT).show()
@@ -139,13 +140,13 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz),
                             questionNumberText.text =
                                 "Question ${model.questionCount} over ${quizzesId.size}"
                             question.text = currentQuestion.question
-                            if (currentQuestion.image != null){
+                            if (currentQuestion.image != null) {
                                 binding.image.visibility = View.VISIBLE
                                 Glide.with(requireActivity())
                                     .load(currentQuestion.image)
                                     .centerCrop()
                                     .into(image)
-                            }else{
+                            } else {
                                 binding.image.visibility = View.GONE
                             }
                             firstOption.text = currentQuestion.firstOption
@@ -194,15 +195,15 @@ class MainQuizFragment : Fragment(R.layout.fragment_main_quiz),
     }
 
     private fun finishUp() {
-        model.finish.observe(viewLifecycleOwner){
-            when(it.status){
+        model.finish.observe(viewLifecycleOwner) {
+            when (it.status) {
                 Status.SUCCESS -> {
                     binding.progressBar.visibility = View.GONE
                     findNavController().navigate(R.id.quizResultFragment)
                 }
                 Status.ERROR -> {
-                binding.progressBar.visibility = View.GONE
-                binding.progressBar.showSnack("check your internet connection and try again")
+                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.showSnack("check your internet connection and try again")
                 }
                 Status.LOADING -> binding.progressBar.visibility = View.VISIBLE
 

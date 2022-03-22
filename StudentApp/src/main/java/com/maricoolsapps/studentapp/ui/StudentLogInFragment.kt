@@ -16,7 +16,6 @@ import javax.inject.Inject
 class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment) {
 
     private val model: StudentLogInViewModel by viewModels()
-
     private var _binding: LoginLayoutBinding? = null
     private val binding get() = _binding!!
 
@@ -26,9 +25,11 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = LoginLayoutBinding.bind(view)
+
         binding.register.setOnClickListener {
             findNavController().navigate(R.id.studentSignup)
         }
+
         binding.login.setOnClickListener { userLogin() }
 
         model.result.observe(viewLifecycleOwner) { result ->
@@ -69,6 +70,7 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment) {
             binding.password.requestFocus()
             return
         }
+
         binding.progressBar.visibility = View.VISIBLE
         model.logInUser(userEmail, userPassword)
     }
@@ -80,3 +82,8 @@ class StudentLogInFragment : Fragment(R.layout.student_log_in_fragment) {
         }
     }
 }
+
+
+
+
+

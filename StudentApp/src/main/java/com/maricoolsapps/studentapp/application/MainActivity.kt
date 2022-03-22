@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.studentapp.R
@@ -32,8 +35,15 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
-        setSupportActionBar(toolbar)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.mainFragment
+            ), drawer_layout
+        )
+        setupActionBarWithNavController(
+            navController,
+            appBarConfiguration
+        )
         navigation_drawer.setupWithNavController(navController)
 
         val menu = navigation_drawer.menu
@@ -42,18 +52,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            when(destination.id){
+            when (destination.id) {
                 R.id.studentLogInFragment -> {
                     toolbar.visibility = View.GONE
-                    navigation_drawer.visibility = View.GONE
+                    drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 R.id.studentSignup -> {
                     toolbar.visibility = View.GONE
-                    navigation_drawer.visibility = View.GONE
+                    drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
-                R.id.mainFragment -> {
+                else -> {
                     toolbar.visibility = View.VISIBLE
-                    navigation_drawer.visibility = View.VISIBLE
+                    drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)
                 }
             }
         }
@@ -82,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, drawer_layout) || super.onSupportNavigateUp()
+        onBackPressed()
+        return true
     }
 }

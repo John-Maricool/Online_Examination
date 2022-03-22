@@ -46,7 +46,13 @@
         android:id="@+id/quizResultFragment"
         android:name="com.maricoolsapps.studentapp.ui.QuizResultFragment"
         android:label="Quiz Result"
-        tools:layout="@layout/fragment_quiz_result" />
+        tools:layout="@layout/fragment_quiz_result" >
+        <action
+            android:id="@+id/action_quizResultFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.maricoolsapps.studentapp.ui.ProfileFragment"

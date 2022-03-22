@@ -21,9 +21,13 @@ class MainViewModel
     private val _check = MutableLiveData<MyDataState<Boolean>>()
     val check: LiveData<MyDataState<Boolean>> get() = _check
 
+    private val _ready = MutableLiveData<MyDataState<Boolean>>()
+    val ready: LiveData<MyDataState<Boolean>> get() = _ready
+
     init {
         checkIfPreviouslyRegistered()
     }
+
     fun registerForQuiz(id: String) {
         viewModelScope.launch {
             cloud.registerForQuiz(id, user.getUserUid()) {
@@ -36,6 +40,14 @@ class MainViewModel
         viewModelScope.launch {
             cloud.checkIfPreviouslyRegistered(user.getUserUid()) {
                 _check.postValue(it)
+            }
+        }
+    }
+
+    fun checkIfUserIsActivated(){
+        viewModelScope.launch {
+            cloud.checkIfItsTimeToAccessQuiz(user.getUserUid()){
+                _ready.postValue(it)
             }
         }
     }

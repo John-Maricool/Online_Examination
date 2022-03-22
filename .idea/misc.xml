@@ -22,6 +22,7 @@
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/drawable/bottom_nav.xml" value="0.1" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/drawable/button_gradient.xml" value="0.167" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/drawable/ic_delete.xml" value="0.11" />
+        <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/drawable/ic_delete_forever.xml" value="0.1215" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/drawable/ic_exam.xml" value="0.112" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/drawable/ic_profile.xml" value="0.112" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/drawable/ic_test.xml" value="0.112" />
@@ -31,6 +32,7 @@
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/menu/action_mode.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/Resources/src/main/res/menu/bottom_nav.xml" value="0.1" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/StudentApp/src/main/res/layout/activity_main.xml" value="0.1648148148148148" />
+        <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/StudentApp/src/main/res/layout/fragment_main.xml" value="0.19074074074074074" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/StudentApp/src/main/res/layout/fragment_main_quiz.xml" value="0.19369369369369369" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/StudentApp/src/main/res/layout/fragment_quiz_result.xml" value="0.19369369369369369" />
         <entry key="..\:/Users/JOHN BATISTA/AndroidStudioProjects/OnlineExaminationProject/StudentApp/src/main/res/layout/fragment_student_signup.xml" value="0.1648148148148148" />
