@@ -9,7 +9,7 @@ able to add the quiz results to local database.
 
 ## Technologies and Architecture
 ### Technologies
-Android, Kotlin, Firebase API 
+Android, Kotlin, Firebase API, Modular Programming
 ### Architecture
 Model-View-ViewModel (MVVM)
 ### Backend Features
