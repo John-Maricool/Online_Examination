@@ -192,6 +192,7 @@
                     <com.github.ybq.android.spinkit.SpinKitView
                         android:id="@+id/progress_bar"
                         style="@style/SpinKitView.Large.FadingCircle"
+                        android:visibility="gone"
                         android:layout_width="@dimen/progress_bar_width"
                         android:layout_margin="@dimen/margin_10"
                         android:layout_height="@dimen/progress_bar_height"

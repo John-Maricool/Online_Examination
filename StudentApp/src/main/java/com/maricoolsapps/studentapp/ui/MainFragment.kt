@@ -101,9 +101,14 @@ class MainFragment : Fragment(R.layout.fragment_main), AlertDialogListener {
                     if (it.data == true) {
                         binding.registrationStatus.text =
                             getString(R.string.registration_status_registered)
+                        binding.registerButton.visibility = View.GONE
+                        binding.start.visibility = View.VISIBLE
+
                     } else {
                         binding.registrationStatus.text =
                             getString(R.string.registration_status_notRegistered)
+                        binding.registerButton.visibility = View.VISIBLE
+                        binding.start.visibility = View.GONE
                     }
                     binding.registrationStatus.visibility = View.VISIBLE
 

@@ -51,6 +51,13 @@ class RegisteredUsersAdapter
         listener = mlistener
     }
 
+    fun deleteUser(){
+        clickedItems.forEach {
+            items.remove(it)
+        }
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: RegisteredUsersViewHolder, position: Int) {
         val currentPos = items[position]
         Glide.with(context)

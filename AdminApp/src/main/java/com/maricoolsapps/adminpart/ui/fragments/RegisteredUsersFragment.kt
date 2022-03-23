@@ -87,6 +87,8 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users),
         adapter.setOnClickListener(this)
     }
 
+
+
     private fun observeLiveData() {
         model.loading.observe(viewLifecycleOwner){
             if (it){
@@ -126,7 +128,6 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users),
         actionMode.start()
     }
 
-
     inner class RegisteredUsersActionMode
     constructor(activity: AppCompatActivity) : ActionModeImpl(activity) {
         override fun performAction(mode: ActionMode?, item: MenuItem?) {
@@ -136,6 +137,7 @@ class RegisteredUsersFragment : Fragment(R.layout.fragment_registered_users),
                         it.id
                     }
                     model.deleteStudents(ids)
+                    adapter.deleteUser()
                     mode?.finish()
                 }
             }

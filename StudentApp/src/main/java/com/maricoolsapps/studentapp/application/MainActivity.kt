@@ -1,5 +1,6 @@
 package com.maricoolsapps.studentapp.application
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,12 +16,14 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.maricoolsapps.studentapp.R
+import com.maricoolsapps.utils.interfaces.AlertDialogListener
+import com.maricoolsapps.utils.others.startAlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AlertDialogListener {
 
     private lateinit var navController: NavController
 
@@ -35,18 +38,12 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.mainFragment
-            ), drawer_layout
-        )
-        setupActionBarWithNavController(
-            navController,
-            appBarConfiguration
-        )
-        navigation_drawer.setupWithNavController(navController)
+        NavigationUI.setupActionBarWithNavController(this, navController,drawer_layout)
+        NavigationUI.setupWithNavController(navigation_drawer,  navController)
+        // navigation_drawer.setupWithNavController(navController)
 
         val menu = navigation_drawer.menu
+        NavigationUI.setupActionBarWithNavController(this, navController, drawer_layout)
         menu.findItem(R.id.log_out).setOnMenuItemClickListener {
             logOut()
         }
@@ -63,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> {
                     toolbar.visibility = View.VISIBLE
-                    drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNDEFINED)
+                    drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 }
             }
         }
@@ -75,24 +72,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showDialogBox() {
-        val dialog = AlertDialog.Builder(this)
-        dialog.setTitle("Log Out")
-        dialog.setCancelable(false)
-        dialog.setMessage("Are you sure you want to log out?")
-        dialog.setPositiveButton("Yes") { _, _ ->
-            auth.signOut()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-        dialog.setNegativeButton("No") { theDialog, _ ->
-            theDialog.cancel()
-        }
-        val alert = dialog.create()
-        alert.show()
+        this.startAlertDialog(
+            title = "Log Out",
+            message = "Are you sure you want to log out?",
+            listener = this
+        )
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+         onBackPressed()
         return true
+      // return NavigationUI.navigateUp(navController, drawer_layout)
+    }
+
+    override fun onPositiveListener(dialog: DialogInterface, text: String) {
+        auth.signOut()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    override fun onNegativeListener(dialog: DialogInterface, text: String) {
+        dialog.cancel()
     }
 }
